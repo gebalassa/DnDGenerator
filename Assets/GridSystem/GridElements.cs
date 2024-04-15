@@ -28,12 +28,12 @@ public class GridClass
 
 public class Tile
 {
-    int id;
+    public int Id;
     bool selected;
 
     public Tile()
     {
-        id = 0;
+        Id = 0;
         selected = false;
     }
 }
