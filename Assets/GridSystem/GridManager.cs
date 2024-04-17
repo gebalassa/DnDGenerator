@@ -5,6 +5,7 @@ using System.IO;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class GridManager : MonoBehaviour
 {
@@ -14,7 +15,10 @@ public class GridManager : MonoBehaviour
     GridClass _grid;
 
     [SerializeField] float size;
-    [SerializeField] GameObject sphere;
+    [SerializeField] Tilemap map;
+    [SerializeField] UnityEngine.Tilemaps.Tile defaultTile;
+
+    [SerializeField] bool debugGrid = false;
 
     bool onRunTime = false;
 
@@ -52,11 +56,15 @@ public class GridManager : MonoBehaviour
                 _grid = aux;
             }
         }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            PaintMap();
+        }
     }
 
     void OnDrawGizmos()
     {
-        if (onRunTime)
+        if (onRunTime && debugGrid)
         {
             Gizmos.color = Color.green;
             Vector3 vectorSize = new Vector3(size, size);
@@ -99,6 +107,20 @@ public class GridManager : MonoBehaviour
         string json = File.ReadAllText(saveFilePath);
         GridHelper gh = JsonUtility.FromJson<GridHelper>(json);
 
-        return gh.ConvertToGridClass();
+        GridClass loadedGrid = gh.ConvertToGridClass();
+        width = loadedGrid.width;
+        height = loadedGrid.height;
+        return loadedGrid;
+    }
+
+    void PaintMap()
+    {
+        for(int i = 0; i < width; i++)
+        {
+            for(int j = 0; j < height; j++)
+            {
+                map.SetTile(new Vector3Int(i,j), defaultTile);
+            }
+        }
     }
 }
