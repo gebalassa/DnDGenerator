@@ -38,10 +38,15 @@ public class ImageDnd
     }
 
     // To replace the constructor when instanced through Inspector, which can't call constructors by default.
-    // Assumes sprite was already assigned in Inspector
+    // Assumes sprite was already assigned in Inspector.
     public void Initialize()
     {
-        if (sprite == null) { Debug.LogError("ImageDnd: Initialize(): Sprite wasn't set beforehand in Inspector!"); return; }
+        if (sprite == null)
+        {
+            this.Name = null;
+            this._id = null;
+            Debug.LogError("ImageDnd: Initialize(): Sprite wasn't set beforehand in Inspector!");
+        }
         else
         {
             this.Name = sprite.name;

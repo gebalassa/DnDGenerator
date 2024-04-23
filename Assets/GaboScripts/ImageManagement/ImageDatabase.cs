@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "newDatabase", menuName = "ImageDatabase")]
+[CreateAssetMenu(fileName = "NewDatabase", menuName = "ImageDatabase")]
 public class ImageDatabase : ScriptableObject
 {
     public List<ImageCategory> categories;
+    private Dictionary<string, ImageDnd> imageDictionary; // For quick lookups.
 
     // Initializes images.
-    // Helps initialize images which were added through Inspector and didn't run their constructor.
+    // Helps initialize images which were added through Inspector, which doesn't run their constructor.
     public void Initialize()
     {
         foreach (ImageCategory category in categories)
@@ -18,6 +19,7 @@ public class ImageDatabase : ScriptableObject
                 image.Initialize();
             }
         }
+        UpdateDictionary();
     }
 
     public void AddImage(Sprite sprite, string categoryName)
@@ -30,53 +32,63 @@ public class ImageDatabase : ScriptableObject
                 return;
             }
         }
+        UpdateDictionary();
     }
 
-    public ImageDnd GetImage(string categoryName, string Id)
-    {
-        foreach (ImageCategory category in categories)
-        {
-            if (category.categoryName == categoryName)
-            {
-                ImageDnd img = category.GetImage(Id);
-                if (img != null)
-                {
-                    return img;
-                }
-                else
-                {
-                    Debug.LogError("ImageDatabase: Image not found!");
-                    return null;
-                }
-            }
-        }
-        Debug.LogError("ImageDatabase: Category not found!");
-        return null;
-    }
     public ImageDnd GetImage(string Id)
     {
-        foreach (ImageCategory category in categories)
+        ImageDnd image;
+        imageDictionary.TryGetValue(Id, out image);
+        if (image != null)
         {
-            ImageDnd img = category.GetImage(Id);
-            if (img != null)
-            {
-                return img;
-            }
+            return image;
         }
-        Debug.LogError("ImageDatabase: Image not found!");
-        return null;
+        else
+        {
+            Debug.LogError("ImageDatabase: Image with id " + Id + "not found!");
+            return null;
+        }
     }
     public ImageDnd GetImage(Sprite sprite)
     {
+        string currId = ImageUtilities.CreateUniqueId(sprite);
+        ImageDnd image;
+        imageDictionary.TryGetValue(currId, out image);
+        if (image != null)
+        {
+            return image;
+        }
+        else
+        {
+            Debug.LogError("ImageDatabase: Image with id " + currId + "not found!");
+            return null;
+        }
+    }
+
+    private void UpdateDictionary()
+    {
+        if (imageDictionary == null)
+        {
+            imageDictionary = new();
+        }
+
         foreach (ImageCategory category in categories)
         {
-            ImageDnd img = category.GetImage(sprite);
-            if (img != null)
+            foreach (ImageDnd image in category.images)
             {
-                return img;
+                if (image.Id != null)
+                {
+                    bool result = imageDictionary.TryAdd(image.Id, image);
+                    if (!result)
+                    {
+                        Debug.LogError("ImageDatabase: Image with id " + image.Id + " already exists in dictionary!");
+                    }
+                }
+                else
+                {
+                    Debug.LogError("ImageDatabase: Image with null id found while updating dictionary!");
+                }
             }
         }
-        Debug.LogError("ImageDatabase: Image not found!");
-        return null;
     }
 }
