@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f56b067db942ee24baa1c6940636dff7, type: 3}
-  m_Name: newDatabase
+  m_Name: testDB
   m_EditorClassIdentifier: 
   categories:
-  - categoryName: testCategory1
+  - categoryName: aaaa
     images:
     - sprite: {fileID: 21300000, guid: 96beb52b1e7073d448bec550fd97cc87, type: 3}
-    - sprite: {fileID: 0}
+    - sprite: {fileID: 21300000, guid: d2332a67ee150f44a82db985a9342aaf, type: 3}
+    - sprite: {fileID: 21300000, guid: 96beb52b1e7073d448bec550fd97cc87, type: 3}

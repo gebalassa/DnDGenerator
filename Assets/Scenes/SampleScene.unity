@@ -245,6 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   db: {fileID: 11400000, guid: f4538739d6976b141b5632c61e967d92, type: 2}
+  debugSprite: {fileID: 21300000, guid: 96beb52b1e7073d448bec550fd97cc87, type: 3}
 --- !u!4 &1028499027
 Transform:
   m_ObjectHideFlags: 0

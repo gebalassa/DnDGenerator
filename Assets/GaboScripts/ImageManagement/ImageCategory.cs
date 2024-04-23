@@ -6,12 +6,11 @@ using UnityEngine;
 public class ImageCategory
 {
     public string categoryName;
-    public List<Image> images;
-    private int idCounter;
+    public List<ImageDnd> images;
 
-    public Image GetImage(int Id)
+    public ImageDnd GetImage(string Id)
     {
-        foreach (Image image in images)
+        foreach (ImageDnd image in images)
         {
             if (image.Id == Id)
             {
@@ -22,11 +21,24 @@ public class ImageCategory
             categoryName + " not found!");
         return null;
     }
+    public ImageDnd GetImage(Sprite sprite)
+    {
+        string spriteId = ImageUtilities.CreateUniqueId(sprite);
+        foreach (ImageDnd image in images)
+        {
+            if (image.Id == spriteId)
+            {
+                return image;
+            }
+        }
+        Debug.LogError("ImageCategory: Image with id " + spriteId + " in category " +
+            categoryName + " not found!");
+        return null;
+    }
 
     public void AddImage(Sprite sprite)
     {
-        Image newImage = new(sprite, idCounter);
+        ImageDnd newImage = new(sprite);
         images.Add(newImage);
-        idCounter++;
     }
 }
