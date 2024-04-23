@@ -29,12 +29,7 @@ public class GridManager : MonoBehaviour
         onRunTime = true;
 
         _grid = new GridClass(width,height);
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+        PaintMap();
     }
 
     // Update is called once per frame

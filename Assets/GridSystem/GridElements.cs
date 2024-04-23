@@ -24,7 +24,6 @@ public class GridClass
         {
             for (int j = 0; j < height; j++)
             {
-                Debug.Log(i + " " + j);
                 Grid[i,j] = new Tile();
             }
         }
