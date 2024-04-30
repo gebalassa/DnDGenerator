@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,10 +30,10 @@ public class ImageDatabase : ScriptableObject
             if (category.categoryName == categoryName)
             {
                 category.AddImage(sprite);
+                UpdateDictionary();
                 return;
             }
         }
-        UpdateDictionary();
     }
 
     public ImageDnd GetImage(string Id)
