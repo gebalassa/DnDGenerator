@@ -88,7 +88,7 @@ public class GridManager : MonoBehaviour
         }
         else
         {
-            string saveFilePath = EditorUtility.SaveFilePanel("Choose direction to save map", "Assets/GridSystem", "", ".json");
+            string saveFilePath = EditorUtility.SaveFilePanel("Choose location to save map", "Assets/GridSystem", "", ".json");
             if (saveFilePath.Length == 0) { return; }
             File.WriteAllText(saveFilePath, json);
         }
@@ -96,7 +96,7 @@ public class GridManager : MonoBehaviour
 
     GridClass LoadGrid()
     {
-        string saveFilePath = EditorUtility.OpenFilePanel("Choose direction to load map", "Assets/GridSystem",".json");
+        string saveFilePath = EditorUtility.OpenFilePanel("Choose location to load map", "Assets/GridSystem",".json");
         if(saveFilePath.Length == 0) { return null; }
 
         string json = File.ReadAllText(saveFilePath);
@@ -117,5 +117,14 @@ public class GridManager : MonoBehaviour
                 map.SetTile(new Vector3Int(i,j), defaultTile);
             }
         }
+    }
+
+    public Tilemap GetMap()
+    {
+        return map;
+    }
+    public Vector2 GetDimensions()
+    {
+        return new Vector2(width, height);
     }
 }
