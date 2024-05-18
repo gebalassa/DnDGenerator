@@ -65,7 +65,7 @@ public class GridClass
 public class Tile
 {
     public int Id;
-    bool selected;
+    public bool selected;
 
     public Tile()
     {
