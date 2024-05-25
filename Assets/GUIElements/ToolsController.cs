@@ -1,36 +1,44 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Net.NetworkInformation;
 using Unity.PlasticSCM.Editor.WebApi;
+using Unity.VisualScripting;
 using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class ToolsController : MonoBehaviour
 {
-    Vector3 nullPosition = new Vector3(-1000, -1000, -1000);
-
-    [SerializeField] Tools tool;
-
+    [SerializeField] Tools activeTool;
+    [SerializeField] GridManager gridManager;
+    [SerializeField] ManagerReferences references;
 
     [Header("Select Tool")]
-    Vector3 startPosition;
+    SelectToolFunction selectDoing = SelectToolFunction.None;
     [SerializeField] GameObject selectionSquare = null;
+    Vector3? startPosition;
+    [SerializeField] GameObject assetPreview = null;
+    DraggableAsset assetSelected = null;
 
-    [Header("Drag Tool")]
+    [Header("Drag Map Tool")]
     [SerializeField] float dragSpeed = 1f;
     [SerializeField] float zoomSpeed = 1f;
-    Vector3 prevMousePosition;
+    Vector3? prevMousePosition;
 
     private void Awake()
     {
-        startPosition = nullPosition;
-        prevMousePosition = nullPosition;
+        startPosition = null;
+        prevMousePosition = null;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+
+    void Update()
     {
-        switch (tool)
+        switch (activeTool)
         {
             case Tools.None:
                 break;
@@ -55,26 +63,36 @@ public class ToolsController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             startPosition = new Vector3(Input.mousePosition.x / Camera.main.pixelWidth, Input.mousePosition.y / Camera.main.pixelHeight);
+
+            List<RaycastResult> results = MouseRaycast();
+            if(results.Count == 0) 
+            {
+                selectDoing = SelectToolFunction.SelectingTiles;
+            }
+            else
+            {
+                foreach(RaycastResult result in results)
+                {
+                    if(result.gameObject.GetComponent<DraggableAsset>() != null)
+                    {
+                        assetSelected = result.gameObject.GetComponent<DraggableAsset>();
+                        assetPreview.GetComponent<Image>().sprite = assetSelected.Thumbnail();
+                        selectDoing = SelectToolFunction.DraggingAsset;
+                    }
+                }
+            }
         }
 
-        if (Input.GetKey(KeyCode.Mouse0) && startPosition != nullPosition && selectionSquare != null)
+        switch (selectDoing)
         {
-            Vector3 currentPosition = new Vector3(Input.mousePosition.x / Camera.main.pixelWidth, Input.mousePosition.y / Camera.main.pixelHeight);
-            float minX = Math.Min(startPosition.x, currentPosition.x);
-            float maxX = Math.Max(startPosition.x, currentPosition.x);
-            float minY = Math.Min(startPosition.y, currentPosition.y);
-            float maxY = Math.Max(startPosition.y, currentPosition.y);
-
-            selectionSquare.GetComponent<RectTransform>().anchorMin = new Vector2(minX, minY);
-            selectionSquare.GetComponent<RectTransform>().anchorMax = new Vector2(maxX, maxY);
-
+            case SelectToolFunction.SelectingTiles:
+                SelectingTiles();
+                break;
+            case SelectToolFunction.DraggingAsset:
+                DraggingAsset();
+                break;
         }
-        else if (startPosition != nullPosition)
-        {
-            startPosition = nullPosition;
-            selectionSquare.GetComponent<RectTransform>().anchorMin = new Vector2(0, 0);
-            selectionSquare.GetComponent<RectTransform>().anchorMax = new Vector2(0, 0);
-        }
+
     }
 
     //Drag across the screen to move the camera
@@ -83,15 +101,15 @@ public class ToolsController : MonoBehaviour
         if (Input.GetKey(KeyCode.Mouse0))
         {
             Vector3 position = Input.mousePosition;
-            if (prevMousePosition != nullPosition)
+            if (prevMousePosition != null)
             {
-                Camera.main.transform.position -= (position - prevMousePosition) * dragSpeed * Camera.main.orthographicSize / 5;
+                Camera.main.transform.position -= (position - prevMousePosition.Value) * dragSpeed * Camera.main.orthographicSize / 5;
             }
             prevMousePosition = position;
         }
-        else if (prevMousePosition != nullPosition)
+        else if (prevMousePosition != null)
         {
-            prevMousePosition = nullPosition;
+            prevMousePosition = null;
         }
     }
 
@@ -107,16 +125,143 @@ public class ToolsController : MonoBehaviour
             }
         }
     }
+
+    #region SELECT TOOL FUNCTIONS
+    void SelectingTiles()
+    {
+        if (Input.GetKey(KeyCode.Mouse0) && startPosition != null && selectionSquare != null)
+        {
+            Vector3 currentPosition = new Vector3(Input.mousePosition.x / Camera.main.pixelWidth, Input.mousePosition.y / Camera.main.pixelHeight);
+
+            float minX = Math.Min(startPosition.Value.x, currentPosition.x);
+            float maxX = Math.Max(startPosition.Value.x, currentPosition.x);
+            float minY = Math.Min(startPosition.Value.y, currentPosition.y);
+            float maxY = Math.Max(startPosition.Value.y, currentPosition.y);
+
+            selectionSquare.GetComponent<RectTransform>().anchorMin = new Vector2(minX, minY);
+            selectionSquare.GetComponent<RectTransform>().anchorMax = new Vector2(maxX, maxY);
+
+        }
+        else if (startPosition != null)
+        {
+            //Turn screen position to world position
+            Camera cam = Camera.main;
+            Vector3 worldStartPosition = cam.ScreenToWorldPoint(new Vector3(startPosition.Value.x * Camera.main.pixelWidth, startPosition.Value.y * Camera.main.pixelHeight));
+            Vector3 worldCurrentPosition = cam.ScreenToWorldPoint(Input.mousePosition);
+
+            //Create Bounds of select box
+            float minX = Math.Min(worldStartPosition.x, worldCurrentPosition.x);
+            float maxX = Math.Max(worldStartPosition.x, worldCurrentPosition.x);
+            float minY = Math.Min(worldStartPosition.y, worldCurrentPosition.y);
+            float maxY = Math.Max(worldStartPosition.y, worldCurrentPosition.y);
+
+            Bounds bounds = new Bounds(new Vector3((minX + maxX) / 2, (minY + maxY) / 2), new Vector3((maxX - minX), (maxY - minY)));
+
+            Tilemap map = gridManager.GetMap();
+            Vector2 dimensions = gridManager.GetDimensions();
+
+            for (int i = 0; i < dimensions.x; i++)
+            {
+                for (int j = 0; j < dimensions.y; j++)
+                {
+                    if(bounds.Contains(map.CellToWorld(new Vector3Int(i, j))))
+                    {
+                        gridManager.ChangeTileState(i, j, true);
+                    }
+                    else
+                    {
+                        gridManager.ChangeTileState(i, j, false);
+                    }
+                }
+            }
+
+            //Update the view of the grid
+            gridManager.PaintMap();
+
+            //Reset select square dimensions
+            selectionSquare.GetComponent<RectTransform>().anchorMin = new Vector2(0, 0);
+            selectionSquare.GetComponent<RectTransform>().anchorMax = new Vector2(0, 0);
+
+            //Reset aux values
+            startPosition = null;
+            selectDoing = SelectToolFunction.None;
+        }
+    }
+
+    void DraggingAsset()
+    {
+        if (Input.GetKey(KeyCode.Mouse0) && startPosition != null && assetPreview != null && assetSelected != null)
+        {
+            float tilePixelSize = Camera.main.pixelWidth / (3.8f * Camera.main.orthographicSize);
+
+            Vector3 currentPosition = Input.mousePosition;
+            Vector3 maxPosition = currentPosition + new Vector3(assetSelected.Width() * tilePixelSize, assetSelected.Height() * tilePixelSize);
+
+            Vector3 normCurrentPosition = new Vector3(currentPosition.x / Camera.main.pixelWidth, currentPosition.y / Camera.main.pixelHeight);
+            Vector3 normMaxPosition = new Vector3(maxPosition.x / Camera.main.pixelWidth, maxPosition.y / Camera.main.pixelHeight);
+
+            assetPreview.GetComponent<RectTransform>().anchorMin = normCurrentPosition;
+            assetPreview.GetComponent<RectTransform>().anchorMax = normMaxPosition;
+
+        }
+        else if (startPosition != null)
+        {
+            //Reset asset preview dimensions
+            assetPreview.GetComponent<RectTransform>().anchorMin = new Vector2(0, 0);
+            assetPreview.GetComponent<RectTransform>().anchorMax = new Vector2(0, 0);
+
+            //Reset aux values
+            startPosition = null;
+            selectDoing = SelectToolFunction.None;
+        }
+    }
+
     #endregion
 
+    #endregion
+
+
     #region INTERACTION FUNCTIONS
+    //To use in buttons and stuff
+
     //Activate a specific Tool (requires int because of Unity shenanigans)
     public void ActivateTool(int t)
     {
-        tool = (Tools) t;
-        Debug.Log(t + " " + (Tools)t + " " + tool);
+        activeTool = (Tools) t;
+        Debug.Log(t + " " + (Tools)t + " " + activeTool);
     }
     #endregion
+
+
+    Bounds MakeBounds(Vector3 pos1, Vector3 pos2)
+    {
+        Bounds bounds = new Bounds();
+        return bounds;
+    }
+
+    List<RaycastResult> MouseRaycast()
+    {
+        //Set up the new Pointer Event
+        PointerEventData _pointerEventData = new PointerEventData(references.eventSystem);
+        //Set the Pointer Event Position to that of the mouse position
+        _pointerEventData.position = Input.mousePosition;
+
+        //Create a list of Raycast Results
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        //Raycast using the Graphics Raycaster and mouse click position
+        references.gRaycaster.Raycast(_pointerEventData, results);
+
+        return results;
+    }
+
+
+    enum SelectToolFunction
+    {
+        None = 0,
+        SelectingTiles = 1,
+        DraggingAsset = 2
+    }
 }
 
 [Serializable]

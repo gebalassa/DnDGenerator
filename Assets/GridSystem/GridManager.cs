@@ -17,6 +17,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] float size;
     [SerializeField] Tilemap map;
     [SerializeField] UnityEngine.Tilemaps.Tile defaultTile;
+    [SerializeField] UnityEngine.Tilemaps.Tile selectedTile;
 
     [SerializeField] bool debugGrid = false;
 
@@ -88,7 +89,7 @@ public class GridManager : MonoBehaviour
         }
         else
         {
-            string saveFilePath = EditorUtility.SaveFilePanel("Choose direction to save map", "Assets/GridSystem", "", ".json");
+            string saveFilePath = EditorUtility.SaveFilePanel("Choose location to save map", "Assets/GridSystem", "", ".json");
             if (saveFilePath.Length == 0) { return; }
             File.WriteAllText(saveFilePath, json);
         }
@@ -96,7 +97,7 @@ public class GridManager : MonoBehaviour
 
     GridClass LoadGrid()
     {
-        string saveFilePath = EditorUtility.OpenFilePanel("Choose direction to load map", "Assets/GridSystem",".json");
+        string saveFilePath = EditorUtility.OpenFilePanel("Choose location to load map", "Assets/GridSystem",".json");
         if(saveFilePath.Length == 0) { return null; }
 
         string json = File.ReadAllText(saveFilePath);
@@ -108,14 +109,37 @@ public class GridManager : MonoBehaviour
         return loadedGrid;
     }
 
-    void PaintMap()
+
+    public void ChangeTileState(int x, int y, bool newState)
+    {
+        _grid.Grid[x,y].selected = newState;
+    }
+
+
+    public void PaintMap()
     {
         for(int i = 0; i < width; i++)
         {
             for(int j = 0; j < height; j++)
             {
-                map.SetTile(new Vector3Int(i,j), defaultTile);
+                if (_grid.Grid[i, j].selected)
+                {
+                    map.SetTile(new Vector3Int(i, j), selectedTile);
+                }
+                else
+                {
+                    map.SetTile(new Vector3Int(i, j), defaultTile);
+                }
             }
         }
+    }
+
+    public Tilemap GetMap()
+    {
+        return map;
+    }
+    public Vector2 GetDimensions()
+    {
+        return new Vector2(width, height);
     }
 }
