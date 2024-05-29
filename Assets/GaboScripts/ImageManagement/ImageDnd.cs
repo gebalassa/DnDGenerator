@@ -1,12 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 [System.Serializable]
 public class ImageDnd
 {
     public Sprite sprite;
+    // TODO: Usar subspriterefs
+    // Sub-sprites
+    public int rows = 1;
+    public int columns = 1;
+    [NonSerialized]
+    public List<string> subImageIds; // Holds Ids of sub-sprites of Sprite
+
     public string Id
     {
         get
@@ -28,30 +38,89 @@ public class ImageDnd
     }
     private string _id;
     private string Name;
-    private bool idAlreadySet = false;
+    private bool idAlreadySet;
 
     public ImageDnd(Sprite sprite)
     {
-        this.sprite = sprite;
-        this.Name = sprite.name;
-        this._id = ImageUtilities.CreateUniqueId(sprite);
+        Initialize(sprite);
     }
 
-    // To replace the constructor when instanced through Inspector, which can't call constructors by default.
-    // Assumes sprite was already assigned in Inspector.
-    public void Initialize()
+    // Instance initializer.
+    // Used in constructor but can also replace it when instanced through Inspector,
+    // which apparently can't call constructors with parameters.
+    public void Initialize(Sprite sprite = null)
     {
-        if (sprite == null)
+        idAlreadySet = false;
+        if (this.sprite == null && sprite == null)
         {
             this.Name = null;
-            this._id = null;
-            Debug.LogError("ImageDnd: Initialize(): Sprite wasn't set beforehand in Inspector!");
+            this.Id = null;
+            this.subImageIds = null;
+            Debug.LogError("ImageDnd: Initialize(): Sprite wasn't given in constructor nor set beforehand in Inspector!");
         }
         else
         {
-            this.Name = sprite.name;
-            this._id = ImageUtilities.CreateUniqueId(sprite);
-            Debug.Log("ImageDnd: - Initializing Image: " + Id);
+            // If sprite is given, set as sprite.
+            if (sprite != null)
+            {
+                this.sprite = sprite;
+            }
+            //// If the set sprite is multi-tile, the whole texture is used instead as sprite.
+            //// NOTE: This is an ugly bypass to the fact Unity doesn't allow passing the whole texture as sprite if its sliced,
+            //// choosing the first sub-sprite automatically.
+            //if (rows > 1 || columns > 1)
+            //{
+            //    Sprite fullTextureSprite = Sprite.Create(this.sprite.texture, new Rect(0, 0, this.sprite.texture.width, this.sprite.texture.height), new Vector2(0.5f, 0.5f));
+            //    this.sprite = fullTextureSprite;
+            //}
+
+            this.Name = this.sprite.name;
+            this.Id = ImageUtilities.GetUniqueId(this.sprite);
+            SetSubImageIds();
+            Debug.Log("ImageDnd: Initialize(): - Initializing Image: " + Id);
+        }
+    }
+
+    public List<ImageDnd> GetSubImages()
+    {
+        // Get sub-sprites
+        Texture2D currTexture = sprite.texture;
+        UnityEngine.Object[] subUncastedSprites = Resources.LoadAll<Sprite>(currTexture.name);//UnityEditor.AssetDatabase.LoadAllAssetRepresentationsAtPath(path);
+
+        // Create ImageDnd objects for each subsprite
+        List<ImageDnd> subImages = new();
+        foreach (UnityEngine.Object subUncastedSprite in subUncastedSprites)
+        {
+            Sprite subSprite = (Sprite)subUncastedSprite;
+            ImageDnd newImage = new ImageDnd(subSprite);
+            //Ignore self
+            if (Id == newImage.Id) { continue; }
+            // Add
+            subImages.Add(newImage);
+        }
+
+        return subImages;
+    }
+
+    private void SetSubImageIds()
+    {
+        // Null checks
+        // Null sprite check
+        if (sprite == null) { Debug.LogError("ImageUtilities: SetSubImagesIds(): Null root sprite."); }
+        // Single image check
+        if (rows == 1 || columns == 1) { subImageIds = null; return; }
+
+        // Initialize empty
+        subImageIds = new();
+        // Get sub-images
+        List<ImageDnd> subImages = GetSubImages();
+        // Rows & Columns check (+1 to ignore full image slice)
+        if ((rows * columns) + 1 != subImages.Count) { Debug.LogError(string.Format("Sub-image number is not equal to (Rows*Columns)+1 == {0}!", rows * columns)); }
+
+        // Obtain Ids and add to subImageIds
+        foreach (ImageDnd subImage in subImages)
+        {
+            subImageIds.Add(subImage.Id);
         }
     }
 

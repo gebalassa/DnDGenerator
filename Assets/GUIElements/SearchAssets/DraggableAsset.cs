@@ -8,7 +8,7 @@ public class DraggableAsset : MonoBehaviour
 {
     //PROBABLEMENTE SEA NECESARIO CAMBIARLO LUEGO QUE SE CAMBIE LA CLASE IMAGEDND O ALGO NOSE, MUCHO CUIDADO
     [SerializeField] Sprite thumbnail;
-    [SerializeField] string name;
+    [SerializeField] new string name;
 
     [SerializeField] List<Sprite> images;
     [SerializeField] int width;

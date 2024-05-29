@@ -7,7 +7,6 @@ using UnityEngine.UIElements;
 using System;
 
 
-// NOT BEING USED
 [CustomEditor(typeof(ImageDatabase))]
 [System.Serializable]
 public class ImageDatabaseEditor : Editor

@@ -5,10 +5,6 @@ using UnityEngine.UI;
 
 public class ImageManager : MonoBehaviour
 {
-    //TODO:
-    // - Funcion para recortar spritesheets recibidos
-    // - Inicializador
-
     public ImageDatabase db;
     public Sprite debugSprite;
 

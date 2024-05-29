@@ -6,6 +6,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewDatabase", menuName = "ImageDatabase")]
 public class ImageDatabase : ScriptableObject
 {
+    // IMAGE DATABASE CONSTANTS
+    public const int DEFAULT_PIXEL_HEIGHT = 32;
+    public const int DEFAULT_PIXEL_WIDTH = 32;
+    //
     public List<ImageCategory> categories;
     private Dictionary<string, ImageDnd> imageDictionary; // For quick lookups.
 
@@ -52,7 +56,7 @@ public class ImageDatabase : ScriptableObject
     }
     public ImageDnd GetImage(Sprite sprite)
     {
-        string currId = ImageUtilities.CreateUniqueId(sprite);
+        string currId = ImageUtilities.GetUniqueId(sprite);
         ImageDnd image;
         imageDictionary.TryGetValue(currId, out image);
         if (image != null)
@@ -83,6 +87,23 @@ public class ImageDatabase : ScriptableObject
                     if (!result)
                     {
                         Debug.LogError("ImageDatabase: Image with id " + image.Id + " already exists in dictionary!");
+                    }
+                    // Add sub-images if not single image
+                    if (image.rows > 1 || image.columns > 1)
+                    {
+                        List<ImageDnd> subImages = image.GetSubImages();
+
+                        foreach (ImageDnd subImage in subImages)
+                        {
+                            // Ignore self
+                            if (image.Id == subImage.Id) { continue; }
+                            // Add sub-image
+                            bool subResult = imageDictionary.TryAdd(subImage.Id, subImage);
+                            if (!subResult)
+                            {
+                                Debug.LogError("ImageDatabase: Image id " + image.Id + " has a sub-image (" + subImage.Id + ") already in dictionary!");
+                            }
+                        }
                     }
                 }
                 else
