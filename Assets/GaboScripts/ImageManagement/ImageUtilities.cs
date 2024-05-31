@@ -11,6 +11,8 @@ public class ImageUtilities
         // Create new texture based only on the rectangle used by the sprite
         Texture2D newTexture = new((int)sprite.rect.width, (int)sprite.rect.height);
         Graphics.CopyTexture(sprite.texture, 0, 0, (int)sprite.rect.x, (int)sprite.rect.y, (int)sprite.rect.width, (int)sprite.rect.height, newTexture, 0, 0, 0, 0);
+        //Color[] pixels = sprite.texture.GetPixels((int)sprite.rect.x, (int)sprite.rect.y, (int)sprite.rect.width, (int)sprite.rect.height);
+        //newTexture.SetPixels(pixels);
 
         byte[] rawImage = newTexture.EncodeToPNG();
         Hash128 newId = Hash128.Compute(rawImage);

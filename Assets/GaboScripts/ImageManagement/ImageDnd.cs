@@ -81,11 +81,12 @@ public class ImageDnd
         }
     }
 
-    public List<ImageDnd> GetSubImages()
+    // Get sub-images by creating fresh ImageDnd objects (instead of using a dictionary)
+    public List<ImageDnd> GetSubImagesFromScratch()
     {
         // Get sub-sprites
         Texture2D currTexture = sprite.texture;
-        UnityEngine.Object[] subUncastedSprites = Resources.LoadAll<Sprite>(currTexture.name);//UnityEditor.AssetDatabase.LoadAllAssetRepresentationsAtPath(path);
+        UnityEngine.Object[] subUncastedSprites = Resources.LoadAll<Sprite>(currTexture.name);
 
         // Create ImageDnd objects for each subsprite
         List<ImageDnd> subImages = new();
@@ -98,8 +99,53 @@ public class ImageDnd
             // Add
             subImages.Add(newImage);
         }
-
         return subImages;
+    }
+
+    // Return 2D array with the sub-images properly placed (from scratch, without using dictionary).
+    public ImageDnd[,] Get2DArrayFromScratch()
+    {
+        // Null check
+        if (subImageIds == null) { Debug.LogError("ImageDnd:Get2DArray(): Sub images have not been set!"); }
+
+        // Get sub-images
+        List<ImageDnd> subImages = GetSubImagesFromScratch();
+
+        // Length check
+        if (subImages.Count != rows * columns) { Debug.LogError("Get2DArray(): GetSubImages().Count != rows*columns"); }
+
+        // Generate array
+        ImageDnd[,] newArray = new ImageDnd[rows, columns];
+        for (int i = 0; i < subImages.Count; i++)
+        {
+            newArray[i / rows, i % rows] = subImages[i];
+        }
+        return newArray;
+    }
+    
+    // Get array using given dictionary. Should be faster than creating the objects from scratch.
+    public ImageDnd[,] Get2DArray(Dictionary<string, ImageDnd> imageDictionary)
+    {
+        // Null check
+        if (subImageIds == null) { Debug.LogError("ImageDnd:Get2DArray(): Sub images have not been set!"); }
+
+        // Get sub-images (using dictionary)
+        List<ImageDnd> subImages = new();
+        foreach (string currId in subImageIds)
+        {
+            subImages.Add(imageDictionary[currId]);
+        }
+
+        // Length check
+        if (subImages.Count != rows * columns) { Debug.LogError("Get2DArray(): GetSubImages().Count != rows*columns"); }
+
+        // Generate array
+        ImageDnd[,] newArray = new ImageDnd[rows, columns];
+        for (int i = 0; i < subImages.Count; i++)
+        {
+            newArray[i / rows, i % rows] = subImages[i];
+        }
+        return newArray;
     }
 
     private void SetSubImageIds()
@@ -113,9 +159,9 @@ public class ImageDnd
         // Initialize empty
         subImageIds = new();
         // Get sub-images
-        List<ImageDnd> subImages = GetSubImages();
+        List<ImageDnd> subImages = GetSubImagesFromScratch();
         // Rows & Columns check (+1 to ignore full image slice)
-        if ((rows * columns) + 1 != subImages.Count) { Debug.LogError(string.Format("Sub-image number is not equal to (Rows*Columns)+1 == {0}!", rows * columns)); }
+        if ((rows * columns) != subImages.Count) { Debug.LogError(string.Format("Sub-image number is not equal to (Rows*Columns) == {0}!", rows * columns)); }
 
         // Obtain Ids and add to subImageIds
         foreach (ImageDnd subImage in subImages)

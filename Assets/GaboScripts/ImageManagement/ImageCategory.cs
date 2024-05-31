@@ -37,9 +37,10 @@ public class ImageCategory
     //    return null;
     //}
 
-    public void AddImage(Sprite sprite)
+    public ImageDnd AddImage(Sprite sprite)
     {
         ImageDnd newImage = new(sprite);
         images.Add(newImage);
+        return newImage;
     }
 }
