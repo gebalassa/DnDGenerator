@@ -12,23 +12,8 @@ public class GridClass
     public readonly int width;
     public readonly int height;
     public Tile[,] Grid;
-
-    public GridClass(int width, int height)
-    {
-        this.width = width;
-        this.height = height;
-        Grid = new Tile[width, height];
-
-
-        for (int i = 0; i < width; i++)
-        {
-            for (int j = 0; j < height; j++)
-            {
-                Grid[i,j] = new Tile();
-            }
-        }
-    }
-    public GridClass(int width, int height, bool random)
+    
+    public GridClass(int width, int height, bool random = false)
     {
         this.width = width;
         this.height = height;
@@ -41,7 +26,7 @@ public class GridClass
             {
                 if (random)
                 {
-                    Grid[i, j] = new Tile(UnityEngine.Random.Range(0, 10));
+                    Grid[i, j] = new Tile(UnityEngine.Random.Range(0, 10).ToString());
                 }
                 else
                 {
@@ -64,16 +49,16 @@ public class GridClass
 [Serializable]
 public class Tile
 {
-    public int Id;
+    public string Id;
     public bool selected;
 
     public Tile()
     {
-        Id = 0;
+        Id = "none";
         selected = false;
     }
 
-    public Tile(int id)
+    public Tile(string id)
     {
         Id = id;
         selected = false;
