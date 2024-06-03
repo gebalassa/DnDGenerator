@@ -92,7 +92,6 @@ public class ToolsController : MonoBehaviour
                 DraggingAsset();
                 break;
         }
-
     }
 
     //Drag across the screen to move the camera
@@ -113,6 +112,43 @@ public class ToolsController : MonoBehaviour
         }
     }
 
+    //Put walls in the map
+    void WallFunctions()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            startPosition = new Vector3(Input.mousePosition.x / Camera.main.pixelWidth, Input.mousePosition.y / Camera.main.pixelHeight);
+
+            List<RaycastResult> results = MouseRaycast();
+            if (results.Count == 0)
+            {
+                selectDoing = SelectToolFunction.SelectingTiles;
+            }
+            else
+            {
+                foreach (RaycastResult result in results)
+                {
+                    if (result.gameObject.GetComponent<DraggableAsset>() != null)
+                    {
+                        assetSelected = result.gameObject.GetComponent<DraggableAsset>();
+                        assetPreview.GetComponent<Image>().sprite = assetSelected.Thumbnail();
+                        selectDoing = SelectToolFunction.DraggingAsset;
+                    }
+                }
+            }
+        }
+
+        switch (selectDoing)
+        {
+            case SelectToolFunction.SelectingTiles:
+                SelectingTiles();
+                break;
+            case SelectToolFunction.DraggingAsset:
+                DraggingAsset();
+                break;
+        }
+    }
+
     //Zoom In/Out
     void ZoomFunctions()
     {
@@ -125,6 +161,7 @@ public class ToolsController : MonoBehaviour
             }
         }
     }
+    #endregion
 
     #region SELECT TOOL FUNCTIONS
     void SelectingTiles()
@@ -157,7 +194,7 @@ public class ToolsController : MonoBehaviour
 
             Bounds bounds = new Bounds(new Vector3((minX + maxX) / 2, (minY + maxY) / 2), new Vector3((maxX - minX), (maxY - minY)));
 
-            Tilemap map = gridManager.GetMap();
+            Tilemap map = gridManager.GetBackgroundMap();
             Vector2 dimensions = gridManager.GetDimensions();
 
             for (int i = 0; i < dimensions.x; i++)
@@ -176,7 +213,7 @@ public class ToolsController : MonoBehaviour
             }
 
             //Update the view of the grid
-            gridManager.PaintMap();
+            gridManager.PaintBackgroundMap();
 
             //Reset select square dimensions
             selectionSquare.GetComponent<RectTransform>().anchorMin = new Vector2(0, 0);
@@ -199,13 +236,39 @@ public class ToolsController : MonoBehaviour
 
             Vector3 normCurrentPosition = new Vector3(currentPosition.x / Camera.main.pixelWidth, currentPosition.y / Camera.main.pixelHeight);
             Vector3 normMaxPosition = new Vector3(maxPosition.x / Camera.main.pixelWidth, maxPosition.y / Camera.main.pixelHeight);
+            Vector3 offset = new Vector3((normCurrentPosition.x - normMaxPosition.x) / 2, (normCurrentPosition.y - normMaxPosition.y) / 2);
 
-            assetPreview.GetComponent<RectTransform>().anchorMin = normCurrentPosition;
-            assetPreview.GetComponent<RectTransform>().anchorMax = normMaxPosition;
+            assetPreview.GetComponent<RectTransform>().anchorMin = normCurrentPosition + offset;
+            assetPreview.GetComponent<RectTransform>().anchorMax = normMaxPosition + offset;
 
         }
         else if (startPosition != null)
         {
+            //See if the image will need an adjust (for usability)
+            bool xEven = assetSelected.Width() % 2 == 0;
+            bool yEven = assetSelected.Height() % 2 == 0;
+
+
+            Tilemap map = gridManager.GetBackgroundMap();
+            Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            //Get grid position
+            Vector3Int centerGridPos =  map.WorldToCell(worldMousePos);
+            /*map.cellSize;
+            Debug.Log(centerGridPos);
+
+            //Geting position relative to the tile
+            Vector3 centerWorldPos = map.CellToWorld(centerGridPos);
+            if (xEven)
+            {
+                if(worldMousePos.x < centerGridPos)
+            }//*/
+
+            //Adjust considering position as center
+            int xOffset;
+            int yOffset;
+            
+
             //Reset asset preview dimensions
             assetPreview.GetComponent<RectTransform>().anchorMin = new Vector2(0, 0);
             assetPreview.GetComponent<RectTransform>().anchorMax = new Vector2(0, 0);
@@ -215,11 +278,7 @@ public class ToolsController : MonoBehaviour
             selectDoing = SelectToolFunction.None;
         }
     }
-
     #endregion
-
-    #endregion
-
 
     #region INTERACTION FUNCTIONS
     //To use in buttons and stuff

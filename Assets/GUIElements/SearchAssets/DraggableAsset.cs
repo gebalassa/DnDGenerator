@@ -10,7 +10,7 @@ public class DraggableAsset : MonoBehaviour
     [SerializeField] Sprite thumbnail;
     [SerializeField] new string name;
 
-    [SerializeField] List<Sprite> images;
+    [SerializeField] List<ImageDnd> images;
     [SerializeField] int width;
     [SerializeField] int height;
 

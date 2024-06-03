@@ -14,10 +14,15 @@ public class GridManager : MonoBehaviour
     
     GridClass _grid;
 
-    [SerializeField] float size;
-    [SerializeField] Tilemap map;
+    [SerializeField] float gizmosSize;
+
+    [SerializeField] Tilemap backgroundMap;
+    [SerializeField] Tilemap assetsMap;
+
     [SerializeField] UnityEngine.Tilemaps.Tile defaultTile;
     [SerializeField] UnityEngine.Tilemaps.Tile selectedTile;
+
+    [SerializeField] ImageDatabase database;
 
     [SerializeField] bool debugGrid = false;
 
@@ -30,16 +35,23 @@ public class GridManager : MonoBehaviour
         onRunTime = true;
 
         _grid = new GridClass(width,height);
-        PaintMap();
+        PaintBackgroundMap();
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Debug options
+        /*
         if (Input.GetKeyDown(KeyCode.Space))
         {
             _grid = new GridClass(width, height, true);
         }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            PaintBackgroundMap();
+        }*/
+
         if (Input.GetKeyDown(KeyCode.S))
         {
             SaveGrid();
@@ -52,10 +64,6 @@ public class GridManager : MonoBehaviour
                 _grid = aux;
             }
         }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            PaintMap();
-        }
     }
 
     void OnDrawGizmos()
@@ -63,13 +71,13 @@ public class GridManager : MonoBehaviour
         if (onRunTime && debugGrid)
         {
             Gizmos.color = Color.green;
-            Vector3 vectorSize = new Vector3(size, size);
+            Vector3 vectorSize = new Vector3(gizmosSize, gizmosSize);
 
             for (int i = 0; i < _grid.GetWidth(); i++)
             {
                 for (int j = 0; j < _grid.GetHeight(); j++)
                 {
-                    Vector3 position = new Vector3(i * size, j * -size);
+                    Vector3 position = new Vector3(i * gizmosSize, j * -gizmosSize);
 
                     Gizmos.DrawWireCube(position, vectorSize);
 
@@ -116,7 +124,27 @@ public class GridManager : MonoBehaviour
     }
 
 
-    public void PaintMap()
+    public void PaintAssetMap()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                if (_grid.Grid[i, j].Id != "none")
+                {
+                    ImageDnd _imageDnd = database.GetImage(_grid.Grid[i, j].Id);
+
+                    UnityEngine.Tilemaps.Tile _tile = new UnityEngine.Tilemaps.Tile();
+                    _tile.sprite = _imageDnd.sprite;
+
+                    assetsMap.SetTile(new Vector3Int(i, j), _tile);
+                }
+            }
+        }
+    }
+
+
+    public void PaintBackgroundMap()
     {
         for(int i = 0; i < width; i++)
         {
@@ -124,19 +152,19 @@ public class GridManager : MonoBehaviour
             {
                 if (_grid.Grid[i, j].selected)
                 {
-                    map.SetTile(new Vector3Int(i, j), selectedTile);
+                    backgroundMap.SetTile(new Vector3Int(i, j), selectedTile);
                 }
                 else
                 {
-                    map.SetTile(new Vector3Int(i, j), defaultTile);
+                    backgroundMap.SetTile(new Vector3Int(i, j), defaultTile);
                 }
             }
         }
     }
 
-    public Tilemap GetMap()
+    public Tilemap GetBackgroundMap()
     {
-        return map;
+        return backgroundMap;
     }
     public Vector2 GetDimensions()
     {
