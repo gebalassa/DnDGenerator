@@ -232,7 +232,7 @@ public class ToolsController : MonoBehaviour
             float tilePixelSize = Camera.main.pixelWidth / (3.8f * Camera.main.orthographicSize);
 
             Vector3 currentPosition = Input.mousePosition;
-            Vector3 maxPosition = currentPosition + new Vector3(assetSelected.Width() * tilePixelSize, assetSelected.Height() * tilePixelSize);
+            Vector3 maxPosition = currentPosition + new Vector3(assetSelected.Columns() * tilePixelSize, assetSelected.Rows() * tilePixelSize);
 
             Vector3 normCurrentPosition = new Vector3(currentPosition.x / Camera.main.pixelWidth, currentPosition.y / Camera.main.pixelHeight);
             Vector3 normMaxPosition = new Vector3(maxPosition.x / Camera.main.pixelWidth, maxPosition.y / Camera.main.pixelHeight);
@@ -245,8 +245,8 @@ public class ToolsController : MonoBehaviour
         else if (startPosition != null)
         {
             //See if the image will need an adjust (for usability)
-            bool xEven = assetSelected.Width() % 2 == 0;
-            bool yEven = assetSelected.Height() % 2 == 0;
+            bool xEven = assetSelected.Columns() % 2 == 0;
+            bool yEven = assetSelected.Rows() % 2 == 0;
 
 
             Tilemap map = gridManager.GetBackgroundMap();

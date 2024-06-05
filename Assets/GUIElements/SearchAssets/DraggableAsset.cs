@@ -7,27 +7,43 @@ using UnityEngine.UI;
 public class DraggableAsset : MonoBehaviour
 {
     //PROBABLEMENTE SEA NECESARIO CAMBIARLO LUEGO QUE SE CAMBIE LA CLASE IMAGEDND O ALGO NOSE, MUCHO CUIDADO
-    [SerializeField] Sprite thumbnail;
-    [SerializeField] new string name;
+    [SerializeField] ImageDnd imageClass;
+    [SerializeField] string category;
+    [SerializeField] string assetName;
 
-    [SerializeField] List<ImageDnd> images;
-    [SerializeField] int width;
-    [SerializeField] int height;
+    Sprite thumbnail;
 
-
-
-    public void UpdateObject()
+    public void SetValues(ImageDnd imageClass, string category, string assetName)
     {
-        GetComponent<Image>().sprite = thumbnail;
-        transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = name + " " + width + "x" + height;
+        this.imageClass = imageClass;
+        this.category = category;
+        this.assetName = assetName;
     }
 
     private void Awake()
     {
+        thumbnail = imageClass.sprite;
         UpdateObject();
     }
 
-    public int Width()  { return width; }
-    public int Height() { return height; }
+    public void UpdateObject()
+    {
+        GetComponent<Image>().sprite = thumbnail;
+        transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = assetName + " " + imageClass.columns + "x" + imageClass.rows;
+    }
+
+    public int Columns()  { return imageClass.columns; }
+    public int Rows() { return imageClass.rows; }
+    public ImageDnd ImageClass() { return imageClass; }
     public Sprite Thumbnail() { return thumbnail; }
+
+    public List<ImageDnd> GetSubImages(ImageDatabase database)
+    {
+        List<ImageDnd> images = new List<ImageDnd>();
+        foreach(string id in imageClass.subImageIds)
+        {
+            images.Add(database.GetImage(id));
+        }
+        return images;
+    }
 }
