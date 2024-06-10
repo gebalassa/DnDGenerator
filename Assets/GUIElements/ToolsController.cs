@@ -73,9 +73,9 @@ public class ToolsController : MonoBehaviour
             {
                 foreach(RaycastResult result in results)
                 {
-                    if(result.gameObject.GetComponent<DraggableAsset>() != null)
+                    if(result.gameObject.GetComponentInParent<DraggableAsset>() != null)
                     {
-                        assetSelected = result.gameObject.GetComponent<DraggableAsset>();
+                        assetSelected = result.gameObject.GetComponentInParent<DraggableAsset>();
                         assetPreview.GetComponent<Image>().sprite = assetSelected.Thumbnail();
                         selectDoing = SelectToolFunction.DraggingAsset;
                     }
@@ -122,30 +122,14 @@ public class ToolsController : MonoBehaviour
             List<RaycastResult> results = MouseRaycast();
             if (results.Count == 0)
             {
-                selectDoing = SelectToolFunction.SelectingTiles;
+
             }
             else
             {
                 foreach (RaycastResult result in results)
                 {
-                    if (result.gameObject.GetComponent<DraggableAsset>() != null)
-                    {
-                        assetSelected = result.gameObject.GetComponent<DraggableAsset>();
-                        assetPreview.GetComponent<Image>().sprite = assetSelected.Thumbnail();
-                        selectDoing = SelectToolFunction.DraggingAsset;
-                    }
                 }
             }
-        }
-
-        switch (selectDoing)
-        {
-            case SelectToolFunction.SelectingTiles:
-                SelectingTiles();
-                break;
-            case SelectToolFunction.DraggingAsset:
-                DraggingAsset();
-                break;
         }
     }
 
@@ -252,22 +236,32 @@ public class ToolsController : MonoBehaviour
             Tilemap map = gridManager.GetBackgroundMap();
             Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            //Get grid position
-            Vector3Int centerGridPos =  map.WorldToCell(worldMousePos);
-            /*map.cellSize;
-            Debug.Log(centerGridPos);
+            List<ImageDnd> images = assetSelected.GetSubImages(references.database);
+            int imageCounter = 0;
 
-            //Geting position relative to the tile
-            Vector3 centerWorldPos = map.CellToWorld(centerGridPos);
-            if (xEven)
+            //Odd - Odd case
+            if (!xEven && !yEven)
             {
-                if(worldMousePos.x < centerGridPos)
-            }//*/
+                //Get grid position
+                Vector3Int centerGridPos = map.WorldToCell(worldMousePos);
+                //Place images in tiles
+                for(int i = centerGridPos.x - assetSelected.Columns() / 2; i <= centerGridPos.x + assetSelected.Columns() / 2; i++)
+                {
+                    //Skip out of range cases
+                    if(i < 0 || i > gridManager.GetDimensions().x) { continue; }
 
-            //Adjust considering position as center
-            int xOffset;
-            int yOffset;
-            
+                    for (int j = centerGridPos.y - assetSelected.Rows() / 2; j <= centerGridPos.y + assetSelected.Columns() / 2; j++)
+                    {
+                        //Skip out of range cases
+                        if (j < 0 || j > gridManager.GetDimensions().y) { continue; }
+
+                        if(imageCounter > images.Count) { Debug.LogWarning("imageCounter out of range"); break; }
+
+                        gridManager.PaintAssetTile(i,j, images[imageCounter]);
+                        imageCounter++;
+                    }
+                }
+            }
 
             //Reset asset preview dimensions
             assetPreview.GetComponent<RectTransform>().anchorMin = new Vector2(0, 0);

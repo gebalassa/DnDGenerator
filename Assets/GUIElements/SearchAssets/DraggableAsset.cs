@@ -13,6 +13,11 @@ public class DraggableAsset : MonoBehaviour
 
     Sprite thumbnail;
 
+    private void Awake()
+    {
+        UpdateObject();
+    }
+
     public void SetValues(ImageDnd imageClass, string category, string assetName)
     {
         this.imageClass = imageClass;
@@ -20,16 +25,11 @@ public class DraggableAsset : MonoBehaviour
         this.assetName = assetName;
     }
 
-    private void Awake()
-    {
-        thumbnail = imageClass.sprite;
-        UpdateObject();
-    }
-
     public void UpdateObject()
     {
-        GetComponent<Image>().sprite = thumbnail;
+        thumbnail = imageClass.sprite;
         transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = assetName + " " + imageClass.columns + "x" + imageClass.rows;
+        transform.GetChild(1).GetComponent<Image>().sprite = thumbnail;
     }
 
     public int Columns()  { return imageClass.columns; }

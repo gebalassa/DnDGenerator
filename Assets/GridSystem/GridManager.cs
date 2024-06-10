@@ -41,17 +41,6 @@ public class GridManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug options
-        /*
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _grid = new GridClass(width, height, true);
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            PaintBackgroundMap();
-        }*/
-
         if (Input.GetKeyDown(KeyCode.S))
         {
             SaveGrid();
@@ -123,6 +112,33 @@ public class GridManager : MonoBehaviour
         _grid.Grid[x,y].selected = newState;
     }
 
+    public void PaintBackgroundMap()
+    {
+        for(int i = 0; i < width; i++)
+        {
+            for(int j = 0; j < height; j++)
+            {
+                if (_grid.Grid[i, j].selected)
+                {
+                    backgroundMap.SetTile(new Vector3Int(i, j), selectedTile);
+                }
+                else
+                {
+                    backgroundMap.SetTile(new Vector3Int(i, j), defaultTile);
+                }
+            }
+        }
+    }
+
+    public void PaintAssetTile(int x, int y, ImageDnd _imageDnd)
+    {
+        _grid.Grid[x,y].Id = _imageDnd.Id;
+
+        UnityEngine.Tilemaps.Tile _tile = new UnityEngine.Tilemaps.Tile();
+        _tile.sprite = _imageDnd.sprite;
+
+        assetsMap.SetTile(new Vector3Int(x, y), _tile);
+    }
 
     public void PaintAssetMap()
     {
@@ -138,25 +154,6 @@ public class GridManager : MonoBehaviour
                     _tile.sprite = _imageDnd.sprite;
 
                     assetsMap.SetTile(new Vector3Int(i, j), _tile);
-                }
-            }
-        }
-    }
-
-
-    public void PaintBackgroundMap()
-    {
-        for(int i = 0; i < width; i++)
-        {
-            for(int j = 0; j < height; j++)
-            {
-                if (_grid.Grid[i, j].selected)
-                {
-                    backgroundMap.SetTile(new Vector3Int(i, j), selectedTile);
-                }
-                else
-                {
-                    backgroundMap.SetTile(new Vector3Int(i, j), defaultTile);
                 }
             }
         }
