@@ -81,7 +81,7 @@ public class ImageDatabase : ScriptableObject
         ImageDnd[,] newArray = new ImageDnd[currImage.rows, currImage.columns];
         for (int i = 0; i < subImages.Count; i++)
         {
-            newArray[i / currImage.rows, i % currImage.rows] = subImages[i];
+            newArray[i / currImage.columns, i % currImage.columns] = subImages[i];
         }
         return newArray;
     }
@@ -108,12 +108,12 @@ public class ImageDatabase : ScriptableObject
                 // Null id check
                 if (image.Id == null) { Debug.LogError("ImageDatabase: Image with null id found while updating dictionary!"); continue; }
 
-                // Add image
+                // Add image (if repeated, ignore)
                 bool result = imageDictionary.TryAdd(image.Id, image);
-                if (!result)
-                {
-                    Debug.LogError("ImageDatabase: Image with id " + image.Id + " already exists in dictionary!");
-                }
+                //if (!result)
+                //{
+                //    Debug.LogError("ImageDatabase: Image with id " + image.Id + " already exists in dictionary!");
+                //}
 
                 // Add sub-images if not single image
                 if (image.rows == 1 && image.columns == 1) { continue; }
@@ -123,12 +123,12 @@ public class ImageDatabase : ScriptableObject
                 {
                     // Ignore self (Note: Throw error, this should be done inside ImageDnd, not here)
                     if (image.Id == subImage.Id) { Debug.LogError("FIX!!! ImageDatabase:UpdateDictionary(): Ignoring self should be done in ImageDnd!"); continue; }
-                    // Add sub-image
+                    // Add sub-image (if repeated, ignore)
                     bool subResult = imageDictionary.TryAdd(subImage.Id, subImage);
-                    if (!subResult)
-                    {
-                        Debug.LogError("ImageDatabase: Image id " + image.Id + " has a sub-image (" + subImage.Id + ") already in dictionary!");
-                    }
+                    //if (!subResult)
+                    //{
+                    //    Debug.LogError("ImageDatabase: Image id " + image.Id + " has a sub-image (" + subImage.Id + ") already in dictionary!");
+                    //}
                 }
             }
         }
@@ -141,12 +141,12 @@ public class ImageDatabase : ScriptableObject
         // Null Id check
         else if (newImage.Id == null) { Debug.LogError("ImageDatabase: Image with null id given to update dictionary!"); return; }
 
-        // Add to dictionary
+        // Add to dictionary (if repeated, ignore)
         bool result = imageDictionary.TryAdd(newImage.Id, newImage);
-        if (!result)
-        {
-            Debug.LogError("ImageDatabase: Given image with id " + newImage.Id + " already exists in dictionary!");
-        }
+        //if (!result)
+        //{
+        //    Debug.LogError("ImageDatabase: Given image with id " + newImage.Id + " already exists in dictionary!");
+        //}
 
         // Add sub-images if not single image
         if (newImage.rows == 1 && newImage.columns == 1) { return; }
@@ -156,12 +156,12 @@ public class ImageDatabase : ScriptableObject
         {
             // Ignore self (Note: Throw error, this should be done inside ImageDnd, not here)
             if (newImage.Id == subImage.Id) { Debug.LogError("FIX!!! ImageDatabase:UpdateDictionary(): Ignoring self should be done in ImageDnd!"); continue; }
-            // Add sub-image
+            // Add sub-image (if repeated, ignore)
             bool subResult = imageDictionary.TryAdd(subImage.Id, subImage);
-            if (!subResult)
-            {
-                Debug.LogError("ImageDatabase: Image id " + newImage.Id + " has a sub-image (" + subImage.Id + ") already in dictionary!");
-            }
+            //if (!subResult)
+            //{
+            //    Debug.LogError("ImageDatabase: Image id " + newImage.Id + " has a sub-image (" + subImage.Id + ") already in dictionary!");
+            //}
         }
     }
 }
