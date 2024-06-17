@@ -118,7 +118,7 @@ public class ImageDnd
         ImageDnd[,] newArray = new ImageDnd[rows, columns];
         for (int i = 0; i < subImages.Count; i++)
         {
-            newArray[i / rows, i % rows] = subImages[i];
+            newArray[i / columns, i % columns] = subImages[i];
         }
         return newArray;
     }
@@ -160,7 +160,7 @@ public class ImageDnd
         subImageIds = new();
         // Get sub-images
         List<ImageDnd> subImages = GetSubImagesFromScratch();
-        // Rows & Columns check (+1 to ignore full image slice)
+        // Rows & Columns check
         if ((rows * columns) != subImages.Count) { Debug.LogError(string.Format("Sub-image number is not equal to (Rows*Columns) == {0}!", rows * columns)); }
 
         // Obtain Ids and add to subImageIds
