@@ -276,9 +276,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageDatabase: {fileID: 11400000, guid: f4538739d6976b141b5632c61e967d92, type: 2}
   testImage:
-    sprite: {fileID: -398663997, guid: 1ac173e66b8df414fb3a66a082e8e133, type: 3}
-    rows: 2
-    columns: 2
+    sprite: {fileID: -257201697, guid: b561b846488dc11419b82895fbd48f82, type: 3}
+    rows: 8
+    columns: 13
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
