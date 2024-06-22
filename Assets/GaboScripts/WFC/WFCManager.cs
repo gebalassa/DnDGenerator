@@ -9,12 +9,14 @@ public class WFCManager : MonoBehaviour
     {
         GridClass newGrid = new GridClass(grid.width, grid.height);
 
-        //CODIGOOOOO
+        //DEBUG
+        newGrid = _GetRandom(grid);
+        //FINDEBUG
 
         return newGrid;
     }
 
-    //TODO: terminar
+    // DEBUG: Get random image.
     private GridClass _GetRandom(GridClass grid)
     {
         GridClass newGrid = new GridClass(grid.width, grid.height);
@@ -26,7 +28,7 @@ public class WFCManager : MonoBehaviour
                 if (grid.Grid[i, j].selected)
                 {
                     ImageDatabase db = GetComponent<ImageManager>().db;
-                    //newGrid.Grid[i, j].Id = db.GetRandomImage().Id;
+                    newGrid.Grid[i, j].Id = db.GetRandomImage().Id;
                     newGrid.Grid[i, j].selected = true;
                 }
                 else
@@ -36,6 +38,7 @@ public class WFCManager : MonoBehaviour
                 }
             }
         }
+        return newGrid;
     }
 
 }
