@@ -8,4 +8,5 @@ public class ManagerReferences : MonoBehaviour
 {
     public GraphicRaycaster gRaycaster;
     public EventSystem eventSystem;
+    public readonly ImageDatabase database;
 }
