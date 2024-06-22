@@ -63,6 +63,17 @@ public class ImageDatabase : ScriptableObject
         return GetImage(currId);
     }
 
+    // DEBUG: Get random image.
+    public ImageDnd GetRandomImage()
+    {
+        int categoryIndex = UnityEngine.Random.Range(0, categories.Count);
+        ImageCategory chosenCategory = categories[categoryIndex];
+        
+        int imgIndex = UnityEngine.Random.Range(0, chosenCategory.images.Count);
+        ImageDnd chosenImage = chosenCategory.images[imgIndex];
+        return chosenImage;        
+    }
+
     public ImageDnd[,] GetImageArray(string Id)
     {
         ImageDnd currImage = imageDictionary[Id];
@@ -90,8 +101,6 @@ public class ImageDatabase : ScriptableObject
         string currId = ImageUtilities.GetUniqueId(sprite);
         return GetImageArray(currId);
     }
-
-
 
     private void UpdateDictionary()
     {
