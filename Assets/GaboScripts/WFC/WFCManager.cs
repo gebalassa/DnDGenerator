@@ -21,13 +21,15 @@ public class WFCManager : MonoBehaviour
     {
         GridClass newGrid = new GridClass(grid.width, grid.height);
 
-        for (int i = 0; i < grid.height; i++)
+        ImageDatabase db = GetComponent<ManagerReferences>().database;
+        db.Initialize();
+
+        for (int i = 0; i < grid.width; i++)
         {
-            for (int j = 0; j < grid.width; j++)
+            for (int j = 0; j < grid.height; j++)
             {
                 if (grid.Grid[i, j].selected)
                 {
-                    ImageDatabase db = GetComponent<ImageManager>().db;
                     newGrid.Grid[i, j].Id = db.GetRandomImage().Id;
                     newGrid.Grid[i, j].selected = true;
                 }

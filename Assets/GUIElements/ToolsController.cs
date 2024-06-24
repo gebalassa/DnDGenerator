@@ -283,6 +283,14 @@ public class ToolsController : MonoBehaviour
         activeTool = (Tools) t;
         Debug.Log(t + " " + (Tools)t + " " + activeTool);
     }
+
+    //Fill selected tiles with WFC generated content
+    public void GenerateWFC()
+    {
+        gridManager.GridClass(references.wfcManager.GetWFC(gridManager.GridClass()));
+        gridManager.PaintAssetMap();
+    }
+
     #endregion
 
 
