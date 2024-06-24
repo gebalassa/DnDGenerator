@@ -2792,7 +2792,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gRaycaster: {fileID: 1186217638}
   eventSystem: {fileID: 77042665}
-<<<<<<< Updated upstream
   wfcManager: {fileID: 1809183765}
   database: {fileID: 11400000, guid: f4538739d6976b141b5632c61e967d92, type: 2}
 --- !u!114 &1809183765
@@ -2807,9 +2806,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9daa0e5db1632634089d7f3f0dcafb82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-=======
   database: {fileID: 11400000, guid: f4538739d6976b141b5632c61e967d92, type: 2}
->>>>>>> Stashed changes
 --- !u!1 &1883479521
 GameObject:
   m_ObjectHideFlags: 0

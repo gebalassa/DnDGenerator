@@ -152,11 +152,11 @@ public class ToolsController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Delete))
         {
-            for(int i = 0; i < gridManager.GetGridClass().width; i++)
+            for(int i = 0; i < gridManager.GridClass().width; i++)
             {
-                for (int j = 0; j < gridManager.GetGridClass().height; j++)
+                for (int j = 0; j < gridManager.GridClass().height; j++)
                 {
-                    if (gridManager.GetGridClass().Grid[i, j].selected)
+                    if (gridManager.GridClass().Grid[i, j].selected)
                     {
                         gridManager.EraseAssetTile(i,j);
                     }

@@ -167,7 +167,6 @@ public class GridManager : MonoBehaviour
         }
     }
 
-<<<<<<< Updated upstream
     public GridClass GridClass()
     {
         return _grid;
@@ -178,12 +177,6 @@ public class GridManager : MonoBehaviour
         Debug.LogWarning("Overwritting grid");
         _grid = newGrid;
     }
-=======
-    public GridClass GetGridClass()
-    {
-        return _grid;
-    }//*/
->>>>>>> Stashed changes
 
     public Tilemap GetBackgroundMap()
     {
