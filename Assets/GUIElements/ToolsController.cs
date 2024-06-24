@@ -204,7 +204,10 @@ public class ToolsController : MonoBehaviour
             {
                 for (int j = 0; j < dimensions.y; j++)
                 {
-                    if(bounds.Contains(map.CellToWorld(new Vector3Int(i, j))))
+                    Vector3 tilePosition = map.CellToWorld(new Vector3Int(i, j));
+                    bool isInside = tilePosition.x >= minX && tilePosition.x <= maxX && tilePosition.y >= minY && tilePosition.y <= maxY;
+
+                    if(isInside)
                     {
                         gridManager.ChangeTileState(i, j, true);
                     }
@@ -275,13 +278,13 @@ public class ToolsController : MonoBehaviour
                     gridManager.PaintAssetTile(centerGridPos.x, centerGridPos.y, assetSelected.ImageClass());
                 }
             }
+            //other cases
             else
             {
                 //See if the image will need an adjust (for usability)
                 bool xEven = assetSelected.Columns() % 2 == 0;
                 bool yEven = assetSelected.Rows() % 2 == 0;
 
-                //ImageDnd[,] subImages = assetSelected.ImageClass().Get2DArray(references.database.imageDictionary);
                 ImageDnd[,] subImages = references.database.GetImageArray(assetSelected.ImageClass().Id);
 
                 //Odd - Odd case

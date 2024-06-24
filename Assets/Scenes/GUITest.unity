@@ -2753,8 +2753,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b604c46701467e44fb171d44256bc3b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 20
-  height: 20
+  width: 5
+  height: 5
   gizmosSize: 0
   backgroundMap: {fileID: 1376152539}
   assetsMap: {fileID: 1883479524}
@@ -2806,7 +2806,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9daa0e5db1632634089d7f3f0dcafb82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  database: {fileID: 11400000, guid: f4538739d6976b141b5632c61e967d92, type: 2}
 --- !u!1 &1883479521
 GameObject:
   m_ObjectHideFlags: 0
