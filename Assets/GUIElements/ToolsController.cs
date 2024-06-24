@@ -286,24 +286,33 @@ public class ToolsController : MonoBehaviour
                 bool yEven = assetSelected.Rows() % 2 == 0;
 
                 ImageDnd[,] subImages = references.database.GetImageArray(assetSelected.ImageClass().Id);
+                
+                //Set upperLeft corner reference
+                Vector3Int upperLeft = centerGridPos - new Vector3Int(assetSelected.Columns() / 2, assetSelected.Rows() / 2);
 
-                //Odd - Odd case
-                if (!xEven && !yEven)
+                if (xEven && worldMousePos.x > map.CellToWorld(centerGridPos).x + map.cellSize.x / 2)
                 {
-                    //Place images in tiles
-                    for (int i = 0; i < assetSelected.Columns(); i++)
-                    {
-                        int iGrid = centerGridPos.x - assetSelected.Columns() / 2 + i;
-                        //Skip out of range cases
-                        if (iGrid < 0 || iGrid > gridManager.GetDimensions().x) { Debug.Log("Out of tilemap range"); continue; }
+                    upperLeft.x += 1;
+                }
+                if (yEven && worldMousePos.y > map.CellToWorld(centerGridPos).y + map.cellSize.y / 2)
+                {
+                    upperLeft.y += 1;
+                }
 
-                        for (int j = 0; j < assetSelected.Rows(); j++)
-                        {
-                            int jGrid = centerGridPos.y - assetSelected.Rows() / 2 + j;
-                            //Skip out of range cases
-                            if (jGrid < 0 || jGrid > gridManager.GetDimensions().y) { Debug.Log("Out of tilemap range"); continue; }
-                            gridManager.PaintAssetTile(iGrid, jGrid, subImages[assetSelected.Rows() - 1 - j,i]);
-                        }
+                //Place images in tiles
+                for (int i = 0; i < assetSelected.Columns(); i++)
+                {
+                    int iGrid = upperLeft.x + i;
+                    //Skip out of range cases
+                    if (iGrid < 0 || iGrid > gridManager.GetDimensions().x - 1) { Debug.Log("Out of tilemap range"); continue; }
+
+                    for (int j = 0; j < assetSelected.Rows(); j++)
+                    {
+                        int jGrid = upperLeft.y + j;
+                        //Skip out of range cases
+                        if (jGrid < 0 || jGrid > gridManager.GetDimensions().y - 1) { Debug.Log("Out of tilemap range"); continue; }
+
+                        gridManager.PaintAssetTile(iGrid, jGrid, subImages[assetSelected.Rows() - 1 - j, i]);
                     }
                 }
             }
@@ -352,7 +361,6 @@ public class ToolsController : MonoBehaviour
 
         return results;
     }
-
 
     enum SelectToolFunction
     {

@@ -2753,8 +2753,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b604c46701467e44fb171d44256bc3b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 5
-  height: 5
+  width: 10
+  height: 10
   gizmosSize: 0
   backgroundMap: {fileID: 1376152539}
   assetsMap: {fileID: 1883479524}
