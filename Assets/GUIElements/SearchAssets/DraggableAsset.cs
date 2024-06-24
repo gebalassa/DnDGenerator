@@ -22,13 +22,13 @@ public class DraggableAsset : MonoBehaviour
     {
         this.imageClass = imageClass;
         this.category = category;
-        this.assetName = assetName;
+        this.assetName = TrimAssetName(assetName);
     }
 
     public void UpdateObject()
     {
         thumbnail = imageClass.sprite;
-        transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = imageClass.Id + " " + imageClass.columns + "x" + imageClass.rows;
+        transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = assetName + " " + imageClass.columns + "x" + imageClass.rows;
         transform.GetChild(1).GetComponent<Image>().sprite = thumbnail;
     }
 
@@ -45,5 +45,19 @@ public class DraggableAsset : MonoBehaviour
             images.Add(database.GetImage(id));
         }
         return images;
+    }
+
+    string TrimAssetName(string name)
+    {
+        string newName = string.Empty;
+        for(int i = 0; i < name.Length; i++)
+        {
+            if (name[i].Equals('_'))
+            {
+                break;
+            }
+            newName += name[i];
+        }
+        return newName;
     }
 }

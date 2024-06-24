@@ -18,6 +18,7 @@ public class ToolsController : MonoBehaviour
     [SerializeField] ManagerReferences references;
 
     [Header("Select Tool")]
+    [SerializeField] TileSelectionMode selectionMode;
     SelectToolFunction selectDoing = SelectToolFunction.None;
     [SerializeField] GameObject selectionSquare = null;
     Vector3? startPosition;
@@ -195,8 +196,6 @@ public class ToolsController : MonoBehaviour
             float minY = Math.Min(worldStartPosition.y, worldCurrentPosition.y);
             float maxY = Math.Max(worldStartPosition.y, worldCurrentPosition.y);
 
-            Bounds bounds = new Bounds(new Vector3((minX + maxX) / 2, (minY + maxY) / 2), new Vector3((maxX - minX), (maxY - minY)));
-
             Tilemap map = gridManager.GetBackgroundMap();
             Vector2 dimensions = gridManager.GetDimensions();
 
@@ -205,7 +204,7 @@ public class ToolsController : MonoBehaviour
                 for (int j = 0; j < dimensions.y; j++)
                 {
                     Vector3 tilePosition = map.CellToWorld(new Vector3Int(i, j));
-                    bool isInside = tilePosition.x >= minX && tilePosition.x <= maxX && tilePosition.y >= minY && tilePosition.y <= maxY;
+                    bool isInside = IsTileInsideBounds(minX, maxX, minY, maxY, tilePosition, map.cellSize);
 
                     if(isInside)
                     {
@@ -340,10 +339,24 @@ public class ToolsController : MonoBehaviour
     #endregion
 
 
-    Bounds MakeBounds(Vector3 pos1, Vector3 pos2)
+    bool IsTileInsideBounds(float minX, float maxX, float minY, float maxY, Vector3 tilePosition, Vector3 tileSize)
     {
-        Bounds bounds = new Bounds();
-        return bounds;
+        if(selectionMode == TileSelectionMode.FromCenter)
+        {
+            Vector3 tileCenter = tilePosition + tileSize / 2;
+            if(tileCenter.x >= minX && tileCenter.x <= maxX && tileCenter.y >= minY && tileCenter.y <= maxY)
+            {
+                return true;
+            }
+        }
+        else if(selectionMode == TileSelectionMode.AnyCollision)
+        {
+            if (maxX >= tilePosition.x && minX <= tilePosition.x + tileSize.x && maxY >= tilePosition.y && minY <= tilePosition.y + tileSize.y)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     List<RaycastResult> MouseRaycast()
@@ -367,6 +380,12 @@ public class ToolsController : MonoBehaviour
         None = 0,
         SelectingTiles = 1,
         DraggingAsset = 2
+    }
+
+    enum TileSelectionMode
+    {
+        FromCenter = 0,
+        AnyCollision = 1
     }
 }
 

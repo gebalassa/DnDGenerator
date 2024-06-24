@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1ac173e66b8df414fb3a66a082e8e133
+guid: cf44598192f778040be854c1e5363382
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -21,7 +21,7 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
     flipGreenChannel: 0
-  isReadable: 1
+  isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 668
+  spritePixelsToUnits: 313
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -97,106 +97,106 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: dndFountain_2
+      name: Tree_0
       rect:
         serializedVersion: 2
-        x: 334
-        y: 317
-        width: 334
-        height: 316
+        x: 0
+        y: 313
+        width: 313
+        height: 313
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 039f0161ea5bf5a488906bafb384b515
-      internalID: -880308659
+      spriteID: 73bacf7ab2e773a43a4323f66ea1a95d
+      internalID: -795399423
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dndFountain_0
+      name: Tree_1
+      rect:
+        serializedVersion: 2
+        x: 313
+        y: 313
+        width: 313
+        height: 313
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f820d2d1b51df6548b90cc419b84053c
+      internalID: 199809209
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tree_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 668
-        height: 633
+        width: 313
+        height: 313
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9a1f15fc5267d8e45b349aaf24755dc4
-      internalID: -398663997
+      spriteID: 2cca18f3b40ad994bbf9b86a2f509cae
+      internalID: -1243656996
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dndFountain_4
+      name: Tree_3
       rect:
         serializedVersion: 2
-        x: 334
+        x: 313
         y: 0
-        width: 334
-        height: 316
+        width: 313
+        height: 313
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 05677abb15d37804793b58ccdc1125ec
-      internalID: 2022031364
+      spriteID: 54e8c983c8b68e04dbac48ab9fe0b2e1
+      internalID: -684002307
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dndFountain_3
+      name: Tree_4
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 334
-        height: 316
+        width: 626
+        height: 626
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 969ff979eaf7fd14e9fdecf0882ebd0f
-      internalID: 2127956645
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: dndFountain_1
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 317
-        width: 334
-        height: 316
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 263c8a4789b095b41bd34e361c8d4716
-      internalID: 237829518
+      spriteID: e4ecadc6ee80f394b95de52ff11e93c8
+      internalID: 23571416
       vertices: []
       indices: 
       edges: []
@@ -212,11 +212,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      dndFountain_0: -398663997
-      dndFountain_1: 237829518
-      dndFountain_2: -880308659
-      dndFountain_3: 2127956645
-      dndFountain_4: 2022031364
+      Tree_0: -795399423
+      Tree_1: 199809209
+      Tree_2: -1243656996
+      Tree_3: -684002307
+      Tree_4: 23571416
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
