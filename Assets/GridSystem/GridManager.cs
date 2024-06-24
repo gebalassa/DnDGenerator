@@ -23,6 +23,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] UnityEngine.Tilemaps.Tile selectedTile;
 
     [SerializeField] ImageDatabase database;
+    [SerializeField] OutputCameraScript outputCamera;
 
     [SerializeField] bool debugGrid = false;
 
@@ -36,6 +37,7 @@ public class GridManager : MonoBehaviour
 
         _grid = new GridClass(width,height);
         PaintBackgroundMap();
+        outputCamera.ResizeCamera(this);
     }
 
     // Update is called once per frame
@@ -140,6 +142,12 @@ public class GridManager : MonoBehaviour
         assetsMap.SetTile(new Vector3Int(x, y), _tile);
     }
 
+    public void EraseAssetTile(int x, int y)
+    {
+        _grid.Grid[x, y].Id = "none";
+        assetsMap.SetTile(new Vector3Int(x, y), new UnityEngine.Tilemaps.Tile());
+    }
+
     public void PaintAssetMap()
     {
         for (int i = 0; i < width; i++)
@@ -159,6 +167,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
+<<<<<<< Updated upstream
     public GridClass GridClass()
     {
         return _grid;
@@ -169,13 +178,23 @@ public class GridManager : MonoBehaviour
         Debug.LogWarning("Overwritting grid");
         _grid = newGrid;
     }
+=======
+    public GridClass GetGridClass()
+    {
+        return _grid;
+    }//*/
+>>>>>>> Stashed changes
 
     public Tilemap GetBackgroundMap()
     {
         return backgroundMap;
     }
-    public Vector2 GetDimensions()
+    public Tilemap GetAssetMap()
     {
-        return new Vector2(width, height);
+        return assetsMap;
+    }
+    public Vector2Int GetDimensions()
+    {
+        return new Vector2Int(width, height);
     }
 }

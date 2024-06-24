@@ -28,7 +28,7 @@ public class DraggableAsset : MonoBehaviour
     public void UpdateObject()
     {
         thumbnail = imageClass.sprite;
-        transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = assetName + " " + imageClass.columns + "x" + imageClass.rows;
+        transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = imageClass.Id + " " + imageClass.columns + "x" + imageClass.rows;
         transform.GetChild(1).GetComponent<Image>().sprite = thumbnail;
     }
 

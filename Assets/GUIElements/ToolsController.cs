@@ -52,6 +52,7 @@ public class ToolsController : MonoBehaviour
                 break;
         }
         ZoomFunctions();
+        EraseFunctions();
     }
 
 
@@ -145,6 +146,24 @@ public class ToolsController : MonoBehaviour
             }
         }
     }
+
+    //Erase content from assetsMap
+    void EraseFunctions()
+    {
+        if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            for(int i = 0; i < gridManager.GetGridClass().width; i++)
+            {
+                for (int j = 0; j < gridManager.GetGridClass().height; j++)
+                {
+                    if (gridManager.GetGridClass().Grid[i, j].selected)
+                    {
+                        gridManager.EraseAssetTile(i,j);
+                    }
+                }
+            }
+        }
+    }
     #endregion
 
     #region SELECT TOOL FUNCTIONS
@@ -228,41 +247,6 @@ public class ToolsController : MonoBehaviour
         }
         else if (startPosition != null)
         {
-            //See if the image will need an adjust (for usability)
-            bool xEven = assetSelected.Columns() % 2 == 0;
-            bool yEven = assetSelected.Rows() % 2 == 0;
-
-
-            Tilemap map = gridManager.GetBackgroundMap();
-            Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-            List<ImageDnd> images = assetSelected.GetSubImages(references.database);
-            int imageCounter = 0;
-
-            //Odd - Odd case
-            if (!xEven && !yEven)
-            {
-                //Get grid position
-                Vector3Int centerGridPos = map.WorldToCell(worldMousePos);
-                //Place images in tiles
-                for(int i = centerGridPos.x - assetSelected.Columns() / 2; i <= centerGridPos.x + assetSelected.Columns() / 2; i++)
-                {
-                    //Skip out of range cases
-                    if(i < 0 || i > gridManager.GetDimensions().x) { continue; }
-
-                    for (int j = centerGridPos.y - assetSelected.Rows() / 2; j <= centerGridPos.y + assetSelected.Columns() / 2; j++)
-                    {
-                        //Skip out of range cases
-                        if (j < 0 || j > gridManager.GetDimensions().y) { continue; }
-
-                        if(imageCounter > images.Count) { Debug.LogWarning("imageCounter out of range"); break; }
-
-                        gridManager.PaintAssetTile(i,j, images[imageCounter]);
-                        imageCounter++;
-                    }
-                }
-            }
-
             //Reset asset preview dimensions
             assetPreview.GetComponent<RectTransform>().anchorMin = new Vector2(0, 0);
             assetPreview.GetComponent<RectTransform>().anchorMax = new Vector2(0, 0);
@@ -270,6 +254,56 @@ public class ToolsController : MonoBehaviour
             //Reset aux values
             startPosition = null;
             selectDoing = SelectToolFunction.None;
+
+            //Get grid position
+            Tilemap map = gridManager.GetBackgroundMap();
+            Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3Int centerGridPos = map.WorldToCell(worldMousePos);
+
+            //1-1 case
+            if (assetSelected.Columns() == 1 && assetSelected.Rows() == 1)
+            {
+                //Skip out of range cases
+                if (centerGridPos.x < 0 || centerGridPos.x > gridManager.GetDimensions().x ||
+                    centerGridPos.y < 0 || centerGridPos.y > gridManager.GetDimensions().y)
+                {
+                    Debug.LogWarning("Asset placement out of range");
+                }
+                //Place image in tile
+                else
+                {
+                    gridManager.PaintAssetTile(centerGridPos.x, centerGridPos.y, assetSelected.ImageClass());
+                }
+            }
+            else
+            {
+                //See if the image will need an adjust (for usability)
+                bool xEven = assetSelected.Columns() % 2 == 0;
+                bool yEven = assetSelected.Rows() % 2 == 0;
+
+                //ImageDnd[,] subImages = assetSelected.ImageClass().Get2DArray(references.database.imageDictionary);
+                ImageDnd[,] subImages = references.database.GetImageArray(assetSelected.ImageClass().Id);
+
+                //Odd - Odd case
+                if (!xEven && !yEven)
+                {
+                    //Place images in tiles
+                    for (int i = 0; i < assetSelected.Columns(); i++)
+                    {
+                        int iGrid = centerGridPos.x - assetSelected.Columns() / 2 + i;
+                        //Skip out of range cases
+                        if (iGrid < 0 || iGrid > gridManager.GetDimensions().x) { Debug.Log("Out of tilemap range"); continue; }
+
+                        for (int j = 0; j < assetSelected.Rows(); j++)
+                        {
+                            int jGrid = centerGridPos.y - assetSelected.Rows() / 2 + j;
+                            //Skip out of range cases
+                            if (jGrid < 0 || jGrid > gridManager.GetDimensions().y) { Debug.Log("Out of tilemap range"); continue; }
+                            gridManager.PaintAssetTile(iGrid, jGrid, subImages[assetSelected.Rows() - 1 - j,i]);
+                        }
+                    }
+                }
+            }
         }
     }
     #endregion

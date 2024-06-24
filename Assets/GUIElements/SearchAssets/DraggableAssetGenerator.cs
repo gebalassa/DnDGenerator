@@ -20,10 +20,13 @@ public class DraggableAssetGenerator : MonoBehaviour
         //GET ASSETS FROM DATABASE
         assets = new List<DraggableAsset>();
 
+        database.Initialize();
+
         foreach (ImageCategory category in database.categories)
         {
             foreach (ImageDnd image in category.images)
             {
+
                 //Create new object
                 GameObject newDragAsset = Instantiate(draggableAssetPrefab, panelContent);
                 //Get DraggableAsset script

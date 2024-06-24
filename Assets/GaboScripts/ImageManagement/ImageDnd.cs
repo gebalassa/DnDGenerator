@@ -126,6 +126,7 @@ public class ImageDnd
     // Get array using given dictionary. Should be faster than creating the objects from scratch.
     public ImageDnd[,] Get2DArray(Dictionary<string, ImageDnd> imageDictionary)
     {
+        Debug.Log("HEy");
         // Null check
         if (subImageIds == null) { Debug.LogError("ImageDnd:Get2DArray(): Sub images have not been set!"); }
 
@@ -133,6 +134,7 @@ public class ImageDnd
         List<ImageDnd> subImages = new();
         foreach (string currId in subImageIds)
         {
+            Debug.Log(currId);
             subImages.Add(imageDictionary[currId]);
         }
 
