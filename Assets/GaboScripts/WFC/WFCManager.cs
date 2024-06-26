@@ -21,7 +21,7 @@ public class WFCManager : MonoBehaviour
     {
         GridClass newGrid = new GridClass(grid.width, grid.height);
 
-        ImageDatabase db = GetComponent<ManagerReferences>().database;
+        ImageDatabase db = GetComponent<ManagerReferences>().database; //TODO: CAMBIAR!!! GetComponent<ImageManager>()
         db.Initialize();
 
         for (int i = 0; i < grid.width; i++)
@@ -30,7 +30,21 @@ public class WFCManager : MonoBehaviour
             {
                 if (grid.Grid[i, j].selected)
                 {
-                    newGrid.Grid[i, j].Id = db.GetRandomImage().Id;
+                    ImageDnd randomImage = db.GetRandomImage();
+                    string randomImageId = "";
+                    if (randomImage.rows != 1 || randomImage.columns != 1)
+                    {
+                        int randIndex = UnityEngine.Random.Range(0, randomImage.subImageIds.Count);
+                        randomImageId = randomImage.subImageIds[randIndex];
+                    }
+                    else
+                    {
+                        randomImageId = randomImage.Id;
+                    }
+                    newGrid.Grid[i, j].Id = randomImageId;
+                    //DEBUG
+                    Debug.Log("randomImageId: ->"+randomImageId+"<- subSpriteName: "+db.GetImage(randomImageId).sprite.name+" ParentImageArrayDimensions: "+randomImage.rows+"x"+randomImage.columns);
+                    //FIN DEBUG
                     newGrid.Grid[i, j].selected = true;
                 }
                 else
