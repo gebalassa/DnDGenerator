@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class DraggableAssetGenerator : MonoBehaviour
 {
-    [SerializeField] ImageDatabase database;
+    [SerializeField] ManagerReferences references;
     [SerializeField] GameObject draggableAssetPrefab;
 
     [SerializeField] int columns;
@@ -20,9 +20,7 @@ public class DraggableAssetGenerator : MonoBehaviour
         //GET ASSETS FROM DATABASE
         assets = new List<DraggableAsset>();
 
-        database.Initialize();
-
-        foreach (ImageCategory category in database.categories)
+        foreach (ImageCategory category in references.database.categories)
         {
             foreach (ImageDnd image in category.images)
             {

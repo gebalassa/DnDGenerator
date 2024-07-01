@@ -57,6 +57,7 @@ public class ImageDnd
             this.Id = null;
             this.subImageIds = null;
             Debug.LogError("ImageDnd: Initialize(): Sprite wasn't given in constructor nor set beforehand in Inspector!");
+            LogFileManager.logString += "ImageDnd: Initialize(): Sprite wasn't given in constructor nor set beforehand in Inspector!\n";
         }
         else
         {
@@ -78,6 +79,7 @@ public class ImageDnd
             this.Id = ImageUtilities.GetUniqueId(this.sprite);
             SetSubImageIds();
             Debug.Log("ImageDnd: Initialize(): - Initializing Image: " + Id);
+            LogFileManager.logString += "ImageDnd: Initialize(): - Initializing Image: " + Id + "\n";
         }
     }
 

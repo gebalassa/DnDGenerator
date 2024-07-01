@@ -53,6 +53,7 @@ public class ImageDatabase : ScriptableObject
         }
         else
         {
+            LogFileManager.logString += "ImageDatabase: Image with id " + Id + "not found!\n";
             Debug.LogError("ImageDatabase: Image with id " + Id + "not found!");
             return null;
         }

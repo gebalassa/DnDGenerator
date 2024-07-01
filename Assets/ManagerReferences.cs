@@ -10,4 +10,9 @@ public class ManagerReferences : MonoBehaviour
     public EventSystem eventSystem;
     public WFCManager wfcManager;
     public ImageDatabase database;
+
+    private void Awake()
+    {
+        database.Initialize();
+    }
 }

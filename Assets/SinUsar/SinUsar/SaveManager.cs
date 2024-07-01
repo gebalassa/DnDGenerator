@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
-using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 
 public class SaveManager : ScriptableObject

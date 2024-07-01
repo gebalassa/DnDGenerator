@@ -26,7 +26,7 @@ public class OutputCameraScript : MonoBehaviour
         outputTexture.width = gm.GetDimensions().x * (int)gm.GetAssetMap().cellSize.x * tileResolution.x;
         outputTexture.height = gm.GetDimensions().y * (int)gm.GetAssetMap().cellSize.y * tileResolution.y;
 
-        cam.transform.position = new Vector3(gm.GetDimensions().x / 2, gm.GetDimensions().y / 2, -10);
+        cam.transform.position = new Vector3(gm.GetDimensions().x / 2, gm.GetDimensions().y / 2, transform.position.z);
         cam.orthographicSize = gm.GetDimensions().x / 2;
     }
 
@@ -46,7 +46,7 @@ public class OutputCameraScript : MonoBehaviour
             if(cam == this.cam)
             {
                 Texture2D outputImage = new Texture2D(outputTexture.width, outputTexture.height);
-                outputImage.ReadPixels(new Rect(0, 0, outputTexture.width, outputTexture.height), 0, 0);
+                outputImage.ReadPixels(new Rect(0, 0, outputTexture.width, outputTexture.height), 0, 0, true);
                 outputImage.Apply();
                 outputImage.name = "Output Image";
 
