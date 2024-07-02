@@ -77,9 +77,11 @@ public class ImageDnd
 
             this.Name = this.sprite.name;
             this.Id = ImageUtilities.GetUniqueId(this.sprite);
-            SetSubImageIds();
+
             Debug.Log("ImageDnd: Initialize(): - Initializing Image: " + Id);
-            LogFileManager.logString += "ImageDnd: Initialize(): - Initializing Image: " + Id + "\n";
+            LogFileManager.logString += "ImageDnd: Initialize(): - Initializing Image: " + Id + " Name: " + Name + "\n";
+
+            SetSubImageIds();
         }
     }
 
@@ -88,16 +90,24 @@ public class ImageDnd
     {
         // Get sub-sprites
         Texture2D currTexture = sprite.texture;
-        UnityEngine.Object[] subUncastedSprites = Resources.LoadAll<Sprite>(currTexture.name);
+        Sprite[] subUncastedSprites = Resources.LoadAll<Sprite>(currTexture.name);
+        LogFileManager.logString += "Texture name: " + currTexture.name + " - Num of sprites: " + subUncastedSprites.Length + "\n";
+        foreach(Sprite subsprite in subUncastedSprites)
+        {
+            LogFileManager.logString += subsprite.texture.name;
+        }
 
         // Create ImageDnd objects for each subsprite
         List<ImageDnd> subImages = new();
-        foreach (UnityEngine.Object subUncastedSprite in subUncastedSprites)
+        foreach (Sprite subSprite in subUncastedSprites)
         {
-            Sprite subSprite = (Sprite)subUncastedSprite;
-            ImageDnd newImage = new ImageDnd(subSprite);
+            //Sprite subSprite = (Sprite)subUncastedSprite;
+
             //Ignore self
-            if (Id == newImage.Id) { continue; }
+            if (Name == subSprite.name) { continue; }
+
+            //Create ImageDnd (this assigns an Id)
+            ImageDnd newImage = new ImageDnd(subSprite);
             // Add
             subImages.Add(newImage);
         }

@@ -20,8 +20,10 @@ public class ImageDatabase : ScriptableObject
     // Helps initialize images which were added through Inspector, which doesn't run their constructor.
     public void Initialize()
     {
+        LogFileManager.logString += "Initializing database...\n";
         foreach (ImageCategory category in categories)
         {
+            LogFileManager.logString += "Category " + category.categoryName + " has " + category.images.Count + " images:\n";
             foreach (ImageDnd image in category.images)
             {
                 image.Initialize();

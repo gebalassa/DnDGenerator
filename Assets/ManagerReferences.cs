@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,10 +10,8 @@ public class ManagerReferences : MonoBehaviour
     public GraphicRaycaster gRaycaster;
     public EventSystem eventSystem;
     public WFCManager wfcManager;
-    public ImageDatabase database;
+    public ImageManager imageManager;
 
-    private void Awake()
-    {
-        database.Initialize();
-    }
+    [HideInInspector]
+    public ImageDatabase database;
 }

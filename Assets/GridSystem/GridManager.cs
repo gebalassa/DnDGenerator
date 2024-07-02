@@ -252,12 +252,12 @@ public class LogFileManager
 
         int logCounter = 0;
         string fileName = "/Log.txt";
-        FileInfo file = new FileInfo(fileName);
+        FileInfo file = new FileInfo(directory.Directory + fileName);
         while (file.Exists)
         {
             logCounter++;
             fileName = "/Log" + logCounter.ToString() + ".txt";
-            file = new FileInfo(fileName);
+            file = new FileInfo(directory.Directory + fileName);
         }
         File.WriteAllText(directory.Directory + fileName, logString);
     }

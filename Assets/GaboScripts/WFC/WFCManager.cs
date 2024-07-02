@@ -22,7 +22,6 @@ public class WFCManager : MonoBehaviour
         GridClass newGrid = new GridClass(grid.width, grid.height);
 
         ImageDatabase db = GetComponent<ManagerReferences>().database;
-        db.Initialize();
 
         for (int i = 0; i < grid.width; i++)
         {

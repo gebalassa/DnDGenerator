@@ -3068,8 +3068,9 @@ GameObject:
   - component: {fileID: 1809183762}
   - component: {fileID: 1809183764}
   - component: {fileID: 1809183765}
+  - component: {fileID: 1809183766}
   m_Layer: 0
-  m_Name: GridManager
+  m_Name: Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3127,6 +3128,7 @@ MonoBehaviour:
   gRaycaster: {fileID: 1186217638}
   eventSystem: {fileID: 77042665}
   wfcManager: {fileID: 1809183765}
+  imageManager: {fileID: 1809183766}
   database: {fileID: 11400000, guid: f4538739d6976b141b5632c61e967d92, type: 2}
 --- !u!114 &1809183765
 MonoBehaviour:
@@ -3140,6 +3142,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9daa0e5db1632634089d7f3f0dcafb82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1809183766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809183761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10731cbbf79f1924c8fca1d36fb64514, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  db: {fileID: 11400000, guid: f4538739d6976b141b5632c61e967d92, type: 2}
+  debugSprite: {fileID: 0}
 --- !u!1 &1883479521
 GameObject:
   m_ObjectHideFlags: 0
