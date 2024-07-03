@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cf44598192f778040be854c1e5363382
+guid: def02bd78380c794eaaf49ebe3b3a74b
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -44,11 +44,11 @@ TextureImporter:
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
-  spriteExtrude: 0
+  spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 313
+  spritePixelsToUnits: 375
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tree_0
+      name: Treasure_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 313
-        width: 313
-        height: 313
+        y: 375
+        width: 375
+        height: 375
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,20 +111,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 73bacf7ab2e773a43a4323f66ea1a95d
-      internalID: -795399423
+      spriteID: af1a19ef31095eb45a6d4dd452b11d05
+      internalID: 2065568845
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tree_1
+      name: Treasure_1
       rect:
         serializedVersion: 2
-        x: 313
-        y: 313
-        width: 313
-        height: 313
+        x: 375
+        y: 375
+        width: 375
+        height: 375
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,62 +132,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f820d2d1b51df6548b90cc419b84053c
-      internalID: 199809209
+      spriteID: 89c848b207746514ebc616ca56a72d62
+      internalID: -200261381
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tree_2
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 313
-        height: 313
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2cca18f3b40ad994bbf9b86a2f509cae
-      internalID: -1243656996
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Tree_3
-      rect:
-        serializedVersion: 2
-        x: 313
-        y: 0
-        width: 313
-        height: 313
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 54e8c983c8b68e04dbac48ab9fe0b2e1
-      internalID: -684002307
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Tree_4
+      name: Treasure_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 626
-        height: 626
+        width: 375
+        height: 375
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -195,8 +153,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e4ecadc6ee80f394b95de52ff11e93c8
-      internalID: 23571416
+      spriteID: e27324ea6e655a9449c3172ead0c425b
+      internalID: 18199502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Treasure_3
+      rect:
+        serializedVersion: 2
+        x: 375
+        y: 0
+        width: 375
+        height: 375
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1d1223f864399147b87808f8b938e29
+      internalID: 538210325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Treasure_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 750
+        height: 750
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ba2fdafa5f5bd14191e50aba0317b80
+      internalID: -2132940842
       vertices: []
       indices: 
       edges: []
@@ -212,11 +212,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Tree_0: -795399423
-      Tree_1: 199809209
-      Tree_2: -1243656996
-      Tree_3: -684002307
-      Tree_4: 23571416
+      Treasure_0: 2065568845
+      Treasure_1: -200261381
+      Treasure_2: 18199502
+      Treasure_3: 538210325
+      Treasure_4: -2132940842
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

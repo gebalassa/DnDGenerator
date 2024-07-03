@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cf44598192f778040be854c1e5363382
+guid: 75dec925806bbb948af68eb8c3e72a31
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 313
+  spritePixelsToUnits: 253
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -97,55 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tree_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 313
-        width: 313
-        height: 313
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 73bacf7ab2e773a43a4323f66ea1a95d
-      internalID: -795399423
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Tree_1
-      rect:
-        serializedVersion: 2
-        x: 313
-        y: 313
-        width: 313
-        height: 313
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f820d2d1b51df6548b90cc419b84053c
-      internalID: 199809209
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Tree_2
+      name: Chest_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 313
-        height: 313
+        width: 223
+        height: 223
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,20 +111,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2cca18f3b40ad994bbf9b86a2f509cae
-      internalID: -1243656996
+      spriteID: 7fe4eb4baa7c88d40a8658dec820c577
+      internalID: -1132330587
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tree_3
+      name: Chest_1
       rect:
         serializedVersion: 2
-        x: 313
+        x: 223
         y: 0
-        width: 313
-        height: 313
+        width: 223
+        height: 223
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -174,20 +132,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 54e8c983c8b68e04dbac48ab9fe0b2e1
-      internalID: -684002307
+      spriteID: eec65b195b8b08949906a10bde24034e
+      internalID: 649304107
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tree_4
+      name: Chest_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 626
-        height: 626
+        width: 446
+        height: 223
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -195,8 +153,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e4ecadc6ee80f394b95de52ff11e93c8
-      internalID: 23571416
+      spriteID: d8c9102c82ba2fa4bbf00b989d3faa54
+      internalID: 1956563017
       vertices: []
       indices: 
       edges: []
@@ -212,11 +170,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Tree_0: -795399423
-      Tree_1: 199809209
-      Tree_2: -1243656996
-      Tree_3: -684002307
-      Tree_4: 23571416
+      Chest_0: -1132330587
+      Chest_1: 649304107
+      Chest_2: 1956563017
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

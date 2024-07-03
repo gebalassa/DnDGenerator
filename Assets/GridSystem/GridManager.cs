@@ -61,7 +61,7 @@ public class GridManager : MonoBehaviour
     }
 
     void SaveGrid()
-    {/*
+    {
         string json = JsonUtility.ToJson( new GridHelper(_grid), true );
         
         if(saveFilePath != null)
@@ -70,7 +70,7 @@ public class GridManager : MonoBehaviour
         }
         else
         {
-            string saveFilePath = EditorUtility.SaveFilePanel("Choose location to save map", "Assets/GridSystem", "", ".json");
+            string saveFilePath = EditorUtility.SaveFilePanel("Choose location to save map", "Assets/GridSystem", "", "json");
             if (saveFilePath.Length == 0) { return; }
             File.WriteAllText(saveFilePath, json);
         }//*/
@@ -174,7 +174,7 @@ public class GridManager : MonoBehaviour
     public void EraseAssetTile(int x, int y)
     {
         _grid.Grid[x, y].Id = "none";
-        assetsMap.SetTile(new Vector3Int(x, y), new UnityEngine.Tilemaps.Tile());
+        assetsMap.SetTile(new Vector3Int(x, y), ScriptableObject.CreateInstance<UnityEngine.Tilemaps.Tile>());
     }
     /// <summary>
     /// Paints all the tiles from the grid in the asset tilemap
