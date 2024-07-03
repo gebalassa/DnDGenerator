@@ -41,7 +41,7 @@ public class PossibilityTile : MonoBehaviour
     }
     public void CollapseTile()
     {
-        if (GetLocalPossibleTileTypes().Count != 1) { Debug.LogError("Valores posibles de largo distinto a 1 al intentar colapsar!"); }
+        if (GetLocalPossibleTileTypes().Count != 1) { Debug.LogError("Mas de una opcion al intentar colapsar!"); }
         TileType tileType = GetLocalPossibleTileTypes()[0];
         CollapseTile(tileType);
     }

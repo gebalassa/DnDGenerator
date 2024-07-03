@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WFCManager : MonoBehaviour
 {
+
     //TODO: TERMINARRRRR
     public GridClass GetWFC(GridClass grid)
     {
@@ -14,6 +15,26 @@ public class WFCManager : MonoBehaviour
         //FINDEBUG
 
         return newGrid;
+    }
+
+    //TODO: TERMINAR
+    private GridClass _GetWFC(GridClass grid)
+    {
+        // PROCEDURE
+        // Receive grid.
+        // Check "selected" tiles, all the others are considered collapsed.
+        // Save in ¿priority list? from least to most entropy,
+        // according to surrounding tiles.
+        // Collapse least entropy tile using WFCTrainer from remaining posibs.
+        // Propagate (Use PropagateFrom, LeastEntropyPTile, IsCollapsed)
+        // Repeat until all are collapsed. If one tile cant be collapsed, ignore
+        // and go to next one.
+
+
+        //PossibilityTile[,] pTiles = new PossibilityTile[grid.width, grid.height];
+
+
+        return null;
     }
 
     // DEBUG: Get random image.
@@ -43,7 +64,7 @@ public class WFCManager : MonoBehaviour
                     }
                     newGrid.Grid[i, j].Id = randomImageId;
                     //DEBUG
-                    Debug.Log("randomImageId: ->"+randomImageId+"<- subSpriteName: "+db.GetImage(randomImageId).sprite.name+" ParentImageArrayDimensions: "+randomImage.rows+"x"+randomImage.columns);
+                    Debug.Log("randomImageId: ->" + randomImageId + "<- subSpriteName: " + db.GetImage(randomImageId).sprite.name + " ParentImageArrayDimensions: " + randomImage.rows + "x" + randomImage.columns);
                     //FIN DEBUG
                     newGrid.Grid[i, j].selected = true;
                 }

@@ -214,7 +214,7 @@ public class WFCGrid : MonoBehaviour
         else { return false; }
     }
 
-    // Retunr grid pTile with least number of possible tiles
+    // Return grid pTile with least number of possible tiles
     PossibilityTile LeastEntropyPTile()
     {
         int currLowestEntropy = 99999999;
