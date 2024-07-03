@@ -23,7 +23,7 @@ public class WFCManager : MonoBehaviour
         // PROCEDURE
         // Receive grid.
         // Check "selected" tiles, all the others are considered collapsed.
-        // Save in ¿priority list? from least to most entropy,
+        // Save in ï¿½priority list? from least to most entropy,
         // according to surrounding tiles.
         // Collapse least entropy tile using WFCTrainer from remaining posibs.
         // Propagate (Use PropagateFrom, LeastEntropyPTile, IsCollapsed)

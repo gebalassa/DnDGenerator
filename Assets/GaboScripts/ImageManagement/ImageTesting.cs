@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+//using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 // Tests for ImageDatabase family of classes
 public class ImageTesting : MonoBehaviour
@@ -20,8 +20,8 @@ public class ImageTesting : MonoBehaviour
     public void TestGetSubSpriteIds()
     {
         // Initialize test image and db
-        testImage.Initialize();
-        imageDatabase.Initialize();
+        //testImage.Initialize();
+        //imageDatabase.Initialize();
 
         // Instantiate sub-images
         int counter = 0;
@@ -43,8 +43,8 @@ public class ImageTesting : MonoBehaviour
     public void TestGet2DArray()
     {
         // Initialize test image and db
-        testImage.Initialize();
-        imageDatabase.Initialize();
+        //testImage.Initialize();
+        //imageDatabase.Initialize();
 
         // Get array
         //ImageDnd[,] currArray = testImage.Get2DArrayFromScratch();

@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net.NetworkInformation;
-using Unity.PlasticSCM.Editor.WebApi;
 using Unity.VisualScripting;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
@@ -30,10 +28,15 @@ public class ToolsController : MonoBehaviour
     [SerializeField] float zoomSpeed = 1f;
     Vector3? prevMousePosition;
 
+    [Header("Wall Placement Tool")]
+    Vector3? wallStartPosition;
+    [SerializeField] LineRenderer lineRenderer = null;
+
     private void Awake()
     {
         startPosition = null;
         prevMousePosition = null;
+        wallStartPosition = null;
     }
 
 
@@ -48,8 +51,12 @@ public class ToolsController : MonoBehaviour
                 SelectToolFunctions();
                 break;
 
-            case Tools.DragTool:
+            case Tools.MapTool:
                 DragToolFunctions();
+                break;
+
+            case Tools.WallTool:
+                WallFunctions();
                 break;
         }
         ZoomFunctions();
@@ -119,19 +126,49 @@ public class ToolsController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            startPosition = new Vector3(Input.mousePosition.x / Camera.main.pixelWidth, Input.mousePosition.y / Camera.main.pixelHeight);
-
             List<RaycastResult> results = MouseRaycast();
             if (results.Count == 0)
             {
+                wallStartPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector3 pointPos = new Vector3(wallStartPosition.Value.x, wallStartPosition.Value.y, -6);
 
+                lineRenderer.positionCount = 2;
+                lineRenderer.SetPosition(0, pointPos);
+                lineRenderer.SetPosition(1, pointPos);
             }
-            else
+        }
+
+        if (Input.GetKey(KeyCode.Mouse0) && wallStartPosition != null && lineRenderer != null)
+        {
+            Vector3 currentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            currentPosition.z = -6;
+            lineRenderer.SetPosition(1, currentPosition);
+        }
+        else if (wallStartPosition != null)
+        {
+            Vector3 currentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            //Get Tiles under the line
+            Tilemap map = gridManager.GetAssetMap();
+            Vector2 dimensions = gridManager.GetDimensions();
+
+            for (int i = 0; i < dimensions.x; i++)
             {
-                foreach (RaycastResult result in results)
+                for (int j = 0; j < dimensions.y; j++)
                 {
+                    Vector3 tilePosition = map.CellToWorld(new Vector3Int(i, j));
+                    bool isUnder = LineRectCollision(wallStartPosition.Value, currentPosition, tilePosition, map.cellSize.x, map.cellSize.y);
+
+                    if (isUnder)
+                    {
+                        gridManager.PaintAssetWall(i, j);
+                    }
                 }
             }
+
+            //Reset aux values
+            wallStartPosition = null;
+            lineRenderer.positionCount = 0;
         }
     }
 
@@ -338,7 +375,7 @@ public class ToolsController : MonoBehaviour
 
     #endregion
 
-
+    #region UTILITIES
     bool IsTileInsideBounds(float minX, float maxX, float minY, float maxY, Vector3 tilePosition, Vector3 tileSize)
     {
         if(selectionMode == TileSelectionMode.FromCenter)
@@ -355,6 +392,38 @@ public class ToolsController : MonoBehaviour
             {
                 return true;
             }
+        }
+        return false;
+    }
+
+    bool LineRectCollision(Vector2 lineStart, Vector2 lineEnd, Vector2 rBottomLeft, float rWidth, float rHeight)
+    {
+        // check if the line has hit any of the rectangle's sides
+        // uses the Line/Line function below
+        bool left = LineLineCollision(lineStart, lineEnd, rBottomLeft, rBottomLeft + new Vector2(0,rHeight));
+        bool right = LineLineCollision(lineStart, lineEnd, rBottomLeft + new Vector2(rWidth, 0), rBottomLeft + new Vector2(rWidth, rHeight));
+        bool top = LineLineCollision(lineStart, lineEnd, rBottomLeft + new Vector2(0, rHeight), rBottomLeft + new Vector2(rWidth, rHeight));
+        bool bottom = LineLineCollision(lineStart, lineEnd, rBottomLeft, rBottomLeft + new Vector2(rWidth, 0));
+
+        // if ANY of the above are true, the line
+        // has hit the rectangle
+        if (left || right || top || bottom)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    bool LineLineCollision(Vector2 point1, Vector2 point2, Vector2 point3, Vector2 point4)
+    {
+        // calculate the direction of the lines
+        float uA = ((point4.x - point3.x) * (point1.y - point3.y) - (point4.y - point3.y) * (point1.x - point3.x)) / ((point4.y - point3.y) * (point2.x - point1.x) - (point4.x - point3.x) * (point2.y - point1.y));
+        float uB = ((point2.x - point1.x) * (point1.y - point3.y) - (point2.y - point1.y) * (point1.x - point3.x)) / ((point4.y - point3.y) * (point2.x - point1.x) - (point4.x - point3.x) * (point2.y - point1.y));
+
+        // if uA and uB are between 0-1, lines are colliding
+        if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1)
+        {
+            return true;
         }
         return false;
     }
@@ -387,6 +456,7 @@ public class ToolsController : MonoBehaviour
         FromCenter = 0,
         AnyCollision = 1
     }
+    #endregion
 }
 
 [Serializable]
@@ -394,5 +464,6 @@ public enum Tools
 {
     None = 0,
     SelectTool = 1,
-    DragTool = 2
+    MapTool = 2,
+    WallTool = 3
 }

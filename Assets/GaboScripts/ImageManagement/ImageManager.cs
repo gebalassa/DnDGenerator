@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ImageManager : MonoBehaviour
 {
     public ImageDatabase db;
-    public Sprite debugSprite;
+    public Sprite debugSprite = null;
 
     private void Start()
     {
@@ -14,7 +14,10 @@ public class ImageManager : MonoBehaviour
         db.Initialize();
 
         // DEBUG
-        ImageDnd img = db.GetImage(debugSprite);
-        Debug.Log(img.sprite);
+        if(debugSprite != null)
+        {
+            ImageDnd img = db.GetImage(debugSprite);
+            Debug.Log(img.sprite);
+        }
     }
 }
