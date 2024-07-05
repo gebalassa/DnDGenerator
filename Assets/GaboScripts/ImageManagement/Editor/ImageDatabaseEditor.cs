@@ -12,7 +12,6 @@ using System;
 public class ImageDatabaseEditor : Editor
 {
     private SerializedProperty categoriesProperty;
-    private SerializedProperty selectedCategoryProperty;
 
     //AUX
     DropdownField dropdownCategoryField;
@@ -20,7 +19,8 @@ public class ImageDatabaseEditor : Editor
 
     private void OnEnable()
     {
-        categoriesProperty = serializedObject.FindProperty("categories");
+        categoriesProperty = serializedObject.FindProperty(
+            nameof(ImageDatabase.categories));
     }
 
     public override VisualElement CreateInspectorGUI()
@@ -79,7 +79,7 @@ public class ImageDatabaseEditor : Editor
             ((ImageDatabase)target).AddImage(newSprite, dropdownCategoryField.text);
             Debug.Log(sprite);
         }
-        
+
     }
 
 }

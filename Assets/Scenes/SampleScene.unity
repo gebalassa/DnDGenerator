@@ -226,6 +226,7 @@ GameObject:
   - component: {fileID: 1028499027}
   - component: {fileID: 1028499026}
   - component: {fileID: 1028499028}
+  - component: {fileID: 1028499029}
   m_Layer: 0
   m_Name: testObject
   m_TagString: Untagged
@@ -279,6 +280,19 @@ MonoBehaviour:
     sprite: {fileID: -257201697, guid: b561b846488dc11419b82895fbd48f82, type: 3}
     rows: 8
     columns: 13
+--- !u!114 &1028499029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1028499025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac7e78abeee0d2941a36dda1025ff758, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wfcTrainer: {fileID: 11400000, guid: 87cf8c368651b564fba5734cce7e3563, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WFCManager : MonoBehaviour
 {
+    public enum WFCDirection { UP, DOWN, LEFT, RIGHT };
 
     //TODO: TERMINARRRRR
     public GridClass GetWFC(GridClass grid)
@@ -37,13 +38,12 @@ public class WFCManager : MonoBehaviour
         return null;
     }
 
-    // DEBUG: Get random image.
+    // DEBUG: Get random grid.
     private GridClass _GetRandom(GridClass grid)
     {
         GridClass newGrid = new GridClass(grid.width, grid.height);
 
-        ImageDatabase db = GetComponent<ManagerReferences>().database; //TODO: CAMBIAR!!! GetComponent<ImageManager>()
-        db.Initialize();
+        ImageDatabase db = FindAnyObjectByType<ManagerReferences>().imageManager.db;
 
         for (int i = 0; i < grid.width; i++)
         {

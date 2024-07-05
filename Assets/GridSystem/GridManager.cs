@@ -28,7 +28,7 @@ public class GridManager : MonoBehaviour
 
     [SerializeField] OutputCameraScript outputCamera;
 
-    [SerializeField] bool debugGrid = false;
+    //[SerializeField] bool debugGrid = false;
 
     string saveFilePath = null;
 

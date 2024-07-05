@@ -43,8 +43,8 @@ public class ImageTesting : MonoBehaviour
     public void TestGet2DArray()
     {
         // Initialize test image and db
-        //testImage.Initialize();
-        //imageDatabase.Initialize();
+        testImage.Initialize();
+        imageDatabase.Initialize();
 
         // Get array
         //ImageDnd[,] currArray = testImage.Get2DArrayFromScratch();
