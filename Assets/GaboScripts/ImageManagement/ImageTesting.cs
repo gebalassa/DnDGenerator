@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
-//using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+using static WFCTrainer;
 
 // Tests for ImageDatabase family of classes
 public class ImageTesting : MonoBehaviour
@@ -13,7 +14,8 @@ public class ImageTesting : MonoBehaviour
     private void Start()
     {
         //TestGetSubSpriteIds();
-        TestGet2DArray();
+        //TestGet2DArray();
+        TestGridClass();
     }
 
     // Obtain and instantiate all the sub-sprites of an image on the scene.
@@ -39,7 +41,6 @@ public class ImageTesting : MonoBehaviour
             counter++;
         }
     }
-
     public void TestGet2DArray()
     {
         // Initialize test image and db
@@ -67,5 +68,56 @@ public class ImageTesting : MonoBehaviour
             }
         }
 
+    }
+    public void TestGridClass()
+    {
+        // Initialize test image and db
+        testImage.Initialize();
+        imageDatabase.Initialize();
+
+        string mapsPath = "Assets/Maps";
+        string[] mapGuids = AssetDatabase.FindAssets("t:TextAsset", new string[] { mapsPath });
+        if (mapGuids.Length == 0) { Debug.LogWarning("Couldn't find any maps!"); }
+
+        List<GridClassNameWrapper> maps = new List<GridClassNameWrapper>();
+        foreach (string mapGuid in mapGuids)
+        {
+            var path = AssetDatabase.GUIDToAssetPath(mapGuid);
+            TextAsset currTextAssetMap = AssetDatabase.LoadAssetAtPath<TextAsset>(path);
+            if (currTextAssetMap != null)
+            {
+                string json = currTextAssetMap.text;
+                GridHelper gh = JsonUtility.FromJson<GridHelper>(json);
+                GridClass currMap = gh.ConvertToGridClass();
+                maps.Add(new GridClassNameWrapper(currMap, currTextAssetMap.name));
+            }
+            else
+            {
+                Debug.LogWarning("Couldn't cast object " + path + " as Text Asset!");
+            }
+        }
+
+        // Instantiate grid class
+        // NOTA****Por la forma rara en que instancia
+        // (hacia arriba primero en la columna, y asi hacia la derecha)
+        // entonces i depende del width (x), y j del height (y)
+        GridClassNameWrapper chosenMap = maps[0];
+        for (int i = 0; i < chosenMap.gc.width; i++)
+        {
+            for (int j = 0; j < chosenMap.gc.height; j++)
+            {
+                // Create new scene object
+                GameObject newImage = new GameObject();
+                SpriteRenderer newSpriteRenderer = newImage.AddComponent<SpriteRenderer>();
+                if (chosenMap.gc.Grid[i, j].Id != "none" && chosenMap.gc.Grid[i, j].Id != "wall")
+                {
+                    newSpriteRenderer.sprite = imageDatabase.GetImage(chosenMap.gc.Grid[i, j].Id).sprite;
+                    // Set position
+                    float x = (float)(i * (newSpriteRenderer.sprite.rect.width / newSpriteRenderer.sprite.pixelsPerUnit));
+                    float y = (float)(j * (newSpriteRenderer.sprite.rect.height / newSpriteRenderer.sprite.pixelsPerUnit));
+                    newImage.transform.position = new Vector3(x, y, 0);
+                }
+            }
+        }
     }
 }

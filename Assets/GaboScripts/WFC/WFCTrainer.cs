@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -28,24 +29,28 @@ public class WFCTrainer : ScriptableObject
     // -- Random number from 0 to SUM OF THEIR FREQUENCIES.
     // -- Use aggregated frequency trick to choose.
 
-    public Dictionary<string, Dictionary<string, WFCManager.WFCDirection>> tiles;
-    public List<GridClass> debugTrainingMaps = new List<GridClass>();
+    public Dictionary<string, List<(string, WFCManager.WFCDirection)>> tileAssociations = new();
+    public Dictionary<string, int> tileFrequencies = new();
+    public List<GridClassNameWrapper> trainingMaps = new List<GridClassNameWrapper>();
 
     // TODO: Terminar
     public void Train()
     {
-
+        Clear();
         LoadTrainingMaps();
+        PopulateTilesFromLoadedMaps();
     }
 
-    // TODO: Corregir BUG de Grids vacios al cargar
+    // Load maps from maps folder
     private void LoadTrainingMaps()
     {
+        // Obtain map GUIDs
         string mapsPath = "Assets/Maps";
-        //Object[] rawMaps = AssetDatabase.LoadAllAssetsAtPath(mapsPath);
         string[] mapGuids = AssetDatabase.FindAssets("t:TextAsset", new string[] { mapsPath });
+        if (mapGuids.Length == 0) { Debug.LogWarning("Couldn't find any maps!"); }
 
-        List<GridClass> maps = new List<GridClass>();
+        // Create GridClassNameWrapper objects (GridClass objects with names)
+        List<GridClassNameWrapper> maps = new List<GridClassNameWrapper>();
         foreach (string mapGuid in mapGuids)
         {
             var path = AssetDatabase.GUIDToAssetPath(mapGuid);
@@ -55,7 +60,7 @@ public class WFCTrainer : ScriptableObject
                 string json = currTextAssetMap.text;
                 GridHelper gh = JsonUtility.FromJson<GridHelper>(json);
                 GridClass currMap = gh.ConvertToGridClass();
-                maps.Add(currMap);
+                maps.Add(new GridClassNameWrapper(currMap, currTextAssetMap.name));
             }
             else
             {
@@ -63,6 +68,104 @@ public class WFCTrainer : ScriptableObject
             }
         }
 
-        debugTrainingMaps.AddRange(maps);
+        // Add all to map list
+        trainingMaps.AddRange(maps);
+    }
+
+    // Get associated tiles for every tile, with direction
+    // *****NOTA****: Por la forma rara en que instancia
+    // ***(hacia arriba primero en la columna, y asi hacia la derecha)
+    // ***entonces i depende del width, y j del height. Arriba=IZQ, Derecha=UP, etc.
+    private void PopulateTilesFromLoadedMaps()
+    {
+        foreach (GridClassNameWrapper trainingMap in trainingMaps)
+        {
+            for (int i = 0; i < trainingMap.gc.width; i++)
+            {
+                for (int j = 0; j < trainingMap.gc.height; j++)
+                {
+                    Tile currentTile = trainingMap.gc.Grid[i, j];
+                    var newNeighbours = GetNeighbourhood(i, j, currentTile.Id, trainingMap.gc);
+
+                    // Create frequency if new, otherwise add 1 to frequency
+                    if (!tileFrequencies.ContainsKey(currentTile.Id))
+                    {
+                        tileFrequencies.Add(currentTile.Id, 1);
+                    }
+                    else
+                    {
+                        tileFrequencies[currentTile.Id] += 1;
+                    }
+                    // Create associations list if new, otherwise add neighbour (if new, too)
+                    foreach ((string, WFCManager.WFCDirection) neighbour in newNeighbours)
+                    {
+                        if (!tileAssociations.ContainsKey(currentTile.Id))
+                        {
+                            tileAssociations.Add(currentTile.Id, new());
+                            tileAssociations[currentTile.Id].Add(neighbour);
+                        }
+                        else if (!tileAssociations[currentTile.Id].Contains(neighbour))
+                        {
+                            tileAssociations[currentTile.Id].Add(neighbour);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Neighborhood of a single tile
+    // *****NOTA****: Por la forma rara en que instancia
+    // ***(hacia arriba primero en la columna, y asi hacia la derecha)
+    // ***entonces i depende del width, y j del height. Arriba=IZQ, Derecha=UP, etc.
+    private List<(string, WFCManager.WFCDirection)> GetNeighbourhood(int i, int j, string id, GridClass gc)
+    {
+        List<(string, WFCManager.WFCDirection)> neighbourhood = new();
+        // Check each direction (ignore walls and empty for training)
+        // UP
+        if (i > 0)
+        {
+            neighbourhood.Add((gc.Grid[i - 1, j].Id, WFCManager.WFCDirection.UP));
+        }
+        // DOWN
+        if (i < gc.width - 1)
+        {
+            neighbourhood.Add((gc.Grid[i + 1, j].Id, WFCManager.WFCDirection.DOWN));
+        }
+        // LEFT
+        if (j > 0)
+        {
+            neighbourhood.Add((gc.Grid[i, j - 1].Id, WFCManager.WFCDirection.LEFT));
+        }
+        // RIGHT
+        if (j < gc.height - 1)
+        {
+            neighbourhood.Add((gc.Grid[i, j + 1].Id, WFCManager.WFCDirection.RIGHT));
+        }
+        return neighbourhood;
+    }
+
+    private void Clear()
+    {
+        tileAssociations = new();
+        tileFrequencies = new();
+        trainingMaps = new List<GridClassNameWrapper>();
+    }
+
+    private bool IsWall(string id) { return id == "wall"; }
+    private bool IsNone(string id) { return id == "none"; }
+
+    // To print GridClass instances with names (based on json file name) in Inspector
+    [Serializable]
+    public class GridClassNameWrapper
+    {
+        public string Name;
+        [NonSerialized]
+        public GridClass gc;
+        public GridClassNameWrapper(GridClass gc, string name)
+        {
+            this.gc = gc;
+            this.Name = name;
+        }
     }
 }

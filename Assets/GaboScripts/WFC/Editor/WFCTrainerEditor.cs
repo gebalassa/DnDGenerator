@@ -9,20 +9,20 @@ using UnityEngine.UIElements;
 [System.Serializable]
 public class WFCTrainerEditor : Editor
 {
-    private SerializedProperty debugTrainingMapsProperty;
+    private SerializedProperty trainingMapsProperty;
     private void OnEnable()
     {
-        debugTrainingMapsProperty = serializedObject.FindProperty("debugTrainingMaps");
+        trainingMapsProperty = serializedObject.FindProperty(nameof(WFCTrainer.trainingMaps));
     }
 
     public override VisualElement CreateInspectorGUI()
     {
         VisualElement root = new VisualElement();
 
-        // "debugTrainingMaps" property
-        PropertyField debugTrainingMapsField = new(debugTrainingMapsProperty);
-        debugTrainingMapsField.Bind(serializedObject);
-        root.Add(debugTrainingMapsField);
+        // "trainingMaps" property
+        PropertyField trainingMapsField = new(trainingMapsProperty);
+        trainingMapsField.Bind(serializedObject);
+        root.Add(trainingMapsField);
 
         //------------------CUSTOM----------------
         // "Train" Button

@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ad740568e7dc94086ef59a70932f1c, type: 3}
   m_Name: NewWFCTrainer
   m_EditorClassIdentifier: 
-  debugTrainingMaps: []
+  trainingMaps:
+  - Name: Road
+  - Name: Treasure
+  - Name: Village

@@ -270,16 +270,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1028499025}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c2899ce857a54c64fa2625923df220ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   imageDatabase: {fileID: 11400000, guid: f4538739d6976b141b5632c61e967d92, type: 2}
   testImage:
-    sprite: {fileID: -257201697, guid: b561b846488dc11419b82895fbd48f82, type: 3}
-    rows: 8
-    columns: 13
+    sprite: {fileID: -1891221133, guid: 654debc3090f5824987bc47968e026a8, type: 3}
+    rows: 2
+    columns: 2
 --- !u!114 &1028499029
 MonoBehaviour:
   m_ObjectHideFlags: 0

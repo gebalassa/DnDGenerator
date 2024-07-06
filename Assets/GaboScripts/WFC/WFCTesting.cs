@@ -5,15 +5,16 @@ using UnityEngine;
 public class WFCTesting : MonoBehaviour
 {
     public WFCTrainer wfcTrainer;
-    // Start is called before the first frame update
-    void Start()
+    private int a = 6;
+    public int A
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        get
+        {
+            return a;
+        }
+        set
+        {
+            a = value;
+        }
     }
 }
