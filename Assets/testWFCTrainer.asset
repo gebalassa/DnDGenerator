@@ -1,0 +1,966 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43ad740568e7dc94086ef59a70932f1c, type: 3}
+  m_Name: testWFCTrainer
+  m_EditorClassIdentifier: 
+  tileAssociations:
+    _serializedList:
+    - Key: ba692be41e6fccc4bf5683f23dd4580a
+      Value:
+      - id: bdee9447f6ad9f56367e5ada1660aaa0
+        direction: 1
+      - id: 0d8526311de99e1b5c01ef9d5d0a106d
+        direction: 3
+    - Key: 0d8526311de99e1b5c01ef9d5d0a106d
+      Value:
+      - id: 912e2aca07fc535c85311a2157df7472
+        direction: 1
+      - id: ba692be41e6fccc4bf5683f23dd4580a
+        direction: 2
+      - id: b35a02b923c86de1b59d471ac7710769
+        direction: 3
+    - Key: b35a02b923c86de1b59d471ac7710769
+      Value:
+      - id: c869e1ba419e14e5eb6c033fbef7b097
+        direction: 1
+      - id: 0d8526311de99e1b5c01ef9d5d0a106d
+        direction: 2
+      - id: 152d39ce9412ce8738909f9ffac40a23
+        direction: 3
+    - Key: 152d39ce9412ce8738909f9ffac40a23
+      Value:
+      - id: b9a76cbce761b3f461e2755713788a8b
+        direction: 1
+      - id: b35a02b923c86de1b59d471ac7710769
+        direction: 2
+      - id: c6bbfd4ecc8a8af3054fb75c99e5fa8e
+        direction: 3
+    - Key: c6bbfd4ecc8a8af3054fb75c99e5fa8e
+      Value:
+      - id: 14fe385db0979e3935742490078a6c45
+        direction: 1
+      - id: 152d39ce9412ce8738909f9ffac40a23
+        direction: 2
+      - id: 8eb7e961c9125a58c48a66681f824ae6
+        direction: 3
+    - Key: 8eb7e961c9125a58c48a66681f824ae6
+      Value:
+      - id: 695a5975e81d277d1427a83627eec338
+        direction: 1
+      - id: c6bbfd4ecc8a8af3054fb75c99e5fa8e
+        direction: 2
+      - id: 85c66e0c80abe41fb8f2f1d5ecf00c00
+        direction: 3
+    - Key: 85c66e0c80abe41fb8f2f1d5ecf00c00
+      Value:
+      - id: 37fd5f5ab2ee126c5dfed696f2195e48
+        direction: 1
+      - id: 8eb7e961c9125a58c48a66681f824ae6
+        direction: 2
+      - id: 7299888b964b222257cd20073e7b7fbe
+        direction: 3
+    - Key: 7299888b964b222257cd20073e7b7fbe
+      Value:
+      - id: f793f6deac8d4af48a4e7ea2ad8c89ba
+        direction: 1
+      - id: 85c66e0c80abe41fb8f2f1d5ecf00c00
+        direction: 2
+      - id: 5d0977be3870a1b9e9f6585d5f4e7b8d
+        direction: 3
+    - Key: 5d0977be3870a1b9e9f6585d5f4e7b8d
+      Value:
+      - id: a00e06f5724b85e3712cbd6d9c591d01
+        direction: 1
+      - id: 7299888b964b222257cd20073e7b7fbe
+        direction: 2
+      - id: a73255aa19f27130533bddff59c89d42
+        direction: 3
+    - Key: a73255aa19f27130533bddff59c89d42
+      Value:
+      - id: 2f97cf549fb728cd15f059412d01d4a4
+        direction: 1
+      - id: 5d0977be3870a1b9e9f6585d5f4e7b8d
+        direction: 2
+    - Key: bdee9447f6ad9f56367e5ada1660aaa0
+      Value:
+      - id: ba692be41e6fccc4bf5683f23dd4580a
+        direction: 0
+      - id: 2581607336c4589eb68abdaa122a2924
+        direction: 1
+      - id: 912e2aca07fc535c85311a2157df7472
+        direction: 3
+      - id: none
+        direction: 2
+    - Key: 912e2aca07fc535c85311a2157df7472
+      Value:
+      - id: 0d8526311de99e1b5c01ef9d5d0a106d
+        direction: 0
+      - id: 0099adbce81078a37227632295640f0a
+        direction: 1
+      - id: bdee9447f6ad9f56367e5ada1660aaa0
+        direction: 2
+      - id: c869e1ba419e14e5eb6c033fbef7b097
+        direction: 3
+    - Key: c869e1ba419e14e5eb6c033fbef7b097
+      Value:
+      - id: b35a02b923c86de1b59d471ac7710769
+        direction: 0
+      - id: e0084f2f5acb0fe076a2ff6ee2a9afb1
+        direction: 1
+      - id: 912e2aca07fc535c85311a2157df7472
+        direction: 2
+      - id: b9a76cbce761b3f461e2755713788a8b
+        direction: 3
+    - Key: b9a76cbce761b3f461e2755713788a8b
+      Value:
+      - id: 152d39ce9412ce8738909f9ffac40a23
+        direction: 0
+      - id: 613f3327d4b11a16dde5848d77500dfa
+        direction: 1
+      - id: c869e1ba419e14e5eb6c033fbef7b097
+        direction: 2
+      - id: 14fe385db0979e3935742490078a6c45
+        direction: 3
+    - Key: 14fe385db0979e3935742490078a6c45
+      Value:
+      - id: c6bbfd4ecc8a8af3054fb75c99e5fa8e
+        direction: 0
+      - id: 149f5ffac3944abff9b7c069e376d3f1
+        direction: 1
+      - id: b9a76cbce761b3f461e2755713788a8b
+        direction: 2
+      - id: 695a5975e81d277d1427a83627eec338
+        direction: 3
+    - Key: 695a5975e81d277d1427a83627eec338
+      Value:
+      - id: 8eb7e961c9125a58c48a66681f824ae6
+        direction: 0
+      - id: 85f5158e8209996df809adfbd913f3ff
+        direction: 1
+      - id: 14fe385db0979e3935742490078a6c45
+        direction: 2
+      - id: 37fd5f5ab2ee126c5dfed696f2195e48
+        direction: 3
+    - Key: 37fd5f5ab2ee126c5dfed696f2195e48
+      Value:
+      - id: 85c66e0c80abe41fb8f2f1d5ecf00c00
+        direction: 0
+      - id: 29e1841864ca6f47a81785a7c6e9fde9
+        direction: 1
+      - id: 695a5975e81d277d1427a83627eec338
+        direction: 2
+      - id: f793f6deac8d4af48a4e7ea2ad8c89ba
+        direction: 3
+    - Key: f793f6deac8d4af48a4e7ea2ad8c89ba
+      Value:
+      - id: 7299888b964b222257cd20073e7b7fbe
+        direction: 0
+      - id: 86c6e0054d2ed5e80be645fee6db723f
+        direction: 1
+      - id: 37fd5f5ab2ee126c5dfed696f2195e48
+        direction: 2
+      - id: a00e06f5724b85e3712cbd6d9c591d01
+        direction: 3
+    - Key: a00e06f5724b85e3712cbd6d9c591d01
+      Value:
+      - id: 5d0977be3870a1b9e9f6585d5f4e7b8d
+        direction: 0
+      - id: 626d2bfbc38d59e9a3a8c1609ad14817
+        direction: 1
+      - id: f793f6deac8d4af48a4e7ea2ad8c89ba
+        direction: 2
+      - id: 2f97cf549fb728cd15f059412d01d4a4
+        direction: 3
+    - Key: 2f97cf549fb728cd15f059412d01d4a4
+      Value:
+      - id: a73255aa19f27130533bddff59c89d42
+        direction: 0
+      - id: e1ff7794f4bb2876fba634289caab5da
+        direction: 1
+      - id: a00e06f5724b85e3712cbd6d9c591d01
+        direction: 2
+    - Key: 2581607336c4589eb68abdaa122a2924
+      Value:
+      - id: bdee9447f6ad9f56367e5ada1660aaa0
+        direction: 0
+      - id: 12a35cbb4bf0348417852f4dcbc1b290
+        direction: 1
+      - id: 0099adbce81078a37227632295640f0a
+        direction: 3
+      - id: none
+        direction: 2
+    - Key: 0099adbce81078a37227632295640f0a
+      Value:
+      - id: 912e2aca07fc535c85311a2157df7472
+        direction: 0
+      - id: e964177019576e2c21b3e2384d9c088f
+        direction: 1
+      - id: 2581607336c4589eb68abdaa122a2924
+        direction: 2
+      - id: e0084f2f5acb0fe076a2ff6ee2a9afb1
+        direction: 3
+    - Key: e0084f2f5acb0fe076a2ff6ee2a9afb1
+      Value:
+      - id: c869e1ba419e14e5eb6c033fbef7b097
+        direction: 0
+      - id: 5b255454ec216221fbfbcd4da8e81541
+        direction: 1
+      - id: 0099adbce81078a37227632295640f0a
+        direction: 2
+      - id: 613f3327d4b11a16dde5848d77500dfa
+        direction: 3
+    - Key: 613f3327d4b11a16dde5848d77500dfa
+      Value:
+      - id: b9a76cbce761b3f461e2755713788a8b
+        direction: 0
+      - id: fb0620fd99c139e569990e6926f044e0
+        direction: 1
+      - id: e0084f2f5acb0fe076a2ff6ee2a9afb1
+        direction: 2
+      - id: 149f5ffac3944abff9b7c069e376d3f1
+        direction: 3
+    - Key: 149f5ffac3944abff9b7c069e376d3f1
+      Value:
+      - id: 14fe385db0979e3935742490078a6c45
+        direction: 0
+      - id: 9806ebfe1c63c65fa82e93a217381888
+        direction: 1
+      - id: 613f3327d4b11a16dde5848d77500dfa
+        direction: 2
+      - id: 85f5158e8209996df809adfbd913f3ff
+        direction: 3
+    - Key: 85f5158e8209996df809adfbd913f3ff
+      Value:
+      - id: 695a5975e81d277d1427a83627eec338
+        direction: 0
+      - id: c2f38ff5814ff6096f21ad4bc616919d
+        direction: 1
+      - id: 149f5ffac3944abff9b7c069e376d3f1
+        direction: 2
+      - id: 29e1841864ca6f47a81785a7c6e9fde9
+        direction: 3
+    - Key: 29e1841864ca6f47a81785a7c6e9fde9
+      Value:
+      - id: 37fd5f5ab2ee126c5dfed696f2195e48
+        direction: 0
+      - id: 0ce1953327f6eacc2256c420b733ba1d
+        direction: 1
+      - id: 85f5158e8209996df809adfbd913f3ff
+        direction: 2
+      - id: 86c6e0054d2ed5e80be645fee6db723f
+        direction: 3
+    - Key: 86c6e0054d2ed5e80be645fee6db723f
+      Value:
+      - id: f793f6deac8d4af48a4e7ea2ad8c89ba
+        direction: 0
+      - id: f269dfe01445657709dabfc5907b62f1
+        direction: 1
+      - id: 29e1841864ca6f47a81785a7c6e9fde9
+        direction: 2
+      - id: 626d2bfbc38d59e9a3a8c1609ad14817
+        direction: 3
+    - Key: 626d2bfbc38d59e9a3a8c1609ad14817
+      Value:
+      - id: a00e06f5724b85e3712cbd6d9c591d01
+        direction: 0
+      - id: ef331f6fddf9cbaf77207f99a1dec7e5
+        direction: 1
+      - id: 86c6e0054d2ed5e80be645fee6db723f
+        direction: 2
+      - id: e1ff7794f4bb2876fba634289caab5da
+        direction: 3
+    - Key: e1ff7794f4bb2876fba634289caab5da
+      Value:
+      - id: 2f97cf549fb728cd15f059412d01d4a4
+        direction: 0
+      - id: 9e9f02c66d3c95a5e53d99f301183774
+        direction: 1
+      - id: 626d2bfbc38d59e9a3a8c1609ad14817
+        direction: 2
+    - Key: 12a35cbb4bf0348417852f4dcbc1b290
+      Value:
+      - id: 2581607336c4589eb68abdaa122a2924
+        direction: 0
+      - id: 7d1a6bc8abca6bbb1186e5bb878f1f8b
+        direction: 1
+      - id: e964177019576e2c21b3e2384d9c088f
+        direction: 3
+      - id: none
+        direction: 2
+    - Key: e964177019576e2c21b3e2384d9c088f
+      Value:
+      - id: 0099adbce81078a37227632295640f0a
+        direction: 0
+      - id: 40a3ded1e725596c35e4208b6627965b
+        direction: 1
+      - id: 12a35cbb4bf0348417852f4dcbc1b290
+        direction: 2
+      - id: 5b255454ec216221fbfbcd4da8e81541
+        direction: 3
+    - Key: 5b255454ec216221fbfbcd4da8e81541
+      Value:
+      - id: e0084f2f5acb0fe076a2ff6ee2a9afb1
+        direction: 0
+      - id: cf5ab92ff4c9ede478a0792adde23ed1
+        direction: 1
+      - id: e964177019576e2c21b3e2384d9c088f
+        direction: 2
+      - id: fb0620fd99c139e569990e6926f044e0
+        direction: 3
+    - Key: fb0620fd99c139e569990e6926f044e0
+      Value:
+      - id: 613f3327d4b11a16dde5848d77500dfa
+        direction: 0
+      - id: 40a3ded1e725596c35e4208b6627965b
+        direction: 1
+      - id: 5b255454ec216221fbfbcd4da8e81541
+        direction: 2
+      - id: 9806ebfe1c63c65fa82e93a217381888
+        direction: 3
+    - Key: 9806ebfe1c63c65fa82e93a217381888
+      Value:
+      - id: 149f5ffac3944abff9b7c069e376d3f1
+        direction: 0
+      - id: d26d16ac02bb489c69edf950d627e028
+        direction: 1
+      - id: fb0620fd99c139e569990e6926f044e0
+        direction: 2
+      - id: c2f38ff5814ff6096f21ad4bc616919d
+        direction: 3
+    - Key: c2f38ff5814ff6096f21ad4bc616919d
+      Value:
+      - id: 85f5158e8209996df809adfbd913f3ff
+        direction: 0
+      - id: 8e368da8f0018520ba7ed8ea96970824
+        direction: 1
+      - id: 9806ebfe1c63c65fa82e93a217381888
+        direction: 2
+      - id: 0ce1953327f6eacc2256c420b733ba1d
+        direction: 3
+    - Key: 0ce1953327f6eacc2256c420b733ba1d
+      Value:
+      - id: 29e1841864ca6f47a81785a7c6e9fde9
+        direction: 0
+      - id: a7a868e0e4ab2fe23cc73337705b455a
+        direction: 1
+      - id: c2f38ff5814ff6096f21ad4bc616919d
+        direction: 2
+      - id: f269dfe01445657709dabfc5907b62f1
+        direction: 3
+    - Key: f269dfe01445657709dabfc5907b62f1
+      Value:
+      - id: 86c6e0054d2ed5e80be645fee6db723f
+        direction: 0
+      - id: 840f44cbd2bff6ee774b658fad8c0a77
+        direction: 1
+      - id: 0ce1953327f6eacc2256c420b733ba1d
+        direction: 2
+      - id: ef331f6fddf9cbaf77207f99a1dec7e5
+        direction: 3
+    - Key: ef331f6fddf9cbaf77207f99a1dec7e5
+      Value:
+      - id: 626d2bfbc38d59e9a3a8c1609ad14817
+        direction: 0
+      - id: ce5062645be9fee5f4c0a7881c4fd53d
+        direction: 1
+      - id: f269dfe01445657709dabfc5907b62f1
+        direction: 2
+      - id: 9e9f02c66d3c95a5e53d99f301183774
+        direction: 3
+    - Key: 9e9f02c66d3c95a5e53d99f301183774
+      Value:
+      - id: e1ff7794f4bb2876fba634289caab5da
+        direction: 0
+      - id: 33c6f284d5b07c26bdc312f49cf01c02
+        direction: 1
+      - id: ef331f6fddf9cbaf77207f99a1dec7e5
+        direction: 2
+    - Key: 7d1a6bc8abca6bbb1186e5bb878f1f8b
+      Value:
+      - id: 12a35cbb4bf0348417852f4dcbc1b290
+        direction: 0
+      - id: none
+        direction: 1
+      - id: 40a3ded1e725596c35e4208b6627965b
+        direction: 3
+      - id: 4e094cf6ef733bfa9a11171c88fcedd3
+        direction: 1
+      - id: none
+        direction: 2
+    - Key: 40a3ded1e725596c35e4208b6627965b
+      Value:
+      - id: e964177019576e2c21b3e2384d9c088f
+        direction: 0
+      - id: none
+        direction: 1
+      - id: 7d1a6bc8abca6bbb1186e5bb878f1f8b
+        direction: 2
+      - id: cf5ab92ff4c9ede478a0792adde23ed1
+        direction: 3
+      - id: fb0620fd99c139e569990e6926f044e0
+        direction: 0
+      - id: cf5ab92ff4c9ede478a0792adde23ed1
+        direction: 2
+      - id: d26d16ac02bb489c69edf950d627e028
+        direction: 3
+    - Key: cf5ab92ff4c9ede478a0792adde23ed1
+      Value:
+      - id: 5b255454ec216221fbfbcd4da8e81541
+        direction: 0
+      - id: none
+        direction: 1
+      - id: 40a3ded1e725596c35e4208b6627965b
+        direction: 2
+      - id: 40a3ded1e725596c35e4208b6627965b
+        direction: 3
+    - Key: d26d16ac02bb489c69edf950d627e028
+      Value:
+      - id: 9806ebfe1c63c65fa82e93a217381888
+        direction: 0
+      - id: da878235784188dff59e38017e336dd2
+        direction: 1
+      - id: 40a3ded1e725596c35e4208b6627965b
+        direction: 2
+      - id: 8e368da8f0018520ba7ed8ea96970824
+        direction: 3
+    - Key: 8e368da8f0018520ba7ed8ea96970824
+      Value:
+      - id: c2f38ff5814ff6096f21ad4bc616919d
+        direction: 0
+      - id: none
+        direction: 1
+      - id: d26d16ac02bb489c69edf950d627e028
+        direction: 2
+      - id: a7a868e0e4ab2fe23cc73337705b455a
+        direction: 3
+    - Key: a7a868e0e4ab2fe23cc73337705b455a
+      Value:
+      - id: 0ce1953327f6eacc2256c420b733ba1d
+        direction: 0
+      - id: none
+        direction: 1
+      - id: 8e368da8f0018520ba7ed8ea96970824
+        direction: 2
+      - id: 840f44cbd2bff6ee774b658fad8c0a77
+        direction: 3
+    - Key: 840f44cbd2bff6ee774b658fad8c0a77
+      Value:
+      - id: f269dfe01445657709dabfc5907b62f1
+        direction: 0
+      - id: none
+        direction: 1
+      - id: a7a868e0e4ab2fe23cc73337705b455a
+        direction: 2
+      - id: ce5062645be9fee5f4c0a7881c4fd53d
+        direction: 3
+    - Key: ce5062645be9fee5f4c0a7881c4fd53d
+      Value:
+      - id: ef331f6fddf9cbaf77207f99a1dec7e5
+        direction: 0
+      - id: none
+        direction: 1
+      - id: 840f44cbd2bff6ee774b658fad8c0a77
+        direction: 2
+      - id: 33c6f284d5b07c26bdc312f49cf01c02
+        direction: 3
+    - Key: 33c6f284d5b07c26bdc312f49cf01c02
+      Value:
+      - id: 9e9f02c66d3c95a5e53d99f301183774
+        direction: 0
+      - id: 5401f3a201cce15ee00dd86d111e00b4
+        direction: 1
+      - id: ce5062645be9fee5f4c0a7881c4fd53d
+        direction: 2
+    - Key: none
+      Value:
+      - id: 7d1a6bc8abca6bbb1186e5bb878f1f8b
+        direction: 0
+      - id: none
+        direction: 1
+      - id: none
+        direction: 3
+      - id: 40a3ded1e725596c35e4208b6627965b
+        direction: 0
+      - id: b7b5f810ce97dddae812b6fcc505cd62
+        direction: 1
+      - id: none
+        direction: 2
+      - id: cf5ab92ff4c9ede478a0792adde23ed1
+        direction: 0
+      - id: da878235784188dff59e38017e336dd2
+        direction: 3
+      - id: 8e368da8f0018520ba7ed8ea96970824
+        direction: 0
+      - id: da878235784188dff59e38017e336dd2
+        direction: 2
+      - id: a7a868e0e4ab2fe23cc73337705b455a
+        direction: 0
+      - id: 840f44cbd2bff6ee774b658fad8c0a77
+        direction: 0
+      - id: 5401f3a201cce15ee00dd86d111e00b4
+        direction: 1
+      - id: ce5062645be9fee5f4c0a7881c4fd53d
+        direction: 0
+      - id: 5401f3a201cce15ee00dd86d111e00b4
+        direction: 3
+      - id: none
+        direction: 0
+      - id: b7b5f810ce97dddae812b6fcc505cd62
+        direction: 3
+      - id: b7b5f810ce97dddae812b6fcc505cd62
+        direction: 2
+      - id: da878235784188dff59e38017e336dd2
+        direction: 0
+      - id: c5075a0b8bcd9592f458eb7e25af8652
+        direction: 1
+      - id: 4e094cf6ef733bfa9a11171c88fcedd3
+        direction: 1
+      - id: 5401f3a201cce15ee00dd86d111e00b4
+        direction: 2
+      - id: 5401f3a201cce15ee00dd86d111e00b4
+        direction: 0
+      - id: b7b5f810ce97dddae812b6fcc505cd62
+        direction: 0
+      - id: c5075a0b8bcd9592f458eb7e25af8652
+        direction: 3
+      - id: da878235784188dff59e38017e336dd2
+        direction: 1
+      - id: dede34c059a81d8d49a80f5fd5f45283
+        direction: 3
+      - id: 125f3068c80074c959a01063c12f700c
+        direction: 2
+      - id: 4e094cf6ef733bfa9a11171c88fcedd3
+        direction: 2
+      - id: dede34c059a81d8d49a80f5fd5f45283
+        direction: 0
+      - id: 125f3068c80074c959a01063c12f700c
+        direction: 0
+      - id: wall
+        direction: 1
+      - id: wall
+        direction: 3
+      - id: wall
+        direction: 0
+      - id: wall
+        direction: 2
+      - id: c3f3c9cb6c4341cc91081b665b67da46
+        direction: 3
+      - id: c3f3c9cb6c4341cc91081b665b67da46
+        direction: 2
+      - id: fedf8e713b0f84a44c2ab18c0a40d93b
+        direction: 1
+      - id: a46fc0680b3a43cb15903929077f59b4
+        direction: 1
+      - id: fedf8e713b0f84a44c2ab18c0a40d93b
+        direction: 3
+      - id: a46fc0680b3a43cb15903929077f59b4
+        direction: 2
+      - id: 68acc73f63af1179a885c6171bf1aa76
+        direction: 3
+      - id: e24566e47ba09d6fb1795e88b008edd1
+        direction: 2
+      - id: 68acc73f63af1179a885c6171bf1aa76
+        direction: 0
+      - id: bdee9447f6ad9f56367e5ada1660aaa0
+        direction: 3
+      - id: 095481e0ee5847b48ab794cc9448bdc1
+        direction: 2
+      - id: 2581607336c4589eb68abdaa122a2924
+        direction: 3
+      - id: 12a35cbb4bf0348417852f4dcbc1b290
+        direction: 3
+      - id: 7c086a6003484ab3b2957feb6b1f718b
+        direction: 0
+      - id: bd53714d96029c11dc6fc5bed92381c4
+        direction: 0
+      - id: 7d1a6bc8abca6bbb1186e5bb878f1f8b
+        direction: 3
+    - Key: da878235784188dff59e38017e336dd2
+      Value:
+      - id: d26d16ac02bb489c69edf950d627e028
+        direction: 0
+      - id: none
+        direction: 1
+      - id: none
+        direction: 2
+      - id: none
+        direction: 3
+      - id: none
+        direction: 0
+      - id: 4e094cf6ef733bfa9a11171c88fcedd3
+        direction: 1
+    - Key: 5401f3a201cce15ee00dd86d111e00b4
+      Value:
+      - id: 33c6f284d5b07c26bdc312f49cf01c02
+        direction: 0
+      - id: none
+        direction: 1
+      - id: none
+        direction: 2
+      - id: none
+        direction: 0
+      - id: none
+        direction: 3
+      - id: 4e094cf6ef733bfa9a11171c88fcedd3
+        direction: 1
+      - id: bd53714d96029c11dc6fc5bed92381c4
+        direction: 2
+    - Key: b7b5f810ce97dddae812b6fcc505cd62
+      Value:
+      - id: none
+        direction: 0
+      - id: none
+        direction: 1
+      - id: none
+        direction: 2
+      - id: none
+        direction: 3
+      - id: 4e094cf6ef733bfa9a11171c88fcedd3
+        direction: 2
+    - Key: c5075a0b8bcd9592f458eb7e25af8652
+      Value:
+      - id: none
+        direction: 0
+      - id: dede34c059a81d8d49a80f5fd5f45283
+        direction: 1
+      - id: none
+        direction: 2
+      - id: 4e094cf6ef733bfa9a11171c88fcedd3
+        direction: 3
+      - id: wall
+        direction: 0
+    - Key: 4e094cf6ef733bfa9a11171c88fcedd3
+      Value:
+      - id: none
+        direction: 0
+      - id: 125f3068c80074c959a01063c12f700c
+        direction: 1
+      - id: c5075a0b8bcd9592f458eb7e25af8652
+        direction: 2
+      - id: b7b5f810ce97dddae812b6fcc505cd62
+        direction: 3
+      - id: 5401f3a201cce15ee00dd86d111e00b4
+        direction: 0
+      - id: none
+        direction: 3
+      - id: da878235784188dff59e38017e336dd2
+        direction: 0
+      - id: 7d1a6bc8abca6bbb1186e5bb878f1f8b
+        direction: 0
+      - id: wall
+        direction: 0
+    - Key: dede34c059a81d8d49a80f5fd5f45283
+      Value:
+      - id: c5075a0b8bcd9592f458eb7e25af8652
+        direction: 0
+      - id: none
+        direction: 1
+      - id: none
+        direction: 2
+      - id: 125f3068c80074c959a01063c12f700c
+        direction: 3
+    - Key: 125f3068c80074c959a01063c12f700c
+      Value:
+      - id: 4e094cf6ef733bfa9a11171c88fcedd3
+        direction: 0
+      - id: none
+        direction: 1
+      - id: dede34c059a81d8d49a80f5fd5f45283
+        direction: 2
+      - id: none
+        direction: 3
+    - Key: wall
+      Value:
+      - id: wall
+        direction: 1
+      - id: none
+        direction: 2
+      - id: wall
+        direction: 3
+      - id: none
+        direction: 1
+      - id: wall
+        direction: 2
+      - id: none
+        direction: 0
+      - id: wall
+        direction: 0
+      - id: c3f3c9cb6c4341cc91081b665b67da46
+        direction: 1
+      - id: none
+        direction: 3
+      - id: c3f3c9cb6c4341cc91081b665b67da46
+        direction: 0
+      - id: a46fc0680b3a43cb15903929077f59b4
+        direction: 2
+      - id: e24566e47ba09d6fb1795e88b008edd1
+        direction: 2
+      - id: 68acc73f63af1179a885c6171bf1aa76
+        direction: 0
+      - id: e24566e47ba09d6fb1795e88b008edd1
+        direction: 0
+      - id: 8180a61df0b6722a3de521b7cfc6b3ed
+        direction: 1
+      - id: 095481e0ee5847b48ab794cc9448bdc1
+        direction: 1
+      - id: 8180a61df0b6722a3de521b7cfc6b3ed
+        direction: 3
+      - id: 7c086a6003484ab3b2957feb6b1f718b
+        direction: 3
+      - id: c5075a0b8bcd9592f458eb7e25af8652
+        direction: 1
+      - id: 4e094cf6ef733bfa9a11171c88fcedd3
+        direction: 1
+    - Key: c3f3c9cb6c4341cc91081b665b67da46
+      Value:
+      - id: wall
+        direction: 0
+      - id: c3f3c9cb6c4341cc91081b665b67da46
+        direction: 1
+      - id: none
+        direction: 2
+      - id: none
+        direction: 3
+      - id: c3f3c9cb6c4341cc91081b665b67da46
+        direction: 0
+      - id: wall
+        direction: 1
+    - Key: fedf8e713b0f84a44c2ab18c0a40d93b
+      Value:
+      - id: none
+        direction: 0
+      - id: 68acc73f63af1179a885c6171bf1aa76
+        direction: 1
+      - id: none
+        direction: 2
+      - id: a46fc0680b3a43cb15903929077f59b4
+        direction: 3
+      - id: e24566e47ba09d6fb1795e88b008edd1
+        direction: 0
+    - Key: a46fc0680b3a43cb15903929077f59b4
+      Value:
+      - id: none
+        direction: 0
+      - id: e24566e47ba09d6fb1795e88b008edd1
+        direction: 1
+      - id: fedf8e713b0f84a44c2ab18c0a40d93b
+        direction: 2
+      - id: none
+        direction: 3
+      - id: wall
+        direction: 3
+    - Key: 68acc73f63af1179a885c6171bf1aa76
+      Value:
+      - id: fedf8e713b0f84a44c2ab18c0a40d93b
+        direction: 0
+      - id: none
+        direction: 1
+      - id: none
+        direction: 2
+      - id: e24566e47ba09d6fb1795e88b008edd1
+        direction: 3
+      - id: wall
+        direction: 1
+    - Key: e24566e47ba09d6fb1795e88b008edd1
+      Value:
+      - id: a46fc0680b3a43cb15903929077f59b4
+        direction: 0
+      - id: fedf8e713b0f84a44c2ab18c0a40d93b
+        direction: 1
+      - id: 68acc73f63af1179a885c6171bf1aa76
+        direction: 2
+      - id: none
+        direction: 3
+      - id: wall
+        direction: 1
+      - id: wall
+        direction: 3
+    - Key: 8180a61df0b6722a3de521b7cfc6b3ed
+      Value:
+      - id: wall
+        direction: 0
+      - id: 7c086a6003484ab3b2957feb6b1f718b
+        direction: 1
+      - id: wall
+        direction: 2
+      - id: 095481e0ee5847b48ab794cc9448bdc1
+        direction: 3
+    - Key: 095481e0ee5847b48ab794cc9448bdc1
+      Value:
+      - id: wall
+        direction: 0
+      - id: bd53714d96029c11dc6fc5bed92381c4
+        direction: 1
+      - id: 8180a61df0b6722a3de521b7cfc6b3ed
+        direction: 2
+      - id: none
+        direction: 3
+    - Key: 7c086a6003484ab3b2957feb6b1f718b
+      Value:
+      - id: 8180a61df0b6722a3de521b7cfc6b3ed
+        direction: 0
+      - id: none
+        direction: 1
+      - id: wall
+        direction: 2
+      - id: bd53714d96029c11dc6fc5bed92381c4
+        direction: 3
+    - Key: bd53714d96029c11dc6fc5bed92381c4
+      Value:
+      - id: 095481e0ee5847b48ab794cc9448bdc1
+        direction: 0
+      - id: none
+        direction: 1
+      - id: 7c086a6003484ab3b2957feb6b1f718b
+        direction: 2
+      - id: 5401f3a201cce15ee00dd86d111e00b4
+        direction: 3
+  tileFrequencies:
+    _serializedList:
+    - Key: ba692be41e6fccc4bf5683f23dd4580a
+      Value: 1
+    - Key: 0d8526311de99e1b5c01ef9d5d0a106d
+      Value: 1
+    - Key: b35a02b923c86de1b59d471ac7710769
+      Value: 1
+    - Key: 152d39ce9412ce8738909f9ffac40a23
+      Value: 1
+    - Key: c6bbfd4ecc8a8af3054fb75c99e5fa8e
+      Value: 1
+    - Key: 8eb7e961c9125a58c48a66681f824ae6
+      Value: 1
+    - Key: 85c66e0c80abe41fb8f2f1d5ecf00c00
+      Value: 1
+    - Key: 7299888b964b222257cd20073e7b7fbe
+      Value: 1
+    - Key: 5d0977be3870a1b9e9f6585d5f4e7b8d
+      Value: 1
+    - Key: a73255aa19f27130533bddff59c89d42
+      Value: 1
+    - Key: bdee9447f6ad9f56367e5ada1660aaa0
+      Value: 2
+    - Key: 912e2aca07fc535c85311a2157df7472
+      Value: 2
+    - Key: c869e1ba419e14e5eb6c033fbef7b097
+      Value: 1
+    - Key: b9a76cbce761b3f461e2755713788a8b
+      Value: 1
+    - Key: 14fe385db0979e3935742490078a6c45
+      Value: 1
+    - Key: 695a5975e81d277d1427a83627eec338
+      Value: 1
+    - Key: 37fd5f5ab2ee126c5dfed696f2195e48
+      Value: 1
+    - Key: f793f6deac8d4af48a4e7ea2ad8c89ba
+      Value: 1
+    - Key: a00e06f5724b85e3712cbd6d9c591d01
+      Value: 1
+    - Key: 2f97cf549fb728cd15f059412d01d4a4
+      Value: 1
+    - Key: 2581607336c4589eb68abdaa122a2924
+      Value: 2
+    - Key: 0099adbce81078a37227632295640f0a
+      Value: 2
+    - Key: e0084f2f5acb0fe076a2ff6ee2a9afb1
+      Value: 1
+    - Key: 613f3327d4b11a16dde5848d77500dfa
+      Value: 1
+    - Key: 149f5ffac3944abff9b7c069e376d3f1
+      Value: 1
+    - Key: 85f5158e8209996df809adfbd913f3ff
+      Value: 1
+    - Key: 29e1841864ca6f47a81785a7c6e9fde9
+      Value: 1
+    - Key: 86c6e0054d2ed5e80be645fee6db723f
+      Value: 1
+    - Key: 626d2bfbc38d59e9a3a8c1609ad14817
+      Value: 1
+    - Key: e1ff7794f4bb2876fba634289caab5da
+      Value: 1
+    - Key: 12a35cbb4bf0348417852f4dcbc1b290
+      Value: 2
+    - Key: e964177019576e2c21b3e2384d9c088f
+      Value: 2
+    - Key: 5b255454ec216221fbfbcd4da8e81541
+      Value: 1
+    - Key: fb0620fd99c139e569990e6926f044e0
+      Value: 1
+    - Key: 9806ebfe1c63c65fa82e93a217381888
+      Value: 1
+    - Key: c2f38ff5814ff6096f21ad4bc616919d
+      Value: 1
+    - Key: 0ce1953327f6eacc2256c420b733ba1d
+      Value: 1
+    - Key: f269dfe01445657709dabfc5907b62f1
+      Value: 1
+    - Key: ef331f6fddf9cbaf77207f99a1dec7e5
+      Value: 1
+    - Key: 9e9f02c66d3c95a5e53d99f301183774
+      Value: 1
+    - Key: 7d1a6bc8abca6bbb1186e5bb878f1f8b
+      Value: 2
+    - Key: 40a3ded1e725596c35e4208b6627965b
+      Value: 3
+    - Key: cf5ab92ff4c9ede478a0792adde23ed1
+      Value: 1
+    - Key: d26d16ac02bb489c69edf950d627e028
+      Value: 1
+    - Key: 8e368da8f0018520ba7ed8ea96970824
+      Value: 1
+    - Key: a7a868e0e4ab2fe23cc73337705b455a
+      Value: 1
+    - Key: 840f44cbd2bff6ee774b658fad8c0a77
+      Value: 1
+    - Key: ce5062645be9fee5f4c0a7881c4fd53d
+      Value: 1
+    - Key: 33c6f284d5b07c26bdc312f49cf01c02
+      Value: 1
+    - Key: none
+      Value: 140
+    - Key: da878235784188dff59e38017e336dd2
+      Value: 4
+    - Key: 5401f3a201cce15ee00dd86d111e00b4
+      Value: 5
+    - Key: b7b5f810ce97dddae812b6fcc505cd62
+      Value: 5
+    - Key: c5075a0b8bcd9592f458eb7e25af8652
+      Value: 5
+    - Key: 4e094cf6ef733bfa9a11171c88fcedd3
+      Value: 6
+    - Key: dede34c059a81d8d49a80f5fd5f45283
+      Value: 3
+    - Key: 125f3068c80074c959a01063c12f700c
+      Value: 3
+    - Key: wall
+      Value: 57
+    - Key: c3f3c9cb6c4341cc91081b665b67da46
+      Value: 2
+    - Key: fedf8e713b0f84a44c2ab18c0a40d93b
+      Value: 2
+    - Key: a46fc0680b3a43cb15903929077f59b4
+      Value: 2
+    - Key: 68acc73f63af1179a885c6171bf1aa76
+      Value: 2
+    - Key: e24566e47ba09d6fb1795e88b008edd1
+      Value: 2
+    - Key: 8180a61df0b6722a3de521b7cfc6b3ed
+      Value: 1
+    - Key: 095481e0ee5847b48ab794cc9448bdc1
+      Value: 1
+    - Key: 7c086a6003484ab3b2957feb6b1f718b
+      Value: 1
+    - Key: bd53714d96029c11dc6fc5bed92381c4
+      Value: 1
+  trainingMaps:
+  - Name: Road
+  - Name: Treasure
+  - Name: Village

@@ -5,7 +5,8 @@ using System.Windows.Forms;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
+using AYellowpaper.SerializedCollections;
+using Ookii.Dialogs;
 
 [CreateAssetMenu(fileName = "NewWFCTrainer", menuName = "WFCTrainer")]
 [System.Serializable]
@@ -29,8 +30,10 @@ public class WFCTrainer : ScriptableObject
     // -- Random number from 0 to SUM OF THEIR FREQUENCIES.
     // -- Use aggregated frequency trick to choose.
 
-    public Dictionary<string, List<(string, WFCManager.WFCDirection)>> tileAssociations = new();
-    public Dictionary<string, int> tileFrequencies = new();
+    [SerializedDictionary("ID", "Association List")]
+    public SerializedDictionary<string, List<AssociationTuple>> tileAssociations = new();
+    [SerializedDictionary("ID", "Frequency")]
+    public SerializedDictionary<string, int> tileFrequencies = new();
     public List<GridClassNameWrapper> trainingMaps = new List<GridClassNameWrapper>();
 
     // TODO: Terminar
@@ -97,7 +100,7 @@ public class WFCTrainer : ScriptableObject
                         tileFrequencies[currentTile.Id] += 1;
                     }
                     // Create associations list if new, otherwise add neighbour (if new, too)
-                    foreach ((string, WFCManager.WFCDirection) neighbour in newNeighbours)
+                    foreach (AssociationTuple neighbour in newNeighbours)
                     {
                         if (!tileAssociations.ContainsKey(currentTile.Id))
                         {
@@ -118,29 +121,29 @@ public class WFCTrainer : ScriptableObject
     // *****NOTA****: Por la forma rara en que instancia
     // ***(hacia arriba primero en la columna, y asi hacia la derecha)
     // ***entonces i depende del width, y j del height. Arriba=IZQ, Derecha=UP, etc.
-    private List<(string, WFCManager.WFCDirection)> GetNeighbourhood(int i, int j, string id, GridClass gc)
+    private List<AssociationTuple> GetNeighbourhood(int i, int j, string id, GridClass gc)
     {
-        List<(string, WFCManager.WFCDirection)> neighbourhood = new();
+        List<AssociationTuple> neighbourhood = new();
         // Check each direction (ignore walls and empty for training)
         // UP
         if (i > 0)
         {
-            neighbourhood.Add((gc.Grid[i - 1, j].Id, WFCManager.WFCDirection.UP));
+            neighbourhood.Add(new(gc.Grid[i - 1, j].Id, WFCManager.WFCDirection.UP));
         }
         // DOWN
         if (i < gc.width - 1)
         {
-            neighbourhood.Add((gc.Grid[i + 1, j].Id, WFCManager.WFCDirection.DOWN));
+            neighbourhood.Add(new(gc.Grid[i + 1, j].Id, WFCManager.WFCDirection.DOWN));
         }
         // LEFT
         if (j > 0)
         {
-            neighbourhood.Add((gc.Grid[i, j - 1].Id, WFCManager.WFCDirection.LEFT));
+            neighbourhood.Add(new(gc.Grid[i, j - 1].Id, WFCManager.WFCDirection.LEFT));
         }
         // RIGHT
         if (j < gc.height - 1)
         {
-            neighbourhood.Add((gc.Grid[i, j + 1].Id, WFCManager.WFCDirection.RIGHT));
+            neighbourhood.Add(new(gc.Grid[i, j + 1].Id, WFCManager.WFCDirection.RIGHT));
         }
         return neighbourhood;
     }
@@ -155,6 +158,25 @@ public class WFCTrainer : ScriptableObject
     private bool IsWall(string id) { return id == "wall"; }
     private bool IsNone(string id) { return id == "none"; }
 
+    [Serializable]
+    public class AssociationTuple : IEquatable<AssociationTuple>
+    {
+        [SerializeField]
+        string id;
+        [SerializeField]
+        WFCManager.WFCDirection direction;
+        public AssociationTuple(string id, WFCManager.WFCDirection direction)
+        {
+            this.id = id;
+            this.direction = direction;
+        }
+        public bool Equals(AssociationTuple other)
+        {
+            if (other == null) { return false; }
+            else if (this.id == other.id && this.direction == other.direction) { return true; }
+            else { return false; }
+        }
+    }
     // To print GridClass instances with names (based on json file name) in Inspector
     [Serializable]
     public class GridClassNameWrapper
