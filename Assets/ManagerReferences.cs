@@ -10,8 +10,16 @@ public class ManagerReferences : MonoBehaviour
     public GraphicRaycaster gRaycaster;
     public EventSystem eventSystem;
     public WFCManager wfcManager;
-    public ImageManager imageManager;
 
     [HideInInspector]
+    public ImageManager imageManager;
+    [HideInInspector]
     public ImageDatabase database;
+
+    private void Awake()
+    {
+        //Get script reference
+        imageManager = GameObject.Find("AuxManager").GetComponent<ImageManager>();
+        database = imageManager.db;
+    }
 }
