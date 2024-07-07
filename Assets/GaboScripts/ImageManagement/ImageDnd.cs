@@ -10,7 +10,6 @@ using UnityEngine;
 public class ImageDnd
 {
     public Sprite sprite;
-    // TODO: Usar subspriterefs
     // Sub-sprites
     public int rows = 1;
     public int columns = 1;

@@ -9,11 +9,13 @@ using UnityEngine.UIElements;
 [System.Serializable]
 public class WFCTrainerEditor : Editor
 {
+    private SerializedProperty mapsPathProperty;
     private SerializedProperty tileAssociationsProperty;
     private SerializedProperty tileFrequenciesProperty;
     private SerializedProperty trainingMapsProperty;
     private void OnEnable()
     {
+        mapsPathProperty = serializedObject.FindProperty(nameof(WFCTrainer.mapsPath));
         tileAssociationsProperty = serializedObject.FindProperty(nameof(WFCTrainer.tileAssociations));
         tileFrequenciesProperty = serializedObject.FindProperty(nameof(WFCTrainer.tileFrequencies));
         trainingMapsProperty = serializedObject.FindProperty(nameof(WFCTrainer.trainingMaps));
@@ -22,6 +24,11 @@ public class WFCTrainerEditor : Editor
     public override VisualElement CreateInspectorGUI()
     {
         VisualElement root = new VisualElement();
+
+        // "mapsPath" property
+        PropertyField mapsPathField = new(mapsPathProperty);
+        mapsPathField.Bind(serializedObject);
+        root.Add(mapsPathField);
 
         // "tileAssociations" property
         PropertyField tileAssociationsField = new(tileAssociationsProperty);

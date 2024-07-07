@@ -5,6 +5,7 @@ using UnityEngine;
 public class WFCManager : MonoBehaviour
 {
     public enum WFCDirection { UP, DOWN, LEFT, RIGHT };
+    public WFCTrainer trainer;
 
     //TODO: TERMINARRRRR
     public GridClass GetWFC(GridClass grid)
@@ -12,7 +13,7 @@ public class WFCManager : MonoBehaviour
         GridClass newGrid = new GridClass(grid.width, grid.height);
 
         //DEBUG
-        newGrid = _GetRandom(grid);
+        newGrid = _GetWFC(grid);//_GetRandom(grid);
         //FINDEBUG
 
         return newGrid;
@@ -21,21 +22,22 @@ public class WFCManager : MonoBehaviour
     //TODO: TERMINAR
     private GridClass _GetWFC(GridClass grid)
     {
+        #region OBSOLETE PROCEDURE
         // PROCEDURE
         // Receive grid.
         // Check "selected" tiles, all the others are considered collapsed.
-        // Save in �priority list? from least to most entropy,
+        // Save in ?priority list? from least to most entropy,
         // according to surrounding tiles.
         // Collapse least entropy tile using WFCTrainer from remaining posibs.
         // Propagate (Use PropagateFrom, LeastEntropyPTile, IsCollapsed)
         // Repeat until all are collapsed. If one tile cant be collapsed, ignore
         // and go to next one.
+        #endregion
 
+        WFCGrid wfcGrid = new WFCGrid(grid.width, grid.height);
+        GridClass newGrid = wfcGrid.GetWFC(grid);
 
-        //PossibilityTile[,] pTiles = new PossibilityTile[grid.width, grid.height];
-
-
-        return null;
+        return new GridClass(grid.height, grid.width);
     }
 
     // DEBUG: Get random grid.

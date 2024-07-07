@@ -1,12 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Windows.Forms;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using AYellowpaper.SerializedCollections;
-using Ookii.Dialogs;
 
 [CreateAssetMenu(fileName = "NewWFCTrainer", menuName = "WFCTrainer")]
 [System.Serializable]
@@ -30,13 +27,15 @@ public class WFCTrainer : ScriptableObject
     // -- Random number from 0 to SUM OF THEIR FREQUENCIES.
     // -- Use aggregated frequency trick to choose.
 
+    public string mapsPath = "Assets/Maps";
     [SerializedDictionary("ID", "Association List")]
     public SerializedDictionary<string, List<AssociationTuple>> tileAssociations = new();
     [SerializedDictionary("ID", "Frequency")]
+    
     public SerializedDictionary<string, int> tileFrequencies = new();
     public List<GridClassNameWrapper> trainingMaps = new List<GridClassNameWrapper>();
 
-    // TODO: Terminar
+    // Train using maps to obtain tile frequencies and associations
     public void Train()
     {
         Clear();
@@ -44,11 +43,24 @@ public class WFCTrainer : ScriptableObject
         PopulateTilesFromLoadedMaps();
     }
 
+    // Get allowed neighbours from a certain direction for a given tile
+    public List<string> GetAllowedNeighbours(string id, WFCManager.WFCDirection direction)
+    {
+        List<string> allowedNeighbours = new();
+        foreach (AssociationTuple neighbourTuple in tileAssociations[id])
+        {
+            if (neighbourTuple.direction == direction)
+            {
+                allowedNeighbours.Add(neighbourTuple.id);
+            }
+        }
+        return allowedNeighbours;
+    }
+
     // Load maps from maps folder
     private void LoadTrainingMaps()
     {
         // Obtain map GUIDs
-        string mapsPath = "Assets/Maps";
         string[] mapGuids = AssetDatabase.FindAssets("t:TextAsset", new string[] { mapsPath });
         if (mapGuids.Length == 0) { Debug.LogWarning("Couldn't find any maps!"); }
 
@@ -76,19 +88,17 @@ public class WFCTrainer : ScriptableObject
     }
 
     // Get associated tiles for every tile, with direction
-    // *****NOTA****: Por la forma rara en que instancia
-    // ***(hacia arriba primero en la columna, y asi hacia la derecha)
-    // ***entonces i depende del width, y j del height. Arriba=IZQ, Derecha=UP, etc.
     private void PopulateTilesFromLoadedMaps()
     {
         foreach (GridClassNameWrapper trainingMap in trainingMaps)
         {
-            for (int i = 0; i < trainingMap.gc.width; i++)
+            for (int i = 0; i < trainingMap.gc.height; i++)
             {
-                for (int j = 0; j < trainingMap.gc.height; j++)
+                for (int j = 0; j < trainingMap.gc.width; j++)
                 {
                     Tile currentTile = trainingMap.gc.Grid[i, j];
-                    var newNeighbours = GetNeighbourhood(i, j, currentTile.Id, trainingMap.gc);
+                    var newNeighbours = GetNeighbourhood(
+                        i, j, currentTile.Id, trainingMap.gc);
 
                     // Create frequency if new, otherwise add 1 to frequency
                     if (!tileFrequencies.ContainsKey(currentTile.Id))
@@ -118,32 +128,29 @@ public class WFCTrainer : ScriptableObject
     }
 
     // Neighborhood of a single tile
-    // *****NOTA****: Por la forma rara en que instancia
-    // ***(hacia arriba primero en la columna, y asi hacia la derecha)
-    // ***entonces i depende del width, y j del height. Arriba=IZQ, Derecha=UP, etc.
     private List<AssociationTuple> GetNeighbourhood(int i, int j, string id, GridClass gc)
     {
         List<AssociationTuple> neighbourhood = new();
-        // Check each direction (ignore walls and empty for training)
+        // Check each direction
         // UP
-        if (i > 0)
-        {
-            neighbourhood.Add(new(gc.Grid[i - 1, j].Id, WFCManager.WFCDirection.UP));
-        }
-        // DOWN
-        if (i < gc.width - 1)
-        {
-            neighbourhood.Add(new(gc.Grid[i + 1, j].Id, WFCManager.WFCDirection.DOWN));
-        }
-        // LEFT
         if (j > 0)
         {
-            neighbourhood.Add(new(gc.Grid[i, j - 1].Id, WFCManager.WFCDirection.LEFT));
+            neighbourhood.Add(new(gc.Grid[i, j - 1].Id, WFCManager.WFCDirection.UP));
         }
-        // RIGHT
+        // DOWN
         if (j < gc.height - 1)
         {
-            neighbourhood.Add(new(gc.Grid[i, j + 1].Id, WFCManager.WFCDirection.RIGHT));
+            neighbourhood.Add(new(gc.Grid[i, j + 1].Id, WFCManager.WFCDirection.DOWN));
+        }
+        // LEFT
+        if (i > 0)
+        {
+            neighbourhood.Add(new(gc.Grid[i - 1, j].Id, WFCManager.WFCDirection.LEFT));
+        }
+        // RIGHT
+        if (i < gc.width - 1)
+        {
+            neighbourhood.Add(new(gc.Grid[i + 1, j].Id, WFCManager.WFCDirection.RIGHT));
         }
         return neighbourhood;
     }
@@ -162,9 +169,9 @@ public class WFCTrainer : ScriptableObject
     public class AssociationTuple : IEquatable<AssociationTuple>
     {
         [SerializeField]
-        string id;
+        public string id;
         [SerializeField]
-        WFCManager.WFCDirection direction;
+        public WFCManager.WFCDirection direction;
         public AssociationTuple(string id, WFCManager.WFCDirection direction)
         {
             this.id = id;
@@ -177,6 +184,7 @@ public class WFCTrainer : ScriptableObject
             else { return false; }
         }
     }
+
     // To print GridClass instances with names (based on json file name) in Inspector
     [Serializable]
     public class GridClassNameWrapper

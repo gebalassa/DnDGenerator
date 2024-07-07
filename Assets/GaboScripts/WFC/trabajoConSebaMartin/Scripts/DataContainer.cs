@@ -2,47 +2,50 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DataContainer : MonoBehaviour
+namespace SebaTrabajo
 {
-    [SerializeField] List<GameObject> tilePrefabs = new List<GameObject>();
-
-    List<TileType> tileTypes = new List<TileType>();
-
-    public List<GameObject> GetTiles() => tilePrefabs;
-    public List<TileType> GetTileTypes() => tileTypes;
-
-    private void Awake()
+    public class DataContainer : MonoBehaviour
     {
-        // Acá se inicializan los tiles uno por uno
-        foreach(GameObject tile in tilePrefabs)
-        {
-            tile.GetComponent<SebaTile>().Initialize();
-        }
-        FindObjectOfType<ConnectionTester>()?.SetTiles(tilePrefabs);
+        [SerializeField] List<GameObject> tilePrefabs = new List<GameObject>();
 
-        // Los TyleTypes usados se cargan a la lista tileTypes
-        TileType curr;
-        foreach (GameObject obj in tilePrefabs)
+        List<TileType> tileTypes = new List<TileType>();
+
+        public List<GameObject> GetTiles() => tilePrefabs;
+        public List<TileType> GetTileTypes() => tileTypes;
+
+        private void Awake()
         {
-            curr = obj.GetComponent<SebaTile>().GetTileType();
-            // Verifica unicidad de los TileType
-            if (!tileTypes.Contains(curr))
+            // Acá se inicializan los tiles uno por uno
+            foreach (GameObject tile in tilePrefabs)
             {
-                tileTypes.Add(curr);
+                tile.GetComponent<SebaTile>().Initialize();
             }
-            else { Debug.LogError("Se encontró tipos repetidos!"); }
-        }
-    }
+            FindObjectOfType<ConnectionTester>()?.SetTiles(tilePrefabs);
 
-    // Retorno un GameObject para instanciar un tile
-    public GameObject GetTile(TileType t)
-    {
-        foreach (GameObject tile in tilePrefabs)
+            // Los TyleTypes usados se cargan a la lista tileTypes
+            TileType curr;
+            foreach (GameObject obj in tilePrefabs)
+            {
+                curr = obj.GetComponent<SebaTile>().GetTileType();
+                // Verifica unicidad de los TileType
+                if (!tileTypes.Contains(curr))
+                {
+                    tileTypes.Add(curr);
+                }
+                else { Debug.LogError("Se encontró tipos repetidos!"); }
+            }
+        }
+
+        // Retorno un GameObject para instanciar un tile
+        public GameObject GetTile(TileType t)
         {
-            if(tile.GetComponent<SebaTile>().GetTileType() == t) return tile;
+            foreach (GameObject tile in tilePrefabs)
+            {
+                if (tile.GetComponent<SebaTile>().GetTileType() == t) return tile;
+            }
+            return null;
         }
-        return null;
+
+
     }
-
-
 }
