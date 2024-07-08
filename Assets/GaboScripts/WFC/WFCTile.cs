@@ -63,6 +63,10 @@ public class WFCTile
             }
         }
     }
+    public void Collapse(string id)
+    {
+        _Collapse(id);
+    }
     private void _Collapse(string id)
     {
         ClearPossibleTileIds();

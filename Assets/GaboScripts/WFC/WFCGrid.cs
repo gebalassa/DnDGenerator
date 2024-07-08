@@ -35,7 +35,7 @@ public class WFCGrid
 
     public GridClass GetWFC(GridClass gc)
     {
-        // Fill WFCGrid with possible tiles
+        // Initial fill of tiles
         Fill(gc);
 
         // Cycle between collapsing random and propagating until fully collapsed
@@ -73,6 +73,14 @@ public class WFCGrid
         WFCTile chosenTile = uncollapsedTiles[0];
         chosenTile.Collapse();
         Propagate(chosenTile);
+    }
+    private void CollapseTile(GridClass gc, int i, int j)
+    {
+        if (wfcGrid[i, j].CanBeCollapsed() && !wfcGrid[i,j].IsCollapsed())
+        {
+            wfcGrid[i, j].Collapse(gc.Grid[i, j].Id);
+            Propagate(wfcGrid[i, j]);
+        }
     }
 
     // TODO
@@ -175,7 +183,7 @@ public class WFCGrid
             }
             if (!isObjectiveAllowed) { toRemove.Add(currObjectiveId); }
         }
-        // if there was changed, objectiveShouldBeQueued = true
+        // if there was change, objectiveShouldBeQueued = true
         if (toRemove.Count != 0)
         {
             objectiveShouldbeQueued = true;
@@ -221,140 +229,225 @@ public class WFCGrid
         return uncollapsedTiles;
     }
 
-    // Initial filling of grid with possibilities
-    public void Fill(GridClass gc)
+    // Fill V2.0
+    private void Fill(GridClass gc)
     {
         // Clear tiles
         Clear();
 
+        // All start with every tile
         for (int i = 0; i < gc.height; i++)
         {
             for (int j = 0; j < gc.width; j++)
             {
-                Tile currGridClassTile = gc.Grid[i, j];
-                // Two cases: Selected/Not Selected
-                // 1) NOT Selected: Collapse (single possible tile id)
-                if (!currGridClassTile.selected)
+                foreach (string id in trainer.tileAssociations.Keys)
                 {
-                    wfcGrid[i, j].ClearPossibleTileIds();
-                    wfcGrid[i, j].AddPossibleTileId(currGridClassTile.Id);
+                    wfcGrid[i, j].AddPossibleTileId(id);
                 }
-                // 2) Selected: Add possible tiles according to neighbours
-                else
+            }
+        }
+
+        // Iterate collapsing of 'non-selected tiles'
+        for (int i = 0; i < gc.height; i++)
+        {
+            for (int j = 0; j < gc.width; j++)
+            {
+                if (!gc.Grid[i, j].selected)
                 {
-                    List<string> possibleTileIds = FindPossibleTileIds(gc, i, j);
-                    wfcGrid[i, j].AddPossibleTileIds(possibleTileIds);
+                    CollapseTile(gc, i, j);
                 }
             }
         }
     }
 
-    // Obtain tiles valid for all neighbouring tiles.
-    private List<string> FindPossibleTileIds(GridClass gc, int i, int j)
-    {
-        List<string> possibleTileIds = new List<string>();
+    #region failed fill 1.0
+    // Initial filling of grid with possibilities
+    //public void Fill(GridClass gc)
+    //{
+    //    // Clear tiles
+    //    Clear();
 
-        // Get allowed tiles from first valid neighbour,
-        // then check if its allowed by the others.
-        bool isInitiallyFilled = false;
-        //UP
-        if (i > 0)
-        {
-            Tile upperGridClassTile = gc.Grid[i - 1, j];
-            List<string> upperAllowedNeighbours = trainer.GetAllowedNeighbours(
-                upperGridClassTile.Id,
-                WFCManager.WFCDirection.DOWN); // Opposing side
-            possibleTileIds.AddRange(upperAllowedNeighbours);
-            isInitiallyFilled = true;
-        }
-        // DOWN
-        if (i < gc.height - 1)
-        {
-            Tile lowerGridClassTile = gc.Grid[i + 1, j];
-            List<string> lowerAllowedNeighbours = trainer.GetAllowedNeighbours(
-                    lowerGridClassTile.Id,
-                    WFCManager.WFCDirection.UP); // Opposing side
-            if (!isInitiallyFilled)
-            {
-                possibleTileIds.AddRange(lowerAllowedNeighbours);
-                isInitiallyFilled = true;
-            }
-            else
-            {
-                List<string> toRemove = new List<string>();
-                foreach (string possibleTileId in possibleTileIds)
-                {
-                    if (!lowerAllowedNeighbours.Contains(possibleTileId))
-                    {
-                        toRemove.Add(possibleTileId);
-                    }
-                }
-                foreach (string idToRemove in toRemove)
-                {
-                    possibleTileIds.Remove(idToRemove);
-                }
-            }
-        }
-        // LEFT
-        if (j > 0)
-        {
-            Tile leftGridClassTile = gc.Grid[i, j - 1];
-            List<string> leftAllowedNeighbours = trainer.GetAllowedNeighbours(
-                    leftGridClassTile.Id,
-                    WFCManager.WFCDirection.RIGHT); // Opposing side
-            if (!isInitiallyFilled)
-            {
-                possibleTileIds.AddRange(leftAllowedNeighbours);
-                isInitiallyFilled = true;
-            }
-            else
-            {
-                List<string> toRemove = new List<string>();
-                foreach (string possibleTileId in possibleTileIds)
-                {
-                    if (!leftAllowedNeighbours.Contains(possibleTileId))
-                    {
-                        toRemove.Add(possibleTileId);
-                    }
-                }
-                foreach (string idToRemove in toRemove)
-                {
-                    possibleTileIds.Remove(idToRemove);
-                }
-            }
-        }
-        // RIGHT
-        if (j < gc.width - 1)
-        {
-            Tile rightGridClassTile = gc.Grid[i, j + 1];
-            List<string> rightAllowedNeighbours = trainer.GetAllowedNeighbours(
-                    rightGridClassTile.Id,
-                    WFCManager.WFCDirection.LEFT); // Opposing side
-            if (!isInitiallyFilled)
-            {
-                possibleTileIds.AddRange(rightAllowedNeighbours);
-                isInitiallyFilled = true;
-            }
-            else
-            {
-                List<string> toRemove = new List<string>();
-                foreach (string possibleTileId in possibleTileIds)
-                {
-                    if (!rightAllowedNeighbours.Contains(possibleTileId))
-                    {
-                        toRemove.Add(possibleTileId);
-                    }
-                }
-                foreach (string idToRemove in toRemove)
-                {
-                    possibleTileIds.Remove(idToRemove);
-                }
-            }
-        }
+    //    // All 'selected' start with every tile
+    //    for (int i = 0; i < gc.height; i++)
+    //    {
+    //        for (int j = 0; j < gc.width; j++)
+    //        {
+    //            if (gc.Grid[i,j].selected)
+    //            {
+    //                foreach (string id in trainer.tileAssociations.Keys)
+    //                {
+    //                    wfcGrid[i,j].AddPossibleTileId(id);
+    //                }
+    //            }
+    //        }
+    //    }
 
-        // Return tiles allowed by every side.
-        return possibleTileIds;
-    }
+    //    // First, collapse each non-selected tile before anything else.
+    //    while (!IsGridCollapsedAsMuchAsPossible())
+    //    {
+    //        CollapseLeastEntropy();
+    //    }
+
+
+
+
+    //    //-----------------
+    //    #region ignore for now
+    //    //    for (int i = 0; i < gc.height; i++)
+    //    //    {
+    //    //        for (int j = 0; j < gc.width; j++)
+    //    //        {
+    //    //            Tile currGridClassTile = gc.Grid[i, j];
+    //    //            // Two cases: Selected/Not Selected
+    //    //            // 1) NOT Selected: Collapse (single possible tile id)
+    //    //            if (!currGridClassTile.selected)
+    //    //            {
+    //    //                wfcGrid[i, j].ClearPossibleTileIds();
+    //    //                wfcGrid[i, j].AddPossibleTileId(currGridClassTile.Id);
+    //    //            }
+    //    //            // 2) Selected: Add possible tiles according to neighbours
+    //    //            else
+    //    //            {
+    //    //                List<string> possibleTileIds = FindPossibleTileIds(gc, i, j);
+    //    //                wfcGrid[i, j].AddPossibleTileIds(possibleTileIds);
+    //    //            }
+    //    //        }
+    //    //    }
+    //    //}
+
+    //    //// Obtain tiles valid for all neighbouring tiles.
+    //    //private List<string> FindPossibleTileIds(GridClass gc, int i, int j)
+    //    //{
+    //    //    List<string> possibleTileIds = new List<string>();
+
+    //    //    // Get allowed tiles from first valid neighbour,
+    //    //    // then check if its allowed by the others.
+    //    //    bool isInitiallyFilled = false;
+    //    //    //UP
+    //    //    if (i > 0)
+    //    //    {
+    //    //        Tile neighbourTile = gc.Grid[i - 1, j];
+    //    //        // "Selected" tiles do not interfere
+    //    //        if (!neighbourTile.selected)
+    //    //        {
+    //    //            List<string> allowedNeighbourss = trainer.GetAllowedNeighbours(
+    //    //                neighbourTile.Id,
+    //    //                WFCManager.WFCDirection.DOWN); // Opposing side
+    //    //            possibleTileIds.AddRange(allowedNeighbourss);
+    //    //            isInitiallyFilled = true;
+    //    //        }
+    //    //    }
+    //    //    // DOWN
+    //    //    if (i < gc.height - 1)
+    //    //    {
+    //    //        Tile neighbourTile = gc.Grid[i + 1, j];
+    //    //        // Selected tiles are considered empty
+    //    //        if (!neighbourTile.selected)
+    //    //        {
+    //    //            List<string> allowedNeighbours = trainer.GetAllowedNeighbours(
+    //    //                neighbourTile.Id,
+    //    //                WFCManager.WFCDirection.UP); // Opposing side
+    //    //            if (!isInitiallyFilled)
+    //    //            {
+    //    //                possibleTileIds.AddRange(allowedNeighbours);
+    //    //                isInitiallyFilled = true;
+    //    //            }
+    //    //            else
+    //    //            {
+    //    //                List<string> toRemove = new List<string>();
+    //    //                // Obtain removable
+    //    //                foreach (string possibleTileId in possibleTileIds)
+    //    //                {
+    //    //                    if (!allowedNeighbours.Contains(possibleTileId))
+    //    //                    {
+    //    //                        toRemove.Add(possibleTileId);
+    //    //                    }
+    //    //                }
+    //    //                // Remove
+    //    //                foreach (string idToRemove in toRemove)
+    //    //                {
+    //    //                    possibleTileIds.Remove(idToRemove);
+    //    //                }
+    //    //            }
+    //    //        }
+
+    //    //    }
+    //    //    // LEFT
+    //    //    if (j > 0)
+    //    //    {
+    //    //        Tile neighbourTile = gc.Grid[i, j - 1];
+    //    //        // Selected tiles are considered empty
+    //    //        if (!neighbourTile.selected)
+    //    //        {
+    //    //            List<string> allowedNeighbours = trainer.GetAllowedNeighbours(
+    //    //                neighbourTile.Id,
+    //    //                WFCManager.WFCDirection.RIGHT); // Opposing side
+    //    //            if (!isInitiallyFilled)
+    //    //            {
+    //    //                possibleTileIds.AddRange(allowedNeighbours);
+    //    //                isInitiallyFilled = true;
+    //    //            }
+    //    //            else
+    //    //            {
+    //    //                List<string> toRemove = new List<string>();
+    //    //                // Obtain removable
+    //    //                foreach (string possibleTileId in possibleTileIds)
+    //    //                {
+    //    //                    if (!allowedNeighbours.Contains(possibleTileId))
+    //    //                    {
+    //    //                        toRemove.Add(possibleTileId);
+    //    //                    }
+    //    //                }
+    //    //                // Remove
+    //    //                foreach (string idToRemove in toRemove)
+    //    //                {
+    //    //                    possibleTileIds.Remove(idToRemove);
+    //    //                }
+    //    //            }
+    //    //        }
+    //    //    }
+    //    //    // RIGHT
+    //    //    if (j < gc.width - 1)
+    //    //    {
+    //    //        Tile neighbourTile = gc.Grid[i, j + 1];
+    //    //        // Selected tiles are considered empty
+    //    //        if (!neighbourTile.selected)
+    //    //        {
+    //    //            List<string> allowedNeighbours = trainer.GetAllowedNeighbours(
+    //    //                neighbourTile.Id,
+    //    //                WFCManager.WFCDirection.LEFT); // Opposing side
+    //    //            if (!isInitiallyFilled)
+    //    //            {
+    //    //                possibleTileIds.AddRange(allowedNeighbours);
+    //    //                isInitiallyFilled = true;
+    //    //            }
+    //    //            else
+    //    //            {
+    //    //                List<string> toRemove = new List<string>();
+    //    //                // Obtain removable
+    //    //                foreach (string possibleTileId in possibleTileIds)
+    //    //                {
+    //    //                    if (!allowedNeighbours.Contains(possibleTileId))
+    //    //                    {
+    //    //                        toRemove.Add(possibleTileId);
+    //    //                    }
+    //    //                }
+    //    //                // Remove
+    //    //                foreach (string idToRemove in toRemove)
+    //    //                {
+    //    //                    possibleTileIds.Remove(idToRemove);
+    //    //                }
+    //    //            }
+    //    //        }
+    //    //    } 
+
+    //    //// Return tiles allowed by every side.
+    //    //return possibleTileIds;
+    //    #endregion
+
+    //    return null;
+    //}
+    #endregion
 
     private bool IsGridCollapsedAsMuchAsPossible()
     {
