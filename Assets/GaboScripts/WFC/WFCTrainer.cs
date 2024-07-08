@@ -30,10 +30,20 @@ public class WFCTrainer : ScriptableObject
     public string mapsPath = "Assets/Maps";
     [SerializedDictionary("ID", "Association List")]
     public SerializedDictionary<string, List<AssociationTuple>> tileAssociations = new();
-    [SerializedDictionary("ID", "Frequency")]
-    
+    [SerializedDictionary("ID", "Frequency")]    
     public SerializedDictionary<string, int> tileFrequencies = new();
     public List<GridClassNameWrapper> trainingMaps = new List<GridClassNameWrapper>();
+    
+    //DEBUG
+    public SerializedDictionary<string, string> debugNamesForIds = new();
+    ImageManager debugImageManager;
+    //FIN DEBUG
+
+    private void OnEnable()
+    {
+        //DEBUG
+        debugImageManager = FindObjectOfType<ImageManager>();
+    }
 
     // Train using maps to obtain tile frequencies and associations
     public void Train()
@@ -43,6 +53,8 @@ public class WFCTrainer : ScriptableObject
         PopulateTilesFromLoadedMaps();
         // Remove walls from database
         RemoveWallsFromTraining();
+        //DEBUG: Populate ids with sprite names
+        GetNamesWithIds();
     }
 
     // Get allowed neighbours from a certain direction for a given tile
@@ -166,6 +178,30 @@ public class WFCTrainer : ScriptableObject
 
     private bool IsWall(string id) { return id == "wall"; }
     private bool IsNone(string id) { return id == "none"; }
+
+    // DEBUG: Get sprite name for each id in wfc tiles
+    private void GetNamesWithIds()
+    {
+        // Clear
+        debugNamesForIds.Clear();
+        // Add
+        foreach (string id in tileAssociations.Keys)
+        {
+            // DEBUG: Add to id-sprite name dictionary
+            if (!IsWall(id) && !IsNone(id))
+            {
+                ImageDnd img = debugImageManager.db.GetImage(id);
+                if (img != null)
+                {
+                    debugNamesForIds.Add(id, img.sprite.name);
+                }
+                else
+                {
+                    Debug.LogError($"Id {id} in wfc tiles but not in ImgManager!");
+                }
+            }
+        }
+    }
 
     // Remove walls from training database
     private void RemoveWallsFromTraining()
