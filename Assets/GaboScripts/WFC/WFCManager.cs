@@ -37,7 +37,7 @@ public class WFCManager : MonoBehaviour
         WFCGrid wfcGrid = new WFCGrid(grid.width, grid.height);
         GridClass newGrid = wfcGrid.GetWFC(grid);
 
-        return new GridClass(grid.height, grid.width);
+        return newGrid;
     }
 
     // DEBUG: Get random grid.

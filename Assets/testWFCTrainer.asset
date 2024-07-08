@@ -545,14 +545,6 @@ MonoBehaviour:
         direction: 2
       - id: 125f3068c80074c959a01063c12f700c
         direction: 2
-      - id: wall
-        direction: 3
-      - id: wall
-        direction: 1
-      - id: wall
-        direction: 0
-      - id: wall
-        direction: 2
       - id: c3f3c9cb6c4341cc91081b665b67da46
         direction: 1
       - id: c3f3c9cb6c4341cc91081b665b67da46
@@ -637,8 +629,6 @@ MonoBehaviour:
         direction: 2
       - id: dede34c059a81d8d49a80f5fd5f45283
         direction: 3
-      - id: wall
-        direction: 2
     - Key: 4e094cf6ef733bfa9a11171c88fcedd3
       Value:
       - id: c5075a0b8bcd9592f458eb7e25af8652
@@ -656,8 +646,6 @@ MonoBehaviour:
       - id: da878235784188dff59e38017e336dd2
         direction: 2
       - id: 7d1a6bc8abca6bbb1186e5bb878f1f8b
-        direction: 2
-      - id: wall
         direction: 2
     - Key: dede34c059a81d8d49a80f5fd5f45283
       Value:
@@ -679,62 +667,16 @@ MonoBehaviour:
         direction: 2
       - id: none
         direction: 3
-    - Key: wall
-      Value:
-      - id: none
-        direction: 0
-      - id: wall
-        direction: 1
-      - id: wall
-        direction: 3
-      - id: wall
-        direction: 0
-      - id: none
-        direction: 3
-      - id: none
-        direction: 2
-      - id: none
-        direction: 1
-      - id: wall
-        direction: 2
-      - id: c3f3c9cb6c4341cc91081b665b67da46
-        direction: 3
-      - id: c3f3c9cb6c4341cc91081b665b67da46
-        direction: 2
-      - id: a46fc0680b3a43cb15903929077f59b4
-        direction: 0
-      - id: e24566e47ba09d6fb1795e88b008edd1
-        direction: 0
-      - id: 68acc73f63af1179a885c6171bf1aa76
-        direction: 2
-      - id: e24566e47ba09d6fb1795e88b008edd1
-        direction: 2
-      - id: 8180a61df0b6722a3de521b7cfc6b3ed
-        direction: 3
-      - id: 095481e0ee5847b48ab794cc9448bdc1
-        direction: 3
-      - id: 8180a61df0b6722a3de521b7cfc6b3ed
-        direction: 1
-      - id: 7c086a6003484ab3b2957feb6b1f718b
-        direction: 1
-      - id: c5075a0b8bcd9592f458eb7e25af8652
-        direction: 3
-      - id: 4e094cf6ef733bfa9a11171c88fcedd3
-        direction: 3
     - Key: c3f3c9cb6c4341cc91081b665b67da46
       Value:
       - id: none
         direction: 0
       - id: none
         direction: 1
-      - id: wall
-        direction: 2
       - id: c3f3c9cb6c4341cc91081b665b67da46
         direction: 3
       - id: c3f3c9cb6c4341cc91081b665b67da46
         direction: 2
-      - id: wall
-        direction: 3
     - Key: fedf8e713b0f84a44c2ab18c0a40d93b
       Value:
       - id: none
@@ -757,8 +699,6 @@ MonoBehaviour:
         direction: 2
       - id: e24566e47ba09d6fb1795e88b008edd1
         direction: 3
-      - id: wall
-        direction: 1
     - Key: 68acc73f63af1179a885c6171bf1aa76
       Value:
       - id: none
@@ -768,8 +708,6 @@ MonoBehaviour:
       - id: fedf8e713b0f84a44c2ab18c0a40d93b
         direction: 2
       - id: none
-        direction: 3
-      - id: wall
         direction: 3
     - Key: e24566e47ba09d6fb1795e88b008edd1
       Value:
@@ -781,18 +719,10 @@ MonoBehaviour:
         direction: 2
       - id: fedf8e713b0f84a44c2ab18c0a40d93b
         direction: 3
-      - id: wall
-        direction: 1
-      - id: wall
-        direction: 3
     - Key: 8180a61df0b6722a3de521b7cfc6b3ed
       Value:
-      - id: wall
-        direction: 0
       - id: 095481e0ee5847b48ab794cc9448bdc1
         direction: 1
-      - id: wall
-        direction: 2
       - id: 7c086a6003484ab3b2957feb6b1f718b
         direction: 3
     - Key: 095481e0ee5847b48ab794cc9448bdc1
@@ -801,14 +731,10 @@ MonoBehaviour:
         direction: 0
       - id: none
         direction: 1
-      - id: wall
-        direction: 2
       - id: bd53714d96029c11dc6fc5bed92381c4
         direction: 3
     - Key: 7c086a6003484ab3b2957feb6b1f718b
       Value:
-      - id: wall
-        direction: 0
       - id: bd53714d96029c11dc6fc5bed92381c4
         direction: 1
       - id: 8180a61df0b6722a3de521b7cfc6b3ed
@@ -941,8 +867,6 @@ MonoBehaviour:
       Value: 3
     - Key: 125f3068c80074c959a01063c12f700c
       Value: 3
-    - Key: wall
-      Value: 57
     - Key: c3f3c9cb6c4341cc91081b665b67da46
       Value: 2
     - Key: fedf8e713b0f84a44c2ab18c0a40d93b

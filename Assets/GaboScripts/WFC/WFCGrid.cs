@@ -6,14 +6,18 @@ using UnityEngine;
 using static WFCManager;
 
 [System.Serializable]
-public class WFCGrid : Object
+public class WFCGrid
 {
     public int Height { get; private set; }
     public int Width { get; private set; }
     public WFCTile[,] Grid { get { return wfcGrid; } set { wfcGrid = value; } }
 
     private WFCTile[,] wfcGrid;
-    private WFCTrainer trainer = FindAnyObjectByType<ManagerReferences>().wfcManager.trainer;
+    private WFCTrainer trainer = Object.FindAnyObjectByType<ManagerReferences>().wfcManager.trainer;
+
+    //DEBUG
+    //private int debugSteps = 5000;
+    //FIN DEBUG
 
     public WFCGrid(int height, int width)
     {
@@ -46,7 +50,7 @@ public class WFCGrid : Object
         {
             for (int j = 0; j < Width; j++)
             {
-                if (Grid[i, j].CanBeCollapsed() && Grid[i,j].IsCollapsed())
+                if (Grid[i, j].CanBeCollapsed() && Grid[i, j].IsCollapsed())
                 {
                     gc.Grid[i, j].Id = Grid[i, j].GetPossibleTileIds()[0];
                 }
@@ -77,8 +81,11 @@ public class WFCGrid : Object
         Queue<WFCTile> pending = new();
         pending.Enqueue(collapsedTile);
 
-        while (pending.Count > 0)
+        while (pending.Count > 0)// && debugSteps > 0)
         {
+            //DEBUG
+            //debugSteps--;
+            //FIN DEBUG
             WFCTile currTile = pending.Dequeue();
 
             // Check directions for uncollapsed tiles, then propagate.
@@ -169,7 +176,10 @@ public class WFCGrid : Object
             if (!isObjectiveAllowed) { toRemove.Add(currObjectiveId); }
         }
         // if there was changed, objectiveShouldBeQueued = true
-        if (toRemove.Count != 0) { objectiveShouldbeQueued = true; }
+        if (toRemove.Count != 0)
+        {
+            objectiveShouldbeQueued = true;
+        }
         // Remove each non-allowed tile
         foreach (string removableId in toRemove)
         {
@@ -196,11 +206,13 @@ public class WFCGrid : Object
                 }
                 else
                 {
-                    for (int u = 0; u < uncollapsedTiles.Count; u++)
+                    int initialCount = uncollapsedTiles.Count;
+                    for (int u = 0; u < initialCount; u++)
                     {
                         if (currTile.GetEntropy() <= uncollapsedTiles[u].GetEntropy())
                         {
                             uncollapsedTiles.Insert(u, currTile);
+                            break;
                         }
                     }
                 }
@@ -350,7 +362,10 @@ public class WFCGrid : Object
         {
             for (int j = 0; j < Width; j++)
             {
-                if (!Grid[i, j].IsCollapsed() && Grid[i, j].CanBeCollapsed()) { return false; }
+                if (!Grid[i, j].IsCollapsed() && Grid[i, j].CanBeCollapsed())
+                {
+                    return false;
+                }
             }
         }
         return true;

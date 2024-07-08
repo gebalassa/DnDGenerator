@@ -41,6 +41,8 @@ public class WFCTrainer : ScriptableObject
         Clear();
         LoadTrainingMaps();
         PopulateTilesFromLoadedMaps();
+        // Remove walls from database
+        RemoveWallsFromTraining();
     }
 
     // Get allowed neighbours from a certain direction for a given tile
@@ -164,6 +166,17 @@ public class WFCTrainer : ScriptableObject
 
     private bool IsWall(string id) { return id == "wall"; }
     private bool IsNone(string id) { return id == "none"; }
+
+    // Remove walls from training database
+    private void RemoveWallsFromTraining()
+    {
+        tileAssociations.Remove("wall");
+        tileFrequencies.Remove("wall");
+        foreach (string id in tileAssociations.Keys)
+        {
+            tileAssociations[id].RemoveAll(tile => tile.id == "wall");
+        }
+    }
 
     [Serializable]
     public class AssociationTuple : IEquatable<AssociationTuple>

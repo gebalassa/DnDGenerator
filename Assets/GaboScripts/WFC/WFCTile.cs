@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class WFCTile : Object
+public class WFCTile
 {
     List<string> possibleTileIds = new List<string>();
     public int i;
@@ -13,7 +13,7 @@ public class WFCTile : Object
     {
         this.i = i;
         this.j = j;
-        trainer = FindObjectOfType<ManagerReferences>().wfcManager.trainer;
+        trainer = Object.FindObjectOfType<ManagerReferences>().wfcManager.trainer;
     }
     public List<string> GetPossibleTileIds() { return possibleTileIds; }
     public void AddPossibleTileId(string id) { possibleTileIds.Add(id); }
@@ -24,7 +24,10 @@ public class WFCTile : Object
 
     public bool IsCollapsed()
     {
-        if (possibleTileIds.Count == 1) { return true; }
+        if (possibleTileIds.Count == 1)
+        {
+            return true;
+        }
         else if (possibleTileIds.Count == 0)
         {
             Debug.LogWarning("Tile " + i + "," + j + " has 0 possibilities!");
