@@ -1,13 +1,16 @@
 using AnotherFileBrowser.Windows;
+using SFB;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Tilemaps;
+using UnityEngine.VFX;
 
 public class GridManager : MonoBehaviour
 {
@@ -16,8 +19,6 @@ public class GridManager : MonoBehaviour
     
     GridClass _grid;
     ImageDatabase database;
-
-    [SerializeField] float gizmosSize;
 
     [SerializeField] Tilemap backgroundMap;
     [SerializeField] Tilemap assetsMap;
@@ -28,86 +29,56 @@ public class GridManager : MonoBehaviour
 
     [SerializeField] OutputCameraScript outputCamera;
 
-    //[SerializeField] bool debugGrid = false;
-
-    string saveFilePath = null;
+    SaveLoadScript saveLoadScr = null;
 
     private void Awake()
     {
-        _grid = new GridClass(width,height);
-        PaintBackgroundMap();
-        outputCamera.ResizeCamera(this);
+        //Obtener base de datos
         database = GetComponent<ManagerReferences>().database;
+
+        //Get grid from AuxManager
+        if (!GetGridFromAux())
+        {
+            LogFileManager.logString += "ERROR: AuxManager's SaveLoadScript returned null\n";
+            _grid = new GridClass(width, height);
+        }
+
+        //Paint background
+        PaintBackgroundMap();
+        //Paint assets
+        PaintAssetMap();
+        //Adjust outputCamera
+        outputCamera.ResizeCamera(this);
     }
 
-    // Update is called once per frame
-    void Update()
+    bool GetGridFromAux()
     {
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            LogFileManager.Write();
-            SaveGrid();
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            if(LoadGrid())
-            {
-                Debug.Log("Map loaded succesfully");
-                LogFileManager.logString += "Map loaded succesfully\n";
-                PaintBackgroundMap();
-                PaintAssetMap();
-            }
-        }
+        //Get script reference
+        saveLoadScr = GameObject.Find("AuxManager").GetComponent<SaveLoadScript>();
+        if(saveLoadScr == null) { return false; }
+
+        //Copy values
+        _grid = saveLoadScr.GetGrid();
+
+        Vector2Int dimensions = saveLoadScr.GetDimensions();
+        width = dimensions.x;
+        height = dimensions.y;
+
+        return true;
     }
 
-    void SaveGrid()
+    public void CallForSaveGrid()
     {
-        string json = JsonUtility.ToJson( new GridHelper(_grid), true );
-        
-        if(saveFilePath != null)
+        if (saveLoadScr != null)
         {
-            File.WriteAllText(saveFilePath, json);
+            saveLoadScr.SaveGrid();
         }
         else
         {
-            string saveFilePath = EditorUtility.SaveFilePanel("Choose location to save map", "Assets/GridSystem", "", "json");
-            if (saveFilePath.Length == 0) { return; }
-            File.WriteAllText(saveFilePath, json);
-        }//*/
-    }
-
-    bool LoadGrid()
-    {
-        var bp = new BrowserProperties();
-        bp.filter = "Map files (*.json) | *.json";
-        bp.filterIndex = 0;
-
-        string loadFilePath = "";
-
-        //Get path through explorer
-        new FileBrowser().OpenFileBrowser(bp, path =>
-        {
-            loadFilePath = path;
-            LogFileManager.logString += path + "\n";
-            Debug.Log(path);
-        });
-
-        if (loadFilePath.Length == 0) { return false; }
-
-        string json = File.ReadAllText(loadFilePath);
-        GridHelper gh = JsonUtility.FromJson<GridHelper>(json);
-
-        GridClass loadedGrid = gh.ConvertToGridClass();
-        if(loadedGrid != null)
-        {
-            width = loadedGrid.width;
-            height = loadedGrid.height;
-            _grid = loadedGrid;
-
-            return true;
+            LogFileManager.logString += "ERROR: Can't save map without AuxManager's SaveLoadScript reference\n";
         }
-        return false;
     }
+
 
     #region PAINT MAP FUNCTIONS
     /// <summary>
@@ -174,7 +145,7 @@ public class GridManager : MonoBehaviour
     public void EraseAssetTile(int x, int y)
     {
         _grid.Grid[x, y].Id = "none";
-        assetsMap.SetTile(new Vector3Int(x, y), ScriptableObject.CreateInstance<UnityEngine.Tilemaps.Tile>());
+        assetsMap.SetTile(new Vector3Int(x, y), new UnityEngine.Tilemaps.Tile());
     }
     /// <summary>
     /// Paints all the tiles from the grid in the asset tilemap
@@ -209,7 +180,7 @@ public class GridManager : MonoBehaviour
                 }
                 else
                 {
-                    assetsMap.SetTile(new Vector3Int(i, j), new UnityEngine.Tilemaps.Tile());
+                    assetsMap.SetTile(new Vector3Int(i, j), ScriptableObject.CreateInstance<UnityEngine.Tilemaps.Tile>());
                 }
             }
         }
