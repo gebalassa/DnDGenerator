@@ -147,24 +147,24 @@ public class WFCTrainer : ScriptableObject
         List<AssociationTuple> neighbourhood = new();
         // Check each direction
         // UP
-        if (j > 0)
-        {
-            neighbourhood.Add(new(gc.Grid[i, j - 1].Id, WFCManager.WFCDirection.UP));
-        }
-        // DOWN
-        if (j < gc.height - 1)
-        {
-            neighbourhood.Add(new(gc.Grid[i, j + 1].Id, WFCManager.WFCDirection.DOWN));
-        }
-        // LEFT
         if (i > 0)
         {
-            neighbourhood.Add(new(gc.Grid[i - 1, j].Id, WFCManager.WFCDirection.LEFT));
+            neighbourhood.Add(new(gc.Grid[i - 1, j].Id, WFCManager.WFCDirection.UP));
+        }
+        // DOWN
+        if (i < gc.height - 1)
+        {
+            neighbourhood.Add(new(gc.Grid[i + 1, j].Id, WFCManager.WFCDirection.DOWN));
+        }
+        // LEFT
+        if (j > 0)
+        {
+            neighbourhood.Add(new(gc.Grid[i, j - 1].Id, WFCManager.WFCDirection.LEFT));
         }
         // RIGHT
-        if (i < gc.width - 1)
+        if (j < gc.width - 1)
         {
-            neighbourhood.Add(new(gc.Grid[i + 1, j].Id, WFCManager.WFCDirection.RIGHT));
+            neighbourhood.Add(new(gc.Grid[i, j + 1].Id, WFCManager.WFCDirection.RIGHT));
         }
         return neighbourhood;
     }
