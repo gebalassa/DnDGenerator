@@ -1,7 +1,4 @@
-using SebaTrabajo;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using static WFCManager;
 
@@ -14,6 +11,7 @@ public class WFCGrid
 
     private WFCTile[,] wfcGrid;
     private WFCTrainer trainer = Object.FindAnyObjectByType<ManagerReferences>().wfcManager.trainer;
+    private GridClass currentGridClass;
 
     //DEBUG
     //private int debugSteps = 5000;
@@ -35,6 +33,12 @@ public class WFCGrid
 
     public GridClass GetWFC(GridClass gc)
     {
+        // Make class-wide reference to current GridClass parameter.
+        currentGridClass = gc;
+
+        // Check if any tiles selected, otherwise return as is.
+        if (!IsAnyTileSelected(gc)) { Debug.LogWarning("No tiles selected."); return gc; }
+
         // Initial fill of tiles
         Fill(gc);
 
@@ -44,6 +48,9 @@ public class WFCGrid
         {
             CollapseLeastEntropy();
         }
+
+        // If non-selected tiles were modified, they recover their original ids.
+        ResetSelectedTileIds();
 
         // Assign values to GridClass
         for (int i = 0; i < Height; i++)
@@ -71,19 +78,19 @@ public class WFCGrid
         List<WFCTile> uncollapsedTiles = GetUncollapsedByEntropy();
         if (uncollapsedTiles.Count == 0) { Debug.LogWarning("No uncollapsed tiles!"); return; }
         WFCTile chosenTile = uncollapsedTiles[0];
-        chosenTile.Collapse();
-        Propagate(chosenTile);
+        //chosenTile.Collapse();
+        //Propagate(chosenTile);
+        CollapseTile(currentGridClass, chosenTile.i, chosenTile.j);
     }
     private void CollapseTile(GridClass gc, int i, int j)
     {
-        if (wfcGrid[i, j].CanBeCollapsed() && !wfcGrid[i,j].IsCollapsed())
+        if (Grid[i, j].CanBeCollapsed() && !Grid[i, j].IsCollapsed())
         {
-            wfcGrid[i, j].Collapse(gc.Grid[i, j].Id);
-            Propagate(wfcGrid[i, j]);
+            Grid[i, j].Collapse(gc.Grid[i, j].Id);
+            Propagate(Grid[i, j]);
         }
     }
 
-    // TODO
     private void Propagate(WFCTile collapsedTile)
     {
         Queue<WFCTile> pending = new();
@@ -183,7 +190,7 @@ public class WFCGrid
             }
             if (!isObjectiveAllowed) { toRemove.Add(currObjectiveId); }
         }
-        // if there was change, objectiveShouldBeQueued = true
+        // if there was change (removals), objectiveShouldBeQueued = true
         if (toRemove.Count != 0)
         {
             objectiveShouldbeQueued = true;
@@ -193,6 +200,23 @@ public class WFCGrid
         {
             objective.RemovePossibleTileId(removableId);
         }
+
+        //// Prevent 0-possibility tile by collapsing to "None" if selected,
+        //// or its original tile if non-selected.
+        //// TODO: Probar si funciona
+        //Tile currentGridClassTile = currentGridClass.Grid[objective.i, objective.j];
+        //if (!objective.CanBeCollapsed())
+        //{
+        //    if (currentGridClassTile.selected)
+        //    {
+        //        objective.Collapse("none");
+        //    }
+        //    else
+        //    {
+        //        objective.Collapse(currentGridClassTile.Id);
+        //    }
+        //}
+
         return objectiveShouldbeQueued;
     }
 
@@ -222,6 +246,11 @@ public class WFCGrid
                             uncollapsedTiles.Insert(u, currTile);
                             break;
                         }
+                        // If most entropy, insert last
+                        else if (u == initialCount-1)
+                        {
+                            uncollapsedTiles.Add(currTile);
+                        }
                     }
                 }
             }
@@ -242,7 +271,7 @@ public class WFCGrid
             {
                 foreach (string id in trainer.tileAssociations.Keys)
                 {
-                    wfcGrid[i, j].AddPossibleTileId(id);
+                    Grid[i, j].AddPossibleTileId(id);
                 }
             }
         }
@@ -258,6 +287,20 @@ public class WFCGrid
                 }
             }
         }
+
+        //// Force-Fix possible modifications of non-selected tiles (change to their original id).
+        ////TODO: Ver si funciona bien
+        //for (int i = 0; i < gc.height; i++)
+        //{
+        //    for (int j = 0; j < gc.width; j++)
+        //    {
+        //        if (!gc.Grid[i, j].selected)
+        //        {
+        //            wfcGrid[i, j].ClearPossibleTileIds();
+        //            wfcGrid[i, j].AddPossibleTileId(gc.Grid[i,j].Id);
+        //        }
+        //    }
+        //}
     }
 
     #region failed fill 1.0
@@ -464,14 +507,40 @@ public class WFCGrid
         return true;
     }
 
-    private void Clear()
+    private bool IsAnyTileSelected(GridClass gc)
     {
-        wfcGrid = new WFCTile[Height, Width];
         for (int i = 0; i < Height; i++)
         {
             for (int j = 0; j < Width; j++)
             {
-                wfcGrid[i, j] = new WFCTile(i, j);
+                if (gc.Grid[i, j].selected == true) return true;
+            }
+        }
+        return false;
+    }
+
+    private void ResetSelectedTileIds()
+    {
+        for (int i = 0; i < Height; i++)
+        {
+            for (int j = 0; j < Width; j++)
+            {
+                if (!currentGridClass.Grid[i, j].selected)
+                {
+                    Grid[i, j].Collapse(currentGridClass.Grid[i, j].Id);
+                }
+            }
+        }
+    }
+
+    private void Clear()
+    {
+        Grid = new WFCTile[Height, Width];
+        for (int i = 0; i < Height; i++)
+        {
+            for (int j = 0; j < Width; j++)
+            {
+                Grid[i, j] = new WFCTile(i, j);
             }
         }
     }

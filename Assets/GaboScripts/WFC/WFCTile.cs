@@ -42,6 +42,12 @@ public class WFCTile
     // Collapse using relative frequency between remaining possible tiles
     public void Collapse()
     {
+        // Warn for uncollapsable tile
+        if (!CanBeCollapsed())
+        {
+            Debug.LogError($"Can't collapse {i},{j}!"); return;
+        }
+
         // Collapse using aggregated frequency trick
         // 1) Get total frequency of current possible tiles
         int totalFrequency = 0;

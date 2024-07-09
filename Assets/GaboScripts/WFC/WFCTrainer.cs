@@ -53,8 +53,11 @@ public class WFCTrainer : ScriptableObject
         PopulateTilesFromLoadedMaps();
         // Remove walls from database
         RemoveWallsFromTraining();
-        //DEBUG: Populate ids with sprite names
-        GetNamesWithIds();
+        //DEBUG: Populate ids with sprite names (if on Play Mode)
+        if (Application.isPlaying)
+        {
+            GetNamesWithIds();
+        }
     }
 
     // Get allowed neighbours from a certain direction for a given tile

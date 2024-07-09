@@ -18,7 +18,6 @@ public class WFCManager : MonoBehaviour
 
         return newGrid;
     }
-
     //TODO: TERMINAR
     private GridClass _GetWFC(GridClass grid)
     {
