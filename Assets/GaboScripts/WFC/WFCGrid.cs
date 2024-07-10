@@ -101,12 +101,21 @@ public class WFCGrid
         //Propagate(chosenTile);
         CollapseTile(chosenTile.i, chosenTile.j);
     }
-    private void CollapseTile(int i, int j)
+    private void CollapseTile(int i, int j, string id = null)
     {
         if (Grid[i, j].CanBeCollapsed() && !Grid[i, j].IsCollapsed())
         {
-            Grid[i, j].CollapseWithoutPropagation(); // Chooses from between remaining options
-            Propagate(Grid[i, j]);
+            // Id given or not?
+            if (id != null)
+            {
+                Grid[i, j].CollapseWithoutPropagation(id); // If id given, collapse to it
+                Propagate(Grid[i, j]);
+            }
+            else
+            {
+                Grid[i, j].CollapseWithoutPropagation(); // Else, choose from between remaining options
+                Propagate(Grid[i, j]);
+            }
         }
         // If tile entropy is zero for whatever reason, abort //TODO: Ver si funciona
         else if (!Grid[i, j].CanBeCollapsed())
@@ -258,9 +267,12 @@ public class WFCGrid
         // Check if the objective became uncollapsable
         if (!objective.CanBeCollapsed())
         {
-            Debug.LogWarning($"SingleTilePropagation(): Tile {objective.i},{objective.j}," +
-                 $"originally {imageManager.db.GetImage(currentGridClass.Grid[objective.i, objective.j].Id).sprite.name}" +
-                 $" is uncollapsable due to {origin.i},{origin.j}!");
+            string uncollapsableId = currentGridClass.Grid[objective.i, objective.j].Id;
+            Debug.LogWarning(
+                 $"SingleTilePropagation(): Tile {objective.i},{objective.j}," +
+                 $"originally {uncollapsableId}" +
+                 $" is uncollapsable due to {origin.i},{origin.j}!"
+                 );
             return false;
         }
 
@@ -346,7 +358,7 @@ public class WFCGrid
             {
                 if (!gc.Grid[i, j].selected)
                 {
-                    CollapseTile(i, j);
+                    CollapseTile(i, j, gc.Grid[i, j].Id);
                 }
             }
         }

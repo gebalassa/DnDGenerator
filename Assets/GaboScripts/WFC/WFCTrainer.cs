@@ -104,7 +104,7 @@ public class WFCTrainer : ScriptableObject
         LoadTrainingMaps();
         PopulateTilesFromLoadedMaps();
         // Remove walls from database
-        RemoveWallsFromTraining();
+        //RemoveWallsFromTraining(); //TODO: Ver si funciona bien con los muros en el entrenamiento
         //DEBUG: Populate ids with sprite names (if on Play Mode)
         if (Application.isPlaying)
         {
@@ -219,8 +219,8 @@ public class WFCTrainer : ScriptableObject
         trainingMaps = new List<GridClassNameWrapper>();
     }
 
-    private bool IsWall(string id) { return id == "wall"; }
-    private bool IsNone(string id) { return id == "none"; }
+    public bool IsWall(string id) { return id == "wall"; }
+    public bool IsNone(string id) { return id == "none"; }
 
     // DEBUG: Get sprite name for each id in wfc tiles
     private void GetNamesWithIds()
