@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using AYellowpaper.SerializedCollections;
 
@@ -45,23 +47,6 @@ public class WFCTrainer : ScriptableObject
         debugImageManager = FindObjectOfType<ImageManager>();
     }
 
-    // Train using maps to obtain tile frequencies and associations
-    public void Train()
-    {
-        Clear();
-        LoadTrainingMaps();
-        PopulateTilesFromLoadedMaps();
-        // Remove walls from database
-        RemoveWallsFromTraining();
-        //DEBUG: Populate ids with sprite names (if on Play Mode)
-        if (Application.isPlaying)
-        {
-            GetNamesWithIds();
-        }
-        // To save changes to the SO
-        EditorUtility.SetDirty(this);
-    }
-
     // Get allowed neighbours from a certain direction for a given tile
     public List<string> GetAllowedNeighbours(string id, WFCManager.WFCDirection direction)
     {
@@ -75,6 +60,59 @@ public class WFCTrainer : ScriptableObject
         }
         return allowedNeighbours;
     }
+
+    [Serializable]
+    public class AssociationTuple : IEquatable<AssociationTuple>
+    {
+        [SerializeField]
+        public string id;
+        [SerializeField]
+        public WFCManager.WFCDirection direction;
+        public AssociationTuple(string id, WFCManager.WFCDirection direction)
+        {
+            this.id = id;
+            this.direction = direction;
+        }
+        public bool Equals(AssociationTuple other)
+        {
+            if (other == null) { return false; }
+            else if (this.id == other.id && this.direction == other.direction) { return true; }
+            else { return false; }
+        }
+    }
+
+    // To print GridClass instances with names (based on json file name) in Inspector
+    [Serializable]
+    public class GridClassNameWrapper
+    {
+        public string Name;
+        [NonSerialized]
+        public GridClass gc;
+        public GridClassNameWrapper(GridClass gc, string name)
+        {
+            this.gc = gc;
+            this.Name = name;
+        }
+    }
+
+
+    #if UNITY_EDITOR
+    // Train using maps to obtain tile frequencies and associations
+    public void Train()
+    {
+        Clear();
+        LoadTrainingMaps();
+        PopulateTilesFromLoadedMaps();
+        // Remove walls from database
+        //RemoveWallsFromTraining(); //TODO: Ver si funciona bien con los muros en el entrenamiento
+        //DEBUG: Populate ids with sprite names (if on Play Mode)
+        if (Application.isPlaying)
+        {
+            GetNamesWithIds();
+        }
+        // To save changes to the SO
+        EditorUtility.SetDirty(this);
+    } 
 
     // Load maps from maps folder
     private void LoadTrainingMaps()
@@ -181,8 +219,8 @@ public class WFCTrainer : ScriptableObject
         trainingMaps = new List<GridClassNameWrapper>();
     }
 
-    private bool IsWall(string id) { return id == "wall"; }
-    private bool IsNone(string id) { return id == "none"; }
+    public bool IsWall(string id) { return id == "wall"; }
+    public bool IsNone(string id) { return id == "none"; }
 
     // DEBUG: Get sprite name for each id in wfc tiles
     private void GetNamesWithIds()
@@ -218,38 +256,5 @@ public class WFCTrainer : ScriptableObject
             tileAssociations[id].RemoveAll(tile => tile.id == "wall");
         }
     }
-
-    [Serializable]
-    public class AssociationTuple : IEquatable<AssociationTuple>
-    {
-        [SerializeField]
-        public string id;
-        [SerializeField]
-        public WFCManager.WFCDirection direction;
-        public AssociationTuple(string id, WFCManager.WFCDirection direction)
-        {
-            this.id = id;
-            this.direction = direction;
-        }
-        public bool Equals(AssociationTuple other)
-        {
-            if (other == null) { return false; }
-            else if (this.id == other.id && this.direction == other.direction) { return true; }
-            else { return false; }
-        }
-    }
-
-    // To print GridClass instances with names (based on json file name) in Inspector
-    [Serializable]
-    public class GridClassNameWrapper
-    {
-        public string Name;
-        [NonSerialized]
-        public GridClass gc;
-        public GridClassNameWrapper(GridClass gc, string name)
-        {
-            this.gc = gc;
-            this.Name = name;
-        }
-    }
+    #endif
 }

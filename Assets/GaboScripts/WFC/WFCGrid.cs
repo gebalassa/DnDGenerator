@@ -11,6 +11,7 @@ public class WFCGrid
 
     private WFCTile[,] wfcGrid;
     private WFCTrainer trainer = Object.FindAnyObjectByType<ManagerReferences>().wfcManager.trainer;
+    private ImageManager imageManager = Object.FindAnyObjectByType<ManagerReferences>().imageManager;
     private GridClass currentGridClass;
 
     //DEBUG
@@ -42,11 +43,25 @@ public class WFCGrid
         // Initial fill of tiles
         Fill(gc);
 
+        // 1st Check for uncollapsables, in which case simply abort
+        if (IsAnyTileUncollapsable())
+        {
+            Debug.LogWarning("Check after Fill(): Uncollapsable tiles!");
+            return gc;
+        }
+
         // Cycle between collapsing random and propagating until fully collapsed
         // or if it can't be collapsed anymore.
         while (!IsGridCollapsedAsMuchAsPossible())
         {
             CollapseLeastEntropy();
+
+            // 2nd check for uncollapsables, in which case simply abort.
+            if (IsAnyTileUncollapsable())
+            {
+                Debug.LogWarning("Check after CollapseLeastEntropy(): Uncollapsable tiles!");
+                return gc;
+            }
         }
 
         // If non-selected tiles were modified, they recover their original ids.
@@ -86,12 +101,29 @@ public class WFCGrid
         //Propagate(chosenTile);
         CollapseTile(chosenTile.i, chosenTile.j);
     }
-    private void CollapseTile(int i, int j)
+    private void CollapseTile(int i, int j, string id = null)
     {
         if (Grid[i, j].CanBeCollapsed() && !Grid[i, j].IsCollapsed())
         {
-            Grid[i, j].CollapseWithoutPropagation();
-            Propagate(Grid[i, j]);
+            // Id given or not?
+            if (id != null)
+            {
+                Grid[i, j].CollapseWithoutPropagation(id); // If id given, collapse to it
+                Propagate(Grid[i, j]);
+            }
+            else
+            {
+                Grid[i, j].CollapseWithoutPropagation(); // Else, choose from between remaining options
+                Propagate(Grid[i, j]);
+            }
+        }
+        // If tile entropy is zero for whatever reason, abort //TODO: Ver si funciona
+        else if (!Grid[i, j].CanBeCollapsed())
+        {
+            //Debug.LogWarning($"CollapseTile(): Tile {i},{j}," +
+            //                 $"originally {imageManager.db.GetImage(currentGridClass.Grid[i, j].Id).sprite.name}" +
+            //                 $"is uncollapsable!");
+            return;
         }
     }
 
@@ -118,6 +150,12 @@ public class WFCGrid
                         currTile, WFCManager.WFCDirection.UP);
                     if (shouldBeQueued) { pending.Enqueue(neighbourTile); }
                 }
+                //Uncollapsable check
+                if (!neighbourTile.CanBeCollapsed())
+                {
+                    //Debug.LogWarning($"Propagate(): {neighbourTile.i},{neighbourTile.j} is now uncollapsable.");
+                    return;
+                }
             }
             // DOWN
             if (currTile.i < Height - 1)
@@ -128,6 +166,12 @@ public class WFCGrid
                     bool shouldBeQueued = DirectionalSinglePropagation(
                         currTile, WFCManager.WFCDirection.DOWN);
                     if (shouldBeQueued) { pending.Enqueue(neighbourTile); }
+                }
+                //Uncollapsable check
+                if (!neighbourTile.CanBeCollapsed())
+                {
+                    //Debug.LogWarning($"Propagate(): {neighbourTile.i},{neighbourTile.j} is now uncollapsable.");
+                    return;
                 }
             }
             // LEFT
@@ -140,6 +184,12 @@ public class WFCGrid
                         currTile, WFCManager.WFCDirection.LEFT);
                     if (shouldBeQueued) { pending.Enqueue(neighbourTile); }
                 }
+                //Uncollapsable check
+                if (!neighbourTile.CanBeCollapsed())
+                {
+                    //Debug.LogWarning($"Propagate(): {neighbourTile.i},{neighbourTile.j} is now uncollapsable.");
+                    return;
+                }
             }
             // RIGHT
             if (currTile.j < Width - 1)
@@ -150,6 +200,12 @@ public class WFCGrid
                     bool shouldBeQueued = DirectionalSinglePropagation(
                         currTile, WFCManager.WFCDirection.RIGHT);
                     if (shouldBeQueued) { pending.Enqueue(neighbourTile); }
+                }
+                //Uncollapsable check
+                if (!neighbourTile.CanBeCollapsed())
+                {
+                    //Debug.Log($"Propagate(): {neighbourTile.i},{neighbourTile.j} is now uncollapsable.");
+                    return;
                 }
             }
         }
@@ -195,12 +251,6 @@ public class WFCGrid
             if (!isObjectiveAllowed)
             {
                 toRemove.Add(currObjectiveId);
-                //if (currObjectiveId == "c2f38ff5814ff6096f21ad4bc616919d" &&
-                //    objective.i == 2 &&
-                //    objective.j == 5)
-                //{
-                //    Debug.Log("aaaaaaaaaa");
-                //}
             }
         }
         // if there was change (removals), objectiveShouldBeQueued = true
@@ -212,6 +262,18 @@ public class WFCGrid
         foreach (string removableId in toRemove)
         {
             objective.RemovePossibleTileId(removableId);
+        }
+
+        // Check if the objective became uncollapsable
+        if (!objective.CanBeCollapsed())
+        {
+            string uncollapsableId = currentGridClass.Grid[objective.i, objective.j].Id;
+            Debug.LogWarning(
+                 $"SingleTilePropagation(): Tile {objective.i},{objective.j}," +
+                 $"originally {uncollapsableId}" +
+                 $" is uncollapsable due to {origin.i},{origin.j}!"
+                 );
+            return false;
         }
 
         //// Prevent 0-possibility tile by collapsing to "None" if selected,
@@ -296,24 +358,10 @@ public class WFCGrid
             {
                 if (!gc.Grid[i, j].selected)
                 {
-                    CollapseTile(i, j);
+                    CollapseTile(i, j, gc.Grid[i, j].Id);
                 }
             }
         }
-
-        //// Force-Fix possible modifications of non-selected tiles (change to their original id).
-        ////TODO: Ver si funciona bien
-        //for (int i = 0; i < gc.height; i++)
-        //{
-        //    for (int j = 0; j < gc.width; j++)
-        //    {
-        //        if (!gc.Grid[i, j].selected)
-        //        {
-        //            wfcGrid[i, j].ClearPossibleTileIds();
-        //            wfcGrid[i, j].AddPossibleTileId(gc.Grid[i,j].Id);
-        //        }
-        //    }
-        //}
     }
 
     #region failed fill 1.0
@@ -534,16 +582,45 @@ public class WFCGrid
 
     private void ResetNonSelectedTileIds()
     {
+        int resetCounter = 0;
+        int entropyZeroCounter = 0;
         for (int i = 0; i < Height; i++)
         {
             for (int j = 0; j < Width; j++)
             {
-                if (!currentGridClass.Grid[i, j].selected)
+                Tile currGCTile = currentGridClass.Grid[i, j];
+                if (!currGCTile.selected &&
+                    (Grid[i, j].GetEntropy() == 0 || currGCTile.Id != Grid[i, j].GetPossibleTileIds()[0]))
                 {
-                    Grid[i, j].CollapseWithoutPropagation(currentGridClass.Grid[i, j].Id);
+                    //Counters
+                    resetCounter++;
+                    if (Grid[i, j].GetEntropy() == 0) { entropyZeroCounter++; }
+
+                    //Collapse to original id
+                    Grid[i, j].CollapseWithoutPropagation(currGCTile.Id);
                 }
             }
         }
+        Debug.Log($"{resetCounter} non-selected tiles were reset to their originals when finishing. {entropyZeroCounter} of them had zero entropy.");
+    }
+
+    // Check for uncollapsable tiles (entropy=0)
+    private bool IsAnyTileUncollapsable()
+    {
+        for (int i = 0; i < Height; i++)
+        {
+            for (int j = 0; j < Width; j++)
+            {
+                if (!Grid[i, j].CanBeCollapsed())
+                {
+                    //Debug.LogWarning($"IsAnyTileUncollapsable(): Tile {i},{j}," +
+                    //                 $"originally {imageManager.db.GetImage(currentGridClass.Grid[i, j].Id).sprite.name}" +
+                    //                 $" is uncollapsable!");
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void Clear()
