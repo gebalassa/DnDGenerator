@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using AYellowpaper.SerializedCollections;
 
@@ -45,6 +47,56 @@ public class WFCTrainer : ScriptableObject
         debugImageManager = FindObjectOfType<ImageManager>();
     }
 
+    // Get allowed neighbours from a certain direction for a given tile
+    public List<string> GetAllowedNeighbours(string id, WFCManager.WFCDirection direction)
+    {
+        List<string> allowedNeighbours = new();
+        foreach (AssociationTuple neighbourTuple in tileAssociations[id])
+        {
+            if (neighbourTuple.direction == direction)
+            {
+                allowedNeighbours.Add(neighbourTuple.id);
+            }
+        }
+        return allowedNeighbours;
+    }
+
+    [Serializable]
+    public class AssociationTuple : IEquatable<AssociationTuple>
+    {
+        [SerializeField]
+        public string id;
+        [SerializeField]
+        public WFCManager.WFCDirection direction;
+        public AssociationTuple(string id, WFCManager.WFCDirection direction)
+        {
+            this.id = id;
+            this.direction = direction;
+        }
+        public bool Equals(AssociationTuple other)
+        {
+            if (other == null) { return false; }
+            else if (this.id == other.id && this.direction == other.direction) { return true; }
+            else { return false; }
+        }
+    }
+
+    // To print GridClass instances with names (based on json file name) in Inspector
+    [Serializable]
+    public class GridClassNameWrapper
+    {
+        public string Name;
+        [NonSerialized]
+        public GridClass gc;
+        public GridClassNameWrapper(GridClass gc, string name)
+        {
+            this.gc = gc;
+            this.Name = name;
+        }
+    }
+
+
+    #if UNITY_EDITOR
     // Train using maps to obtain tile frequencies and associations
     public void Train()
     {
@@ -60,21 +112,7 @@ public class WFCTrainer : ScriptableObject
         }
         // To save changes to the SO
         EditorUtility.SetDirty(this);
-    }
-
-    // Get allowed neighbours from a certain direction for a given tile
-    public List<string> GetAllowedNeighbours(string id, WFCManager.WFCDirection direction)
-    {
-        List<string> allowedNeighbours = new();
-        foreach (AssociationTuple neighbourTuple in tileAssociations[id])
-        {
-            if (neighbourTuple.direction == direction)
-            {
-                allowedNeighbours.Add(neighbourTuple.id);
-            }
-        }
-        return allowedNeighbours;
-    }
+    } 
 
     // Load maps from maps folder
     private void LoadTrainingMaps()
@@ -218,38 +256,5 @@ public class WFCTrainer : ScriptableObject
             tileAssociations[id].RemoveAll(tile => tile.id == "wall");
         }
     }
-
-    [Serializable]
-    public class AssociationTuple : IEquatable<AssociationTuple>
-    {
-        [SerializeField]
-        public string id;
-        [SerializeField]
-        public WFCManager.WFCDirection direction;
-        public AssociationTuple(string id, WFCManager.WFCDirection direction)
-        {
-            this.id = id;
-            this.direction = direction;
-        }
-        public bool Equals(AssociationTuple other)
-        {
-            if (other == null) { return false; }
-            else if (this.id == other.id && this.direction == other.direction) { return true; }
-            else { return false; }
-        }
-    }
-
-    // To print GridClass instances with names (based on json file name) in Inspector
-    [Serializable]
-    public class GridClassNameWrapper
-    {
-        public string Name;
-        [NonSerialized]
-        public GridClass gc;
-        public GridClassNameWrapper(GridClass gc, string name)
-        {
-            this.gc = gc;
-            this.Name = name;
-        }
-    }
+    #endif
 }

@@ -1,9 +1,11 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using static WFCTrainer;
+
 
 // Tests for ImageDatabase family of classes
 public class ImageTesting : MonoBehaviour
@@ -121,3 +123,4 @@ public class ImageTesting : MonoBehaviour
         }
     }
 }
+#endif

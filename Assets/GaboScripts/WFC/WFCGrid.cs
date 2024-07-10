@@ -195,12 +195,6 @@ public class WFCGrid
             if (!isObjectiveAllowed)
             {
                 toRemove.Add(currObjectiveId);
-                //if (currObjectiveId == "c2f38ff5814ff6096f21ad4bc616919d" &&
-                //    objective.i == 2 &&
-                //    objective.j == 5)
-                //{
-                //    Debug.Log("aaaaaaaaaa");
-                //}
             }
         }
         // if there was change (removals), objectiveShouldBeQueued = true
@@ -300,20 +294,6 @@ public class WFCGrid
                 }
             }
         }
-
-        //// Force-Fix possible modifications of non-selected tiles (change to their original id).
-        ////TODO: Ver si funciona bien
-        //for (int i = 0; i < gc.height; i++)
-        //{
-        //    for (int j = 0; j < gc.width; j++)
-        //    {
-        //        if (!gc.Grid[i, j].selected)
-        //        {
-        //            wfcGrid[i, j].ClearPossibleTileIds();
-        //            wfcGrid[i, j].AddPossibleTileId(gc.Grid[i,j].Id);
-        //        }
-        //    }
-        //}
     }
 
     #region failed fill 1.0
@@ -534,16 +514,25 @@ public class WFCGrid
 
     private void ResetNonSelectedTileIds()
     {
+        int resetCounter = 0;
+        int entropyZeroCounter = 0;
         for (int i = 0; i < Height; i++)
         {
             for (int j = 0; j < Width; j++)
             {
-                if (!currentGridClass.Grid[i, j].selected)
+                Tile currGCTile = currentGridClass.Grid[i, j];
+                if (!currGCTile.selected &&
+                    (Grid[i,j].GetEntropy() == 0 || currGCTile.Id != Grid[i, j].GetPossibleTileIds()[0]))
                 {
-                    Grid[i, j].CollapseWithoutPropagation(currentGridClass.Grid[i, j].Id);
+                    Grid[i, j].CollapseWithoutPropagation(currGCTile.Id);
+                  
+                    //Counters
+                    resetCounter++;
+                    if (Grid[i, j].GetEntropy() == 0) { entropyZeroCounter++; }
                 }
             }
         }
+        Debug.Log($"{resetCounter} non-selected tiles were reset to their originals when finishing. {entropyZeroCounter} of them had zero entropy.");
     }
 
     private void Clear()
