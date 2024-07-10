@@ -65,9 +65,9 @@ public class WFCTrainerEditor : Editor
 
     private void TrainTarget()
     {
-        serializedObject.Update();
+        //serializedObject.Update();
         ((WFCTrainer)target).Train();
-        serializedObject.ApplyModifiedProperties();
+        //serializedObject.ApplyModifiedProperties();
     }
 
 }

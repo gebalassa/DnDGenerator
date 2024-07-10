@@ -50,7 +50,7 @@ public class WFCGrid
         }
 
         // If non-selected tiles were modified, they recover their original ids.
-        ResetSelectedTileIds();
+        ResetNonSelectedTileIds();
 
         // Assign values to GridClass
         for (int i = 0; i < Height; i++)
@@ -64,6 +64,10 @@ public class WFCGrid
                 else if (Grid[i, j].CanBeCollapsed() && !Grid[i, j].IsCollapsed())
                 {
                     Debug.LogError($"Error: WFCTile {i},{j} remains collapsable after exiting cycle!");
+                }
+                else if (!Grid[i, j].CanBeCollapsed())
+                {
+                    //Debug.Log($"Tile {i},{j} can't be collapsed!");
                 }
             }
         }
@@ -80,13 +84,13 @@ public class WFCGrid
         WFCTile chosenTile = uncollapsedTiles[0];
         //chosenTile.Collapse();
         //Propagate(chosenTile);
-        CollapseTile(currentGridClass, chosenTile.i, chosenTile.j);
+        CollapseTile(chosenTile.i, chosenTile.j);
     }
-    private void CollapseTile(GridClass gc, int i, int j)
+    private void CollapseTile(int i, int j)
     {
         if (Grid[i, j].CanBeCollapsed() && !Grid[i, j].IsCollapsed())
         {
-            Grid[i, j].Collapse(gc.Grid[i, j].Id);
+            Grid[i, j].CollapseWithoutPropagation();
             Propagate(Grid[i, j]);
         }
     }
@@ -188,7 +192,16 @@ public class WFCGrid
                     break;
                 }
             }
-            if (!isObjectiveAllowed) { toRemove.Add(currObjectiveId); }
+            if (!isObjectiveAllowed)
+            {
+                toRemove.Add(currObjectiveId);
+                //if (currObjectiveId == "c2f38ff5814ff6096f21ad4bc616919d" &&
+                //    objective.i == 2 &&
+                //    objective.j == 5)
+                //{
+                //    Debug.Log("aaaaaaaaaa");
+                //}
+            }
         }
         // if there was change (removals), objectiveShouldBeQueued = true
         if (toRemove.Count != 0)
@@ -247,7 +260,7 @@ public class WFCGrid
                             break;
                         }
                         // If most entropy, insert last
-                        else if (u == initialCount-1)
+                        else if (u == initialCount - 1)
                         {
                             uncollapsedTiles.Add(currTile);
                         }
@@ -283,7 +296,7 @@ public class WFCGrid
             {
                 if (!gc.Grid[i, j].selected)
                 {
-                    CollapseTile(gc, i, j);
+                    CollapseTile(i, j);
                 }
             }
         }
@@ -519,7 +532,7 @@ public class WFCGrid
         return false;
     }
 
-    private void ResetSelectedTileIds()
+    private void ResetNonSelectedTileIds()
     {
         for (int i = 0; i < Height; i++)
         {
@@ -527,7 +540,7 @@ public class WFCGrid
             {
                 if (!currentGridClass.Grid[i, j].selected)
                 {
-                    Grid[i, j].Collapse(currentGridClass.Grid[i, j].Id);
+                    Grid[i, j].CollapseWithoutPropagation(currentGridClass.Grid[i, j].Id);
                 }
             }
         }

@@ -58,6 +58,8 @@ public class WFCTrainer : ScriptableObject
         {
             GetNamesWithIds();
         }
+        // To save changes to the SO
+        EditorUtility.SetDirty(this);
     }
 
     // Get allowed neighbours from a certain direction for a given tile

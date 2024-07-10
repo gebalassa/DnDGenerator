@@ -30,7 +30,7 @@ public class WFCTile
         }
         else if (possibleTileIds.Count == 0)
         {
-            Debug.LogWarning("Tile " + i + "," + j + " has 0 possibilities!");
+            //Debug.LogWarning("Tile " + i + "," + j + " has 0 possibilities!");
             return false;
         }
         else return false;
@@ -40,7 +40,7 @@ public class WFCTile
 
     //TODO: TERMINARRRR
     // Collapse using relative frequency between remaining possible tiles
-    public void Collapse()
+    public void CollapseWithoutPropagation()
     {
         // Warn for uncollapsable tile
         if (!CanBeCollapsed())
@@ -64,23 +64,23 @@ public class WFCTile
             // Check if chosen
             if (chosenValue <= currentAggregatedFrequency)
             {
-                _Collapse(id);
+                _CollapseWithoutPropagation(id);
                 return;
             }
         }
     }
-    public void Collapse(string id)
+    public void CollapseWithoutPropagation(string id)
     {
-        _Collapse(id);
+        _CollapseWithoutPropagation(id);
     }
-    private void _Collapse(string id)
+    private void _CollapseWithoutPropagation(string id)
     {
         ClearPossibleTileIds();
         AddPossibleTileId(id);
     }
 
     // DEBUG: Collapse into random tile id
-    private void _RandomCollapse()
+    private void _RandomCollapseWithoutPropagation()
     {
         int randIndex = Random.Range(0, possibleTileIds.Count);
         string chosenId = possibleTileIds[randIndex];
