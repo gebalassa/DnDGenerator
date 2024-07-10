@@ -50,6 +50,10 @@ public class DraggableAsset : MonoBehaviour
     string TrimAssetName(string name)
     {
         string newName = string.Empty;
+        string[] subs = name.Split('_');
+
+        newName = subs[subs.Length - 2];
+        /*
         for(int i = 0; i < name.Length; i++)
         {
             if (name[i].Equals('_'))
@@ -57,7 +61,7 @@ public class DraggableAsset : MonoBehaviour
                 break;
             }
             newName += name[i];
-        }
+        }//*/
         return newName;
     }
 }

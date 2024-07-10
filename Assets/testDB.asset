@@ -110,31 +110,31 @@ MonoBehaviour:
       columns: 3
     - sprite: {fileID: 1640337338, guid: af462ca4f7792d8418c3ded83ac21444, type: 3}
       rows: 1
-      columns: 3
+      columns: 1
     - sprite: {fileID: -1296594219, guid: 77cb85a6eebd30c44b2c7bfe5542dd69, type: 3}
       rows: 1
-      columns: 3
+      columns: 1
     - sprite: {fileID: -353473002, guid: a76f5333ad0072a4fa892d77dd00e6ef, type: 3}
       rows: 1
-      columns: 3
+      columns: 1
     - sprite: {fileID: 1895702708, guid: 7096638ffc068e745ac205131045dee7, type: 3}
       rows: 1
-      columns: 3
+      columns: 1
     - sprite: {fileID: 1426753153, guid: 8b205606967e0a34f8b7d5efb7175286, type: 3}
       rows: 1
-      columns: 3
+      columns: 1
     - sprite: {fileID: 1836357227, guid: 6efb2fb60bb04e2418f5558d3d418346, type: 3}
       rows: 1
-      columns: 3
+      columns: 1
     - sprite: {fileID: -943562145, guid: fcaba4b6b265cde44a7b4fb7b374c0fd, type: 3}
       rows: 1
-      columns: 3
+      columns: 1
     - sprite: {fileID: -429817796, guid: aa1716f699c9f3441a69ce0b050a118d, type: 3}
       rows: 1
-      columns: 3
+      columns: 1
     - sprite: {fileID: -304254868, guid: 96236d92e05fa7a419fd460981309c57, type: 3}
       rows: 1
-      columns: 3
+      columns: 1
     - sprite: {fileID: -772070347, guid: 46cded462cde28a4091f13ee82a6d333, type: 3}
       rows: 4
       columns: 3
@@ -236,7 +236,7 @@ MonoBehaviour:
       columns: 2
     - sprite: {fileID: 453167607, guid: 6fc1c012860fec442a3da36f2594c8fe, type: 3}
       rows: 2
-      columns: 2
+      columns: 1
     - sprite: {fileID: 614500535, guid: 87fb6d4098e5b4d4db3f3c327a6d080f, type: 3}
       rows: 2
       columns: 2
