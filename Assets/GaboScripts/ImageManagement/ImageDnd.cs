@@ -167,7 +167,7 @@ public class ImageDnd
         // Null sprite check
         if (sprite == null) { Debug.LogError("ImageUtilities: SetSubImagesIds(): Null root sprite."); }
         // Single image check
-        if (rows == 1 || columns == 1) { subImageIds = null; return; }
+        if (rows == 1 && columns == 1) { subImageIds = null; return; }
 
         // Initialize empty
         subImageIds = new();

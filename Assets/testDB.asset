@@ -236,7 +236,7 @@ MonoBehaviour:
       columns: 2
     - sprite: {fileID: 453167607, guid: 6fc1c012860fec442a3da36f2594c8fe, type: 3}
       rows: 2
-      columns: 2
+      columns: 1
     - sprite: {fileID: 614500535, guid: 87fb6d4098e5b4d4db3f3c327a6d080f, type: 3}
       rows: 2
       columns: 2
