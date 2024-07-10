@@ -35,8 +35,8 @@ public class AssetsPanelMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SearchBarAtributes sba = searchBar.GetComponent<SearchBarAtributes>();
-
+        /*SearchBarAtributes sba = searchBar.GetComponent<SearchBarAtributes>();
+        
         //CHANGE STATE WETHER THEY ARE LOOKING FOR SOMETHING OR NOT
         if (!display && (searchBar.text != string.Empty || sba.IsSelected()))
         {
@@ -45,7 +45,7 @@ public class AssetsPanelMovement : MonoBehaviour
         else if(display && searchBar.text == string.Empty && !sba.IsSelected())
         {
             display = false;
-        }
+        }//*/
 
         //MOVE PANEL
         if (display && panel.anchorMin.x != visibleAnchorMin.x)
@@ -74,5 +74,10 @@ public class AssetsPanelMovement : MonoBehaviour
                 panel.anchorMax = hiddenAnchorMax;
             }
         }
+    }
+
+    public void SwitchDisplayValue()
+    {
+        display = !display;
     }
 }
