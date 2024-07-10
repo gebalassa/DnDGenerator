@@ -59,8 +59,4 @@ public class DraggableAssetGenerator : MonoBehaviour
             da.transform.GetChild(1).GetComponent<RectTransform>().anchoredPosition = new Vector2(size/2, -(size-20)/2);
         }
     }
-
-    private void Update()
-    {
-    }
 }

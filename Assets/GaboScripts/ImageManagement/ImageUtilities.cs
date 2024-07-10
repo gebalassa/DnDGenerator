@@ -1,23 +1,24 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ImageUtilities
 {
     // Create unique Hash128 string based on a sprite's Texture2D byte data.
     public static string GetUniqueId(Sprite sprite)
     {
-        // Create new texture based only on the rectangle used by the sprite
-        Texture2D newTexture = new((int)sprite.rect.width, (int)sprite.rect.height,
-            sprite.texture.format, true);
-        Graphics.CopyTexture(sprite.texture, 0, 0,
-            (int)sprite.rect.x, (int)sprite.rect.y, (int)sprite.rect.width,
-            (int)sprite.rect.height, newTexture, 0, 0, 0, 0);
-        //Color[] pixels = sprite.texture.GetPixels((int)sprite.rect.x, (int)sprite.rect.y, (int)sprite.rect.width, (int)sprite.rect.height);
-        //newTexture.SetPixels(pixels);
+        Texture2D auxTexture = sprite.texture.DeCompress();
+            // Create new texture based only on the rectangle used by the sprite
+            Texture2D newTexture = new((int)sprite.rect.width, (int)sprite.rect.height, auxTexture.format, false);
+            Graphics.CopyTexture(auxTexture, 0, 0, (int)sprite.rect.x, (int)sprite.rect.y, (int)sprite.rect.width, (int)sprite.rect.height, newTexture, 0, 0, 0, 0);
+            //Color[] pixels = sprite.texture.GetPixels((int)sprite.rect.x, (int)sprite.rect.y, (int)sprite.rect.width, (int)sprite.rect.height);
+            //newTexture.SetPixels(pixels);
 
-        byte[] rawImage = newTexture.EncodeToPNG();
-        Hash128 newId = Hash128.Compute(rawImage);
-        //Debug.Log("ImageUtilities: - id: " + newId);
-        return newId.ToString();
+            byte[] rawImage = newTexture.DeCompress().EncodeToPNG();
+            Hash128 newId = Hash128.Compute(rawImage);
+            //Debug.Log("ImageUtilities: - id: " + newId);
+            return newId.ToString();
     }
 
     //// Divide ImageDnd into sub-tiles and return their Hash128 Ids.
@@ -66,4 +67,27 @@ public class ImageUtilities
 
     //    return subImageIds;
     //}
+}
+
+public static class ExtensionMethod
+{
+    public static Texture2D DeCompress(this Texture2D source)
+    {
+        RenderTexture renderTex = RenderTexture.GetTemporary(
+                    source.width,
+                    source.height,
+                    0,
+                    RenderTextureFormat.Default,
+                    RenderTextureReadWrite.Linear);
+
+        Graphics.Blit(source, renderTex);
+        RenderTexture previous = RenderTexture.active;
+        RenderTexture.active = renderTex;
+        Texture2D readableText = new Texture2D(source.width, source.height);
+        readableText.ReadPixels(new Rect(0, 0, renderTex.width, renderTex.height), 0, 0);
+        readableText.Apply();
+        RenderTexture.active = previous;
+        RenderTexture.ReleaseTemporary(renderTex);
+        return readableText;
+    }
 }

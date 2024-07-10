@@ -163,14 +163,14 @@ public class ImageDnd
         // Null sprite check
         if (sprite == null) { Debug.LogError("ImageUtilities: SetSubImagesIds(): Null root sprite."); }
         // Single image check
-        if (rows == 1 || columns == 1) { subImageIds = null; return; }
+        if (rows == 1 && columns == 1) { subImageIds = null; return; }
 
         // Initialize empty
         subImageIds = new();
         // Get sub-images
         List<ImageDnd> subImages = GetSubImagesFromScratch();
         // Rows & Columns check
-        if ((rows * columns) != subImages.Count) { Debug.LogError(string.Format("Sub-image number is not equal to (Rows*Columns) == {0}!", rows * columns)); }
+        if ((rows * columns) != subImages.Count) { Debug.LogError(string.Format("Sub-image from " + sprite.name + " number is not equal to (Rows*Columns) == {0}!", rows * columns)); }
 
         // Obtain Ids and add to subImageIds
         foreach (ImageDnd subImage in subImages)

@@ -21,6 +21,14 @@ public class SaveLoadScript : MonoBehaviour
         DontDestroyOnLoad(this);
     }
 
+    private void Update()
+    {
+        if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
+        {
+            LogFileManager.Write();
+        }
+    }
+
     public void SetWidthFromTMP(TextMeshProUGUI width)
     {
         string aux = "";
