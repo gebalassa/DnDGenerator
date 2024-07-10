@@ -36,7 +36,15 @@ public class WFCTile
         else return false;
     }
 
-    public bool CanBeCollapsed() { return possibleTileIds.Count != 0; }
+    public bool CanBeCollapsed()
+    {
+        bool isNonZeroEntropy = (possibleTileIds.Count != 0);
+        //if (!isNonZeroEntropy)
+        //{
+        //    Debug.LogWarning($"{i},{j} has zero entropy!");
+        //}
+        return isNonZeroEntropy;
+    }
 
     //TODO: TERMINARRRR
     // Collapse using relative frequency between remaining possible tiles
