@@ -52,7 +52,7 @@ public class ToolsController : MonoBehaviour
                 break;
 
             case Tools.MapTool:
-                DragToolFunctions();
+                DragToolFunctions(KeyCode.Mouse0);
                 break;
 
             case Tools.WallTool:
@@ -60,6 +60,7 @@ public class ToolsController : MonoBehaviour
                 break;
         }
         ZoomFunctions();
+        DragToolFunctions(KeyCode.Mouse1);
         EraseFunctions();
     }
 
@@ -104,9 +105,9 @@ public class ToolsController : MonoBehaviour
     }
 
     //Drag across the screen to move the camera
-    void DragToolFunctions()
+    void DragToolFunctions(KeyCode key)
     {
-        if (Input.GetKey(KeyCode.Mouse0))
+        if (Input.GetKey(key))
         {
             Vector3 position = Input.mousePosition;
             if (prevMousePosition != null)
@@ -243,13 +244,19 @@ public class ToolsController : MonoBehaviour
                     Vector3 tilePosition = map.CellToWorld(new Vector3Int(i, j));
                     bool isInside = IsTileInsideBounds(minX, maxX, minY, maxY, tilePosition, map.cellSize);
 
-                    if(isInside)
+                    bool value = true;
+                    if (Input.GetKey(KeyCode.LeftControl))
                     {
-                        gridManager.ChangeTileState(i, j, true);
+                        value = false;
                     }
-                    else
+
+                    if (isInside)
                     {
-                        gridManager.ChangeTileState(i, j, false);
+                        gridManager.ChangeTileState(i, j, value);
+                    }
+                    else if(!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftControl))
+                    {
+                        gridManager.ChangeTileState(i, j, !value);
                     }
                 }
             }
