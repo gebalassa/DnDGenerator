@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using AYellowpaper.SerializedCollections;
 
@@ -30,19 +32,19 @@ public class WFCTrainer : ScriptableObject
     public string mapsPath = "Assets/Maps";
     [SerializedDictionary("ID", "Association List")]
     public SerializedDictionary<string, List<AssociationTuple>> tileAssociations = new();
-    [SerializedDictionary("ID", "Frequency")]
-    
+    [SerializedDictionary("ID", "Frequency")]    
     public SerializedDictionary<string, int> tileFrequencies = new();
     public List<GridClassNameWrapper> trainingMaps = new List<GridClassNameWrapper>();
+    
+    //DEBUG
+    public SerializedDictionary<string, string> debugNamesForIds = new();
+    ImageManager debugImageManager;
+    //FIN DEBUG
 
-    // Train using maps to obtain tile frequencies and associations
-    public void Train()
+    private void OnEnable()
     {
-        Clear();
-        LoadTrainingMaps();
-        PopulateTilesFromLoadedMaps();
-        // Remove walls from database
-        RemoveWallsFromTraining();
+        //DEBUG
+        debugImageManager = FindObjectOfType<ImageManager>();
     }
 
     // Get allowed neighbours from a certain direction for a given tile
@@ -58,6 +60,59 @@ public class WFCTrainer : ScriptableObject
         }
         return allowedNeighbours;
     }
+
+    [Serializable]
+    public class AssociationTuple : IEquatable<AssociationTuple>
+    {
+        [SerializeField]
+        public string id;
+        [SerializeField]
+        public WFCManager.WFCDirection direction;
+        public AssociationTuple(string id, WFCManager.WFCDirection direction)
+        {
+            this.id = id;
+            this.direction = direction;
+        }
+        public bool Equals(AssociationTuple other)
+        {
+            if (other == null) { return false; }
+            else if (this.id == other.id && this.direction == other.direction) { return true; }
+            else { return false; }
+        }
+    }
+
+    // To print GridClass instances with names (based on json file name) in Inspector
+    [Serializable]
+    public class GridClassNameWrapper
+    {
+        public string Name;
+        [NonSerialized]
+        public GridClass gc;
+        public GridClassNameWrapper(GridClass gc, string name)
+        {
+            this.gc = gc;
+            this.Name = name;
+        }
+    }
+
+
+    #if UNITY_EDITOR
+    // Train using maps to obtain tile frequencies and associations
+    public void Train()
+    {
+        Clear();
+        LoadTrainingMaps();
+        PopulateTilesFromLoadedMaps();
+        // Remove walls from database
+        //RemoveWallsFromTraining(); //TODO: Ver si funciona bien con los muros en el entrenamiento
+        //DEBUG: Populate ids with sprite names (if on Play Mode)
+        if (Application.isPlaying)
+        {
+            GetNamesWithIds();
+        }
+        // To save changes to the SO
+        EditorUtility.SetDirty(this);
+    } 
 
     // Load maps from maps folder
     private void LoadTrainingMaps()
@@ -135,24 +190,24 @@ public class WFCTrainer : ScriptableObject
         List<AssociationTuple> neighbourhood = new();
         // Check each direction
         // UP
-        if (j > 0)
-        {
-            neighbourhood.Add(new(gc.Grid[i, j - 1].Id, WFCManager.WFCDirection.UP));
-        }
-        // DOWN
-        if (j < gc.height - 1)
-        {
-            neighbourhood.Add(new(gc.Grid[i, j + 1].Id, WFCManager.WFCDirection.DOWN));
-        }
-        // LEFT
         if (i > 0)
         {
-            neighbourhood.Add(new(gc.Grid[i - 1, j].Id, WFCManager.WFCDirection.LEFT));
+            neighbourhood.Add(new(gc.Grid[i - 1, j].Id, WFCManager.WFCDirection.UP));
+        }
+        // DOWN
+        if (i < gc.height - 1)
+        {
+            neighbourhood.Add(new(gc.Grid[i + 1, j].Id, WFCManager.WFCDirection.DOWN));
+        }
+        // LEFT
+        if (j > 0)
+        {
+            neighbourhood.Add(new(gc.Grid[i, j - 1].Id, WFCManager.WFCDirection.LEFT));
         }
         // RIGHT
-        if (i < gc.width - 1)
+        if (j < gc.width - 1)
         {
-            neighbourhood.Add(new(gc.Grid[i + 1, j].Id, WFCManager.WFCDirection.RIGHT));
+            neighbourhood.Add(new(gc.Grid[i, j + 1].Id, WFCManager.WFCDirection.RIGHT));
         }
         return neighbourhood;
     }
@@ -164,8 +219,32 @@ public class WFCTrainer : ScriptableObject
         trainingMaps = new List<GridClassNameWrapper>();
     }
 
-    private bool IsWall(string id) { return id == "wall"; }
-    private bool IsNone(string id) { return id == "none"; }
+    public bool IsWall(string id) { return id == "wall"; }
+    public bool IsNone(string id) { return id == "none"; }
+
+    // DEBUG: Get sprite name for each id in wfc tiles
+    private void GetNamesWithIds()
+    {
+        // Clear
+        debugNamesForIds.Clear();
+        // Add
+        foreach (string id in tileAssociations.Keys)
+        {
+            // DEBUG: Add to id-sprite name dictionary
+            if (!IsWall(id) && !IsNone(id))
+            {
+                ImageDnd img = debugImageManager.db.GetImage(id);
+                if (img != null)
+                {
+                    debugNamesForIds.Add(id, img.sprite.name);
+                }
+                else
+                {
+                    Debug.LogError($"Id {id} in wfc tiles but not in ImgManager!");
+                }
+            }
+        }
+    }
 
     // Remove walls from training database
     private void RemoveWallsFromTraining()
@@ -177,38 +256,5 @@ public class WFCTrainer : ScriptableObject
             tileAssociations[id].RemoveAll(tile => tile.id == "wall");
         }
     }
-
-    [Serializable]
-    public class AssociationTuple : IEquatable<AssociationTuple>
-    {
-        [SerializeField]
-        public string id;
-        [SerializeField]
-        public WFCManager.WFCDirection direction;
-        public AssociationTuple(string id, WFCManager.WFCDirection direction)
-        {
-            this.id = id;
-            this.direction = direction;
-        }
-        public bool Equals(AssociationTuple other)
-        {
-            if (other == null) { return false; }
-            else if (this.id == other.id && this.direction == other.direction) { return true; }
-            else { return false; }
-        }
-    }
-
-    // To print GridClass instances with names (based on json file name) in Inspector
-    [Serializable]
-    public class GridClassNameWrapper
-    {
-        public string Name;
-        [NonSerialized]
-        public GridClass gc;
-        public GridClassNameWrapper(GridClass gc, string name)
-        {
-            this.gc = gc;
-            this.Name = name;
-        }
-    }
+    #endif
 }

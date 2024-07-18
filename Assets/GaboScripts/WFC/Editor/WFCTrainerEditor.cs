@@ -13,12 +13,16 @@ public class WFCTrainerEditor : Editor
     private SerializedProperty tileAssociationsProperty;
     private SerializedProperty tileFrequenciesProperty;
     private SerializedProperty trainingMapsProperty;
+    //DEBUG
+    private SerializedProperty debugNameForIdsProperty;
     private void OnEnable()
     {
         mapsPathProperty = serializedObject.FindProperty(nameof(WFCTrainer.mapsPath));
         tileAssociationsProperty = serializedObject.FindProperty(nameof(WFCTrainer.tileAssociations));
         tileFrequenciesProperty = serializedObject.FindProperty(nameof(WFCTrainer.tileFrequencies));
         trainingMapsProperty = serializedObject.FindProperty(nameof(WFCTrainer.trainingMaps));
+        //DEBUG
+        debugNameForIdsProperty = serializedObject.FindProperty(nameof(WFCTrainer.debugNamesForIds));
     }
 
     public override VisualElement CreateInspectorGUI()
@@ -45,6 +49,11 @@ public class WFCTrainerEditor : Editor
         trainingMapsField.Bind(serializedObject);
         root.Add(trainingMapsField);
 
+        // DEBUG: "debugNameForIds" property
+        PropertyField debugNameForIdsField = new(debugNameForIdsProperty);
+        debugNameForIdsField.Bind(serializedObject);
+        root.Add(debugNameForIdsField);
+
         //------------------CUSTOM----------------
         // "Train" Button
         Button trainButton = new Button(TrainTarget);
@@ -56,9 +65,9 @@ public class WFCTrainerEditor : Editor
 
     private void TrainTarget()
     {
-        serializedObject.Update();
+        //serializedObject.Update();
         ((WFCTrainer)target).Train();
-        serializedObject.ApplyModifiedProperties();
+        //serializedObject.ApplyModifiedProperties();
     }
 
 }

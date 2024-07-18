@@ -30,18 +30,32 @@ public class WFCTile
         }
         else if (possibleTileIds.Count == 0)
         {
-            Debug.LogWarning("Tile " + i + "," + j + " has 0 possibilities!");
+            //Debug.LogWarning("Tile " + i + "," + j + " has 0 possibilities!");
             return false;
         }
         else return false;
     }
 
-    public bool CanBeCollapsed() { return possibleTileIds.Count != 0; }
+    public bool CanBeCollapsed()
+    {
+        bool isNonZeroEntropy = (possibleTileIds.Count != 0);
+        //if (!isNonZeroEntropy)
+        //{
+        //    Debug.LogWarning($"{i},{j} has zero entropy!");
+        //}
+        return isNonZeroEntropy;
+    }
 
     //TODO: TERMINARRRR
     // Collapse using relative frequency between remaining possible tiles
-    public void Collapse()
+    public void CollapseWithoutPropagation()
     {
+        // Warn for uncollapsable tile
+        if (!CanBeCollapsed())
+        {
+            Debug.LogError($"Can't collapse {i},{j}!"); return;
+        }
+
         // Collapse using aggregated frequency trick
         // 1) Get total frequency of current possible tiles
         int totalFrequency = 0;
@@ -58,19 +72,23 @@ public class WFCTile
             // Check if chosen
             if (chosenValue <= currentAggregatedFrequency)
             {
-                _Collapse(id);
+                _CollapseWithoutPropagation(id);
                 return;
             }
         }
     }
-    private void _Collapse(string id)
+    public void CollapseWithoutPropagation(string id)
+    {
+        _CollapseWithoutPropagation(id);
+    }
+    private void _CollapseWithoutPropagation(string id)
     {
         ClearPossibleTileIds();
         AddPossibleTileId(id);
     }
 
     // DEBUG: Collapse into random tile id
-    private void _RandomCollapse()
+    private void _RandomCollapseWithoutPropagation()
     {
         int randIndex = Random.Range(0, possibleTileIds.Count);
         string chosenId = possibleTileIds[randIndex];
