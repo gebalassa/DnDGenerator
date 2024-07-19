@@ -293,6 +293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wfcTrainer: {fileID: 11400000, guid: 87cf8c368651b564fba5734cce7e3563, type: 2}
+  testSprite: {fileID: -97276307, guid: d58220c428b02764faba373d63f2c61a, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

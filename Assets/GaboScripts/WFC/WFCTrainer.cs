@@ -217,6 +217,7 @@ public class WFCTrainer : ScriptableObject
         tileAssociations = new();
         tileFrequencies = new();
         trainingMaps = new List<GridClassNameWrapper>();
+        debugNamesForIds = new();
     }
 
     public bool IsWall(string id) { return id == "wall"; }

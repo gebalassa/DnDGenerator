@@ -8,17 +8,18 @@ public class ImageUtilities
     // Create unique Hash128 string based on a sprite's Texture2D byte data.
     public static string GetUniqueId(Sprite sprite)
     {
-        Texture2D auxTexture = sprite.texture.DeCompress();
-            // Create new texture based only on the rectangle used by the sprite
-            Texture2D newTexture = new((int)sprite.rect.width, (int)sprite.rect.height, auxTexture.format, false);
-            Graphics.CopyTexture(auxTexture, 0, 0, (int)sprite.rect.x, (int)sprite.rect.y, (int)sprite.rect.width, (int)sprite.rect.height, newTexture, 0, 0, 0, 0);
-            //Color[] pixels = sprite.texture.GetPixels((int)sprite.rect.x, (int)sprite.rect.y, (int)sprite.rect.width, (int)sprite.rect.height);
-            //newTexture.SetPixels(pixels);
+        Texture2D auxTexture = sprite.texture;//.DeCompress();
+        // Create new texture based only on the rectangle used by the sprite
+        Texture2D newTexture = new((int)sprite.rect.width, (int)sprite.rect.height, auxTexture.format, false);
+        Graphics.CopyTexture(auxTexture, 0, 0, (int)sprite.rect.x, (int)sprite.rect.y, (int)sprite.rect.width, (int)sprite.rect.height, newTexture, 0, 0, 0, 0);
+        //Color[] pixels = sprite.texture.GetPixels((int)sprite.rect.x, (int)sprite.rect.y, (int)sprite.rect.width, (int)sprite.rect.height);
+        //newTexture.SetPixels(pixels);
 
-            byte[] rawImage = newTexture.DeCompress().EncodeToPNG();
-            Hash128 newId = Hash128.Compute(rawImage);
-            //Debug.Log("ImageUtilities: - id: " + newId);
-            return newId.ToString();
+        byte[] rawImage = newTexture.EncodeToPNG();
+        //byte[] rawImage = newTexture.DeCompress().EncodeToPNG();
+        Hash128 newId = Hash128.Compute(rawImage);
+        //Debug.Log("ImageUtilities: - id: " + newId);
+        return newId.ToString();
     }
 
     //// Divide ImageDnd into sub-tiles and return their Hash128 Ids.
