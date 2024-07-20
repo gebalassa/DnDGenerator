@@ -46,7 +46,6 @@ public class WFCTile
         return isNonZeroEntropy;
     }
 
-    //TODO: TERMINARRRR
     // Collapse using relative frequency between remaining possible tiles
     public void CollapseWithoutPropagation()
     {

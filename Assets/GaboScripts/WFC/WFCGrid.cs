@@ -32,8 +32,12 @@ public class WFCGrid
         }
     }
 
-    public GridClass GetWFC(GridClass gc)
+    // Returns WFC-modified grid. Can be filtered by category name.
+    public GridClass GetWFC(GridClass gc, string category = null)
     {
+        //DEBUG
+        category = "Furniture";
+        //FIN DEBUG
         // Make class-wide reference to current GridClass parameter.
         currentGridClass = gc;
 
@@ -42,6 +46,12 @@ public class WFCGrid
 
         // Initial fill of tiles
         Fill(gc);
+
+        // If category was given, filter:
+        if (category != null)
+        {
+            FilterByCategory(category);
+        }
 
         // 1st Check for uncollapsables, in which case simply abort
         if (IsAnyTileUncollapsable())
@@ -89,6 +99,146 @@ public class WFCGrid
 
         // Return modified GridClass
         return gc;
+    }
+
+    // Filter according to category V2.0
+    private void FilterByCategory(string category)
+    {
+        // Obtain ImageDnd's from the chosen category
+        List<ImageDnd> chosenRawImages = imageManager.db.categories.Find(cat => cat.categoryName == category).images;
+        List<ImageDnd> chosenSubImages = new();
+        // Add sub-images of each macro-tile image
+        foreach (ImageDnd chosenRawImage in chosenRawImages)
+        {
+            // if single tile, add itself.
+            if (chosenRawImage.rows == 1 && chosenRawImage.columns == 1)
+            {
+                chosenSubImages.Add(chosenRawImage);
+            }
+            // Else, add sub-images
+            else
+            {
+                foreach (string chosenSubImageId in chosenRawImage.subImageIds)
+                {
+                    chosenSubImages.Add(imageManager.db.GetImage(chosenSubImageId));
+                }
+            }
+        }
+
+        // Remove possibilities that are not in chosen images
+        for (int i = 0; i < Height; i++)
+        {
+            for (int j = 0; j < Width; j++)
+            {
+                if (!Grid[i, j].IsCollapsed() && Grid[i, j].CanBeCollapsed())
+                {
+                    Stack<string> toRemove = new();
+                    List<string> currentPossibleIds = Grid[i, j].GetPossibleTileIds();
+                    foreach (string possibilityId in currentPossibleIds)
+                    {
+                        // Check if possibbility exists in chosen sub-images. "None" is an exception.
+                        if (possibilityId != "none" && !chosenSubImages.Exists(img => img.Id == possibilityId))
+                        {
+                            toRemove.Push(possibilityId);
+                        }
+                    }
+                    // Remove unchosen possibilities from the tile
+                    foreach (string removableId in toRemove)
+                    {
+                        Grid[i, j].RemovePossibleTileId(removableId);
+                    }
+                }
+            }
+        }
+    }
+
+    #region FAILED FilterByCategory 1.0
+    //// Filter according to category
+    //private void FilterByCategory(string category)
+    //{
+    //    // Obtain ImageDnd's from the chosen category
+    //    List<ImageDnd> chosenImages = imageManager.db.categories.Find(cat => cat.categoryName == category).images;
+    //    // Create trainer copy and set as new trainer (to avoid modifying the original)
+    //    trainer = trainer.AssociationsAndFrequenciesOnlyDeepCopy();
+    //    // Remove any tile associations which lead to non-chosen-category tiles...
+    //    // 1. ...From the trainer
+    //    foreach (string trainerId in trainer.tileAssociations.Keys)
+    //    {
+    //        Stack<WFCTrainer.AssociationTuple> toRemove = new();
+    //        for (int i = 0; i < trainer.tileAssociations[trainerId].Count; i++)
+    //        {
+    //            if (!chosenImages.Exists(img => img.Id == trainer.tileAssociations[trainerId][i].id))
+    //            {
+    //                toRemove.Push(trainer.tileAssociations[trainerId][i]);
+    //            }
+    //        }
+    //        // Remove unchosen tuples from the associations
+    //        foreach (WFCTrainer.AssociationTuple removableTuple in toRemove)
+    //        {
+    //            trainer.tileAssociations[trainerId].Remove(removableTuple);
+    //        }
+    //    }
+
+    //    // 2. ...From the current tiles
+    //    for (int i = 0; i < Height; i++)
+    //    {
+    //        for (int j = 0; j < Width; j++)
+    //        {
+    //            Stack<string> toRemove = new();
+    //            List<string> currentPossibleIds = Grid[i, j].GetPossibleTileIds();
+    //            foreach (string possibilityId in currentPossibleIds)
+    //            {
+    //                if (!chosenImages.Exists(img => img.Id == possibilityId))
+    //                {
+    //                    toRemove.Push(possibilityId);
+    //                }
+    //            }
+    //            // Remove unchosen possibilities from the tile
+    //            foreach (string removableId in toRemove)
+    //            {
+    //                Grid[i, j].RemovePossibleTileId(removableId);
+    //            }
+    //        }
+    //    }
+    //}
+    #endregion
+
+    // List with uncollapsed (& collapsable) tiles ordered by least to most entropy
+    public List<WFCTile> GetUncollapsedByEntropy()
+    {
+        List<WFCTile> uncollapsedTiles = new();
+        int currLeastEntropy = 999999;
+        for (int i = 0; i < Height; i++)
+        {
+            for (int j = 0; j < Width; j++)
+            {
+                WFCTile currTile = Grid[i, j];
+                if (currTile.IsCollapsed() || !currTile.CanBeCollapsed()) { continue; }
+                else if (currTile.GetEntropy() < currLeastEntropy)
+                {
+                    uncollapsedTiles.Insert(0, currTile);
+                    currLeastEntropy = currTile.GetEntropy(); // Update lowest
+                }
+                else
+                {
+                    int initialCount = uncollapsedTiles.Count;
+                    for (int u = 0; u < initialCount; u++)
+                    {
+                        if (currTile.GetEntropy() <= uncollapsedTiles[u].GetEntropy())
+                        {
+                            uncollapsedTiles.Insert(u, currTile);
+                            break;
+                        }
+                        // If most entropy, insert last
+                        else if (u == initialCount - 1)
+                        {
+                            uncollapsedTiles.Add(currTile);
+                        }
+                    }
+                }
+            }
+        }
+        return uncollapsedTiles;
     }
 
     // Collapse least entropy tile and propagate
@@ -267,18 +417,22 @@ public class WFCGrid
         // Check if the objective became uncollapsable
         if (!objective.CanBeCollapsed())
         {
+            //TODO devolver si no funca cambiar a aire
             string uncollapsableId = currentGridClass.Grid[objective.i, objective.j].Id;
-            Debug.LogWarning(
-                 $"SingleTilePropagation(): Tile {objective.i},{objective.j}," +
-                 $"originally {uncollapsableId}" +
-                 $" is uncollapsable due to {origin.i},{origin.j}!"
-                 );
-            return false;
+            objective.AddPossibleTileId("none");
+            Debug.LogWarning($"Se reemplaza {uncollapsableId} no colapsable en {objective.i},{objective.j} " +
+                $"por None por culpa de {origin.i}{origin.j}");
+            //string uncollapsableId = currentGridClass.Grid[objective.i, objective.j].Id;
+            //Debug.LogWarning(
+            //     $"SingleTilePropagation(): Tile {objective.i},{objective.j}," +
+            //     $"originally {uncollapsableId}" +
+            //     $" is uncollapsable due to {origin.i},{origin.j}!"
+            //     );
+            //return false;
         }
 
         //// Prevent 0-possibility tile by collapsing to "None" if selected,
         //// or its original tile if non-selected.
-        //// TODO: Probar si funciona
         //Tile currentGridClassTile = currentGridClass.Grid[objective.i, objective.j];
         //if (!objective.CanBeCollapsed())
         //{
@@ -293,44 +447,6 @@ public class WFCGrid
         //}
 
         return objectiveShouldbeQueued;
-    }
-
-    // List with uncollapsed (& collapsable) tiles ordered by least to most entropy
-    public List<WFCTile> GetUncollapsedByEntropy()
-    {
-        List<WFCTile> uncollapsedTiles = new();
-        int currLeastEntropy = 999999;
-        for (int i = 0; i < Height; i++)
-        {
-            for (int j = 0; j < Width; j++)
-            {
-                WFCTile currTile = Grid[i, j];
-                if (currTile.IsCollapsed() || !currTile.CanBeCollapsed()) { continue; }
-                else if (currTile.GetEntropy() < currLeastEntropy)
-                {
-                    uncollapsedTiles.Insert(0, currTile);
-                    currLeastEntropy = currTile.GetEntropy(); // Update lowest
-                }
-                else
-                {
-                    int initialCount = uncollapsedTiles.Count;
-                    for (int u = 0; u < initialCount; u++)
-                    {
-                        if (currTile.GetEntropy() <= uncollapsedTiles[u].GetEntropy())
-                        {
-                            uncollapsedTiles.Insert(u, currTile);
-                            break;
-                        }
-                        // If most entropy, insert last
-                        else if (u == initialCount - 1)
-                        {
-                            uncollapsedTiles.Add(currTile);
-                        }
-                    }
-                }
-            }
-        }
-        return uncollapsedTiles;
     }
 
     // Fill V2.0

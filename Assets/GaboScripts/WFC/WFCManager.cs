@@ -7,19 +7,17 @@ public class WFCManager : MonoBehaviour
     public enum WFCDirection { UP, DOWN, LEFT, RIGHT };
     public WFCTrainer trainer;
 
-    //TODO: TERMINARRRRR
-    public GridClass GetWFC(GridClass grid)
+    public GridClass GetWFC(GridClass grid, string category = null)
     {
         GridClass newGrid = new GridClass(grid.width, grid.height);
 
         //DEBUG
-        newGrid = _GetWFC(grid);//_GetRandom(grid);
+        newGrid = _GetWFC(grid);
         //FINDEBUG
 
         return newGrid;
     }
-    //TODO: TERMINAR
-    private GridClass _GetWFC(GridClass grid)
+    private GridClass _GetWFC(GridClass grid, string category = null)
     {
         #region OBSOLETE PROCEDURE
         // PROCEDURE
@@ -34,7 +32,7 @@ public class WFCManager : MonoBehaviour
         #endregion
 
         WFCGrid wfcGrid = new WFCGrid(grid.width, grid.height);
-        GridClass newGrid = wfcGrid.GetWFC(grid);
+        GridClass newGrid = wfcGrid.GetWFC(grid, category);
 
         return newGrid;
     }
