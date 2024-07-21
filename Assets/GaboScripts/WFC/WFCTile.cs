@@ -9,6 +9,7 @@ public class WFCTile
     public int i;
     public int j;
     private WFCTrainer trainer;
+    public bool IsReplacedDuetoUncollapsability = false;
     public WFCTile(int i, int j)
     {
         this.i = i;
@@ -36,9 +37,9 @@ public class WFCTile
         else return false;
     }
 
-    public bool CanBeCollapsed()
+    public bool IsEntropyMoreThanZero()
     {
-        bool isNonZeroEntropy = (possibleTileIds.Count != 0);
+        bool isNonZeroEntropy = (possibleTileIds.Count > 0);
         //if (!isNonZeroEntropy)
         //{
         //    Debug.LogWarning($"{i},{j} has zero entropy!");
@@ -50,7 +51,7 @@ public class WFCTile
     public void CollapseWithoutPropagation()
     {
         // Warn for uncollapsable tile
-        if (!CanBeCollapsed())
+        if (!IsEntropyMoreThanZero())
         {
             Debug.LogError($"Can't collapse {i},{j}!"); return;
         }
