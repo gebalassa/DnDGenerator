@@ -8,8 +8,8 @@ public class WFCTile
     List<string> possibleTileIds = new List<string>();
     public int i;
     public int j;
+    public bool isReplacedWithNone = false;
     private WFCTrainer trainer;
-    public bool IsReplacedDuetoUncollapsability = false;
     public WFCTile(int i, int j)
     {
         this.i = i;

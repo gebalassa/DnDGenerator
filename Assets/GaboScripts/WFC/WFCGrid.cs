@@ -39,7 +39,7 @@ public class WFCGrid
     public GridClass GetWFC(GridClass gc, string category = null)
     {
         //DEBUG
-        category = "Furniture";
+        //category = "Scenery";
         //FIN DEBUG
 
         // Make class-wide reference to current GridClass parameter.
@@ -78,11 +78,14 @@ public class WFCGrid
             }
         }
 
-        // if selected tiles were replaced to "none" due to being uncollapsable, return to original ids.
-        ReplaceUncollapsablesWithOriginals();
+        // Check if selected tiles, which are now collapsed, became uncollapsable
+        // during the process (Ej.: 0-entropy replacement with 'none'). Also,
+        // In such case, replace tile with original.
+        // For 1-entropy, replace with original if different to set.
+        FixZeroAndOneEntropyTilesFromScratch();
 
         // If non-selected tiles were modified, they recover their original ids.
-        ResetNonSelectedTileIds();
+        //ResetNonSelectedTileIds();
 
         // DEBUG: Info
         Debug.Log($"{uncollapsableReplacementCount} tile replacements were done.");
@@ -162,7 +165,7 @@ public class WFCGrid
                     {
                         // If uncollapsable, replace temporarily with "None".
                         Grid[i, j].CollapseWithoutPropagation("none");//currentGridClass.Grid[i, j].Id);
-                        Grid[i, j].IsReplacedDuetoUncollapsability = true;
+                        Grid[i, j].isReplacedWithNone = true;
                         Debug.LogWarning($"FilterByCategory(): Uncollapsable filtered tile at {i},{j} replaced temporarily with \"none\" to continue propagation.");
                         uncollapsableReplacementCount++;
                     }
@@ -301,7 +304,7 @@ public class WFCGrid
         }
     }
 
-    # region Failed propagation for uncollapsable tile s
+    # region Failed propagation for uncollapsable tile
     //// Propagate an uncollapsable tile that got fixed with the original content.
     //// Unlike Propagate(): Collapsed tiles, if selected, are considered anyway,
     //// in case they need fixing.
@@ -481,9 +484,9 @@ public class WFCGrid
         {
             // If uncollapsable, replace with "none" temporarily
             objective.CollapseWithoutPropagation("none");//"currentGridClass.Grid[objective.i, objective.j].Id);
-            objective.IsReplacedDuetoUncollapsability = true;
+            Grid[objective.i, objective.j].isReplacedWithNone = true;
             Debug.LogWarning($"Collapsing uncollapsable tile at {objective.i},{objective.j} " +
-                $"temporarily to \"none\" to continue propagation, due to {origin.i}{origin.j}");
+                $"temporarily to \"none\" to continue propagation, due to {origin.i},{origin.j}");
             uncollapsableReplacementCount++;
         }
 
@@ -721,17 +724,202 @@ public class WFCGrid
     //}
     #endregion
 
-    // Replace tiles marked with "none" due to being uncollapsable with their original tiles.
-    // Note: To be used after all propagation has been done.
-    private void ReplaceUncollapsablesWithOriginals()
+    // FIX: Replace 0-entropy tiles with their original tiles. 
+    // Replace 1-entropy tiles that differ from set one with the allowed tile.
+    // Doesn't rely on saved entropy within each tile,
+    // rather gets it from scratch.
+    private bool FixZeroAndOneEntropyTilesFromScratch()
+    {
+        // Reset tiles replaced with None
+        ResetTilesReplacedWithNone();
+
+        bool isThereChange = false;
+        for (int i = 0; i < Height; i++)
+        {
+            for (int j = 0; j < Width; j++)
+            {
+                if (currentGridClass.Grid[i, j].selected)
+                {
+                    // Get allowed possibilities for current tile.
+                    // NOTE: Direction is that of the neighbour relative to current tile,
+                    // thus opposite to their cardinal direction.
+                    List<string> allowedIds = new();
+                    bool isFirstFilled = false;
+
+                    // UP
+                    if (i > 0)
+                    {
+                        WFCTile upNeighbour = Grid[i - 1, j];
+                        List<string> allowedUp = trainer.GetAllowedNeighbours(
+                            upNeighbour.GetPossibleTileIds()[0],
+                            WFCDirection.DOWN);
+                        if (!isFirstFilled)
+                        {
+                            foreach (string neighbourId in allowedUp)
+                            {
+                                allowedIds.Add(neighbourId);
+                                isFirstFilled = true;
+                            }
+                        }
+                        else
+                        {
+                            List<string> toRemove = new();
+                            foreach (string allowedId in allowedIds)
+                            {
+                                if (!allowedUp.Contains(allowedId))
+                                {
+                                    toRemove.Add(allowedId);
+                                }
+                            }
+                            foreach (string removableId in toRemove)
+                            {
+                                allowedIds.Remove(removableId);
+                            }
+                        }
+                    }
+                    // DOWN
+                    if (i < Height - 1)
+                    {
+                        WFCTile downNeighbour = Grid[i + 1, j];
+                        List<string> allowedDown = trainer.GetAllowedNeighbours(
+                            downNeighbour.GetPossibleTileIds()[0],
+                            WFCDirection.UP);
+                        if (!isFirstFilled)
+                        {
+                            foreach (string neighbourId in allowedDown)
+                            {
+                                allowedIds.Add(neighbourId);
+                                isFirstFilled = true;
+                            }
+                        }
+                        else
+                        {
+                            List<string> toRemove = new();
+                            foreach (string allowedId in allowedIds)
+                            {
+                                if (!allowedDown.Contains(allowedId))
+                                {
+                                    toRemove.Add(allowedId);
+                                }
+                            }
+                            foreach (string removableId in toRemove)
+                            {
+                                allowedIds.Remove(removableId);
+                            }
+                        }
+                    }
+                    // LEFT
+                    if (j > 0)
+                    {
+                        WFCTile leftNeighbour = Grid[i, j - 1];
+                        List<string> allowedLeft = trainer.GetAllowedNeighbours(
+                            leftNeighbour.GetPossibleTileIds()[0],
+                            WFCDirection.RIGHT);
+                        if (!isFirstFilled)
+                        {
+                            foreach (string neighbourId in allowedLeft)
+                            {
+                                allowedIds.Add(neighbourId);
+                                isFirstFilled = true;
+                            }
+                        }
+                        else
+                        {
+                            List<string> toRemove = new();
+                            foreach (string allowedId in allowedIds)
+                            {
+                                if (!allowedLeft.Contains(allowedId))
+                                {
+                                    toRemove.Add(allowedId);
+                                }
+                            }
+                            foreach (string removableId in toRemove)
+                            {
+                                allowedIds.Remove(removableId);
+                            }
+                        }
+                    }
+                    // RIGHT
+                    if (j < Width - 1)
+                    {
+                        WFCTile rightNeighbour = Grid[i, j + 1];
+                        List<string> allowedRight = trainer.GetAllowedNeighbours(
+                            rightNeighbour.GetPossibleTileIds()[0],
+                            WFCDirection.LEFT);
+                        if (!isFirstFilled)
+                        {
+                            foreach (string neighbourId in allowedRight)
+                            {
+                                allowedIds.Add(neighbourId);
+                                isFirstFilled = true;
+                            }
+                        }
+                        else
+                        {
+                            List<string> toRemove = new();
+                            foreach (string allowedId in allowedIds)
+                            {
+                                if (!allowedRight.Contains(allowedId))
+                                {
+                                    toRemove.Add(allowedId);
+                                }
+                            }
+                            foreach (string removableId in toRemove)
+                            {
+                                allowedIds.Remove(removableId);
+                            }
+                        }
+                    }
+
+                    // If allowedIds==0, tile is uncollapsable and is reverted to original.
+                    if (allowedIds.Count == 0)
+                    {
+                        Grid[i, j].CollapseWithoutPropagation(currentGridClass.Grid[i, j].Id);
+                        Debug.Log($"FixZeroEntropyTilesFromScratch(): Tile {i},{j} " +
+                            $"has zero entropy at the end! Replacing with original.");
+                        isThereChange = true;
+                        uncollapsableReplacementCount++;
+                    }
+                    // If allowedIds==1, but that possibility is different to the one set, change to
+                    // that possibility and add 1 to uncollapsable counter.
+                    else if (allowedIds.Count == 1 && (Grid[i, j].GetPossibleTileIds()[0] != allowedIds[0]))
+                    {
+                        if (allowedIds[0] != "none")
+                        {
+                            Grid[i, j].CollapseWithoutPropagation(allowedIds[0]);
+                            Debug.Log($"FixZeroEntropyTilesFromScratch(): Tile {i},{j} " +
+                                      $"has entropy==1 at the end, but set tile differs from the one allowed!" +
+                                      $"Replacing with allowed one.");
+                            isThereChange = true;
+                            uncollapsableReplacementCount++;
+                        }
+                        //else
+                        //{
+                        //    Grid[i, j].CollapseWithoutPropagation(currentGridClass.Grid[i, j].Id);
+                        //    Debug.Log($"FixZeroEntropyTilesFromScratch(): Tile {i},{j} " +
+                        //              $"has entropy==1 at the end, but set tile differs from the one allowed " +
+                        //              $"which is \"none\" (DEBUG: Special case)! Replacing with original.");
+                        //    uncollapsableReplacementCount++;
+                        //}
+                    }
+                }
+            }
+        }
+
+        // return if there was change or not
+        return isThereChange;
+    }
+
+    private void ResetTilesReplacedWithNone()
     {
         for (int i = 0; i < Height; i++)
         {
             for (int j = 0; j < Width; j++)
             {
-                if (Grid[i, j].IsReplacedDuetoUncollapsability)
+                if (Grid[i, j].isReplacedWithNone)
                 {
-                    Grid[i, j].CollapseWithoutPropagation(currentGridClass.Grid[i,j].Id);
+                    Grid[i, j].CollapseWithoutPropagation(
+                        currentGridClass.Grid[i, j].Id);
                 }
             }
         }
@@ -764,29 +952,31 @@ public class WFCGrid
         return false;
     }
 
-    private void ResetNonSelectedTileIds()
-    {
-        int resetCounter = 0;
-        //int entropyZeroCounter = 0;
-        for (int i = 0; i < Height; i++)
-        {
-            for (int j = 0; j < Width; j++)
-            {
-                Tile currGCTile = currentGridClass.Grid[i, j];
-                if (!currGCTile.selected &&
-                    (Grid[i, j].GetEntropy() == 0 || currGCTile.Id != Grid[i, j].GetPossibleTileIds()[0]))
-                {
-                    //Counters
-                    resetCounter++;
-                    //if (Grid[i, j].GetEntropy() == 0) { entropyZeroCounter++; }
+    #region OBSOLETE
+    //private void ResetNonSelectedTileIds()
+    //{
+    //    int resetCounter = 0;
+    //    //int entropyZeroCounter = 0;
+    //    for (int i = 0; i < Height; i++)
+    //    {
+    //        for (int j = 0; j < Width; j++)
+    //        {
+    //            Tile currGCTile = currentGridClass.Grid[i, j];
+    //            if (!currGCTile.selected &&
+    //                (Grid[i, j].GetEntropy() == 0 || currGCTile.Id != Grid[i, j].GetPossibleTileIds()[0]))
+    //            {
+    //                //Counters
+    //                resetCounter++;
+    //                //if (Grid[i, j].GetEntropy() == 0) { entropyZeroCounter++; }
 
-                    //Collapse to original id
-                    Grid[i, j].CollapseWithoutPropagation(currGCTile.Id);
-                }
-            }
-        }
-        Debug.Log($"{resetCounter} non-selected tiles were reset to their originals when finishing."); //{entropyZeroCounter} of them had zero entropy.");
-    }
+    //                //Collapse to original id
+    //                Grid[i, j].CollapseWithoutPropagation(currGCTile.Id);
+    //            }
+    //        }
+    //    }
+    //    Debug.Log($"{resetCounter} non-selected tiles were reset to their originals when finishing."); //{entropyZeroCounter} of them had zero entropy.");
+    //}
+    #endregion
 
     // Check for uncollapsable tiles (entropy=0)
     private bool IsAnyTileUncollapsable()
