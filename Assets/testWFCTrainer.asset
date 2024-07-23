@@ -8978,7 +8978,7 @@ MonoBehaviour:
   tileFrequencies:
     _serializedList:
     - Key: none
-      Value: 30
+      Value: 15
     - Key: d1071d4742e7007710aed65a70c7e7e8
       Value: 23
     - Key: 7fdc0bcadd7a564bbcae1f0273f226fd
@@ -9118,7 +9118,7 @@ MonoBehaviour:
     - Key: 9383770e40ab8b56e0fcddeae02d6926
       Value: 2
     - Key: wall
-      Value: 23
+      Value: 1
     - Key: 16a98c6f0af6d396e5c66d76973c3db3
       Value: 3
     - Key: c823b7bc9812dd41ccddb3e12f22843d
