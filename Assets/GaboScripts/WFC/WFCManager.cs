@@ -12,7 +12,7 @@ public class WFCManager : MonoBehaviour
         GridClass newGrid = new GridClass(grid.width, grid.height);
 
         //DEBUG
-        newGrid = _GetWFC(grid);
+        newGrid = _GetWFC(grid, category);
         //FINDEBUG
 
         return newGrid;

@@ -373,7 +373,7 @@ MonoBehaviour:
     images:
     - sprite: {fileID: -1006080624, guid: 6fa83bf926dc0a244af5b64039e68786, type: 3}
       rows: 1
-      columns: 3
+      columns: 2
     - sprite: {fileID: -1406614169, guid: c5132cc7f23558e45b9f8774eeefe031, type: 3}
       rows: 1
       columns: 1
