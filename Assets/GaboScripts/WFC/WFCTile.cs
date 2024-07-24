@@ -8,6 +8,7 @@ public class WFCTile
     List<string> possibleTileIds = new List<string>();
     public int i;
     public int j;
+    public bool isReplacedWithNone = false;
     private WFCTrainer trainer;
     public WFCTile(int i, int j)
     {
@@ -36,9 +37,9 @@ public class WFCTile
         else return false;
     }
 
-    public bool CanBeCollapsed()
+    public bool IsEntropyMoreThanZero()
     {
-        bool isNonZeroEntropy = (possibleTileIds.Count != 0);
+        bool isNonZeroEntropy = (possibleTileIds.Count > 0);
         //if (!isNonZeroEntropy)
         //{
         //    Debug.LogWarning($"{i},{j} has zero entropy!");
@@ -46,12 +47,11 @@ public class WFCTile
         return isNonZeroEntropy;
     }
 
-    //TODO: TERMINARRRR
     // Collapse using relative frequency between remaining possible tiles
     public void CollapseWithoutPropagation()
     {
         // Warn for uncollapsable tile
-        if (!CanBeCollapsed())
+        if (!IsEntropyMoreThanZero())
         {
             Debug.LogError($"Can't collapse {i},{j}!"); return;
         }

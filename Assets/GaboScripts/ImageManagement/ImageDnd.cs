@@ -85,16 +85,16 @@ public class ImageDnd
     {
         // Get sub-sprites
         Texture2D currTexture = sprite.texture;
-        Sprite[] subUncastedSprites = Resources.LoadAll<Sprite>(currTexture.name);
-        LogFileManager.logString += "Texture name: " + currTexture.name + " - Num of sprites: " + subUncastedSprites.Length + "\n";
-        foreach(Sprite subsprite in subUncastedSprites)
+        Sprite[] subSprites = Resources.LoadAll<Sprite>(currTexture.name);
+        LogFileManager.logString += "Texture name: " + currTexture.name + " - Num of sprites: " + subSprites.Length + "\n";
+        foreach(Sprite subsprite in subSprites)
         {
             LogFileManager.logString += subsprite.texture.name;
         }
 
         // Create ImageDnd objects for each subsprite
         List<ImageDnd> subImages = new();
-        foreach (Sprite subSprite in subUncastedSprites)
+        foreach (Sprite subSprite in subSprites)
         {
             //Sprite subSprite = (Sprite)subUncastedSprite;
 
@@ -133,7 +133,6 @@ public class ImageDnd
     // Get array using given dictionary. Should be faster than creating the objects from scratch.
     public ImageDnd[,] Get2DArray(Dictionary<string, ImageDnd> imageDictionary)
     {
-        Debug.Log("HEy");
         // Null check
         if (subImageIds == null) { Debug.LogError("ImageDnd:Get2DArray(): Sub images have not been set!"); }
 

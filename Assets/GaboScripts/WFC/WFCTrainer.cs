@@ -32,10 +32,10 @@ public class WFCTrainer : ScriptableObject
     public string mapsPath = "Assets/Maps";
     [SerializedDictionary("ID", "Association List")]
     public SerializedDictionary<string, List<AssociationTuple>> tileAssociations = new();
-    [SerializedDictionary("ID", "Frequency")]    
+    [SerializedDictionary("ID", "Frequency")]
     public SerializedDictionary<string, int> tileFrequencies = new();
     public List<GridClassNameWrapper> trainingMaps = new List<GridClassNameWrapper>();
-    
+
     //DEBUG
     public SerializedDictionary<string, string> debugNamesForIds = new();
     ImageManager debugImageManager;
@@ -45,6 +45,36 @@ public class WFCTrainer : ScriptableObject
     {
         //DEBUG
         debugImageManager = FindObjectOfType<ImageManager>();
+    }
+
+    // Clone the trainer associations and frequencies
+    public WFCTrainer AssociationsAndFrequenciesOnlyDeepCopy()
+    {
+        WFCTrainer newWFCTrainer = new WFCTrainer();
+        // Clone maps folder path
+        newWFCTrainer.mapsPath = mapsPath;
+        // Clone tileAssociations
+        foreach (string id in tileAssociations.Keys)
+        {
+            List<AssociationTuple> associations = tileAssociations[id];
+            foreach (AssociationTuple assoc in associations)
+            {
+                AssociationTuple newAssoc = new(assoc.id, assoc.direction);
+                newWFCTrainer.tileAssociations.Add(id, new());
+                newWFCTrainer.tileAssociations[id].Add(newAssoc);
+            }
+        }
+        // Clone tileFrequencies
+        foreach (string id in tileFrequencies.Keys)
+        {
+            newWFCTrainer.tileFrequencies.Add(id, tileFrequencies[id]);
+        }
+        // Set everything else as null
+        newWFCTrainer.trainingMaps = null;
+        newWFCTrainer.debugNamesForIds = null;
+        newWFCTrainer.debugImageManager = null;
+
+        return newWFCTrainer;
     }
 
     // Get allowed neighbours from a certain direction for a given tile
@@ -96,7 +126,7 @@ public class WFCTrainer : ScriptableObject
     }
 
 
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     // Train using maps to obtain tile frequencies and associations
     public void Train()
     {
@@ -104,7 +134,7 @@ public class WFCTrainer : ScriptableObject
         LoadTrainingMaps();
         PopulateTilesFromLoadedMaps();
         // Remove walls from database
-        //RemoveWallsFromTraining(); //TODO: Ver si funciona bien con los muros en el entrenamiento
+        //RemoveWallsFromTraining();
         //DEBUG: Populate ids with sprite names (if on Play Mode)
         if (Application.isPlaying)
         {
@@ -112,7 +142,7 @@ public class WFCTrainer : ScriptableObject
         }
         // To save changes to the SO
         EditorUtility.SetDirty(this);
-    } 
+    }
 
     // Load maps from maps folder
     private void LoadTrainingMaps()
@@ -217,6 +247,7 @@ public class WFCTrainer : ScriptableObject
         tileAssociations = new();
         tileFrequencies = new();
         trainingMaps = new List<GridClassNameWrapper>();
+        debugNamesForIds = new();
     }
 
     public bool IsWall(string id) { return id == "wall"; }
@@ -256,5 +287,5 @@ public class WFCTrainer : ScriptableObject
             tileAssociations[id].RemoveAll(tile => tile.id == "wall");
         }
     }
-    #endif
+#endif
 }
