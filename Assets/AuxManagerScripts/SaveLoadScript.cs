@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class SaveLoadScript : MonoBehaviour
 {
@@ -15,6 +16,20 @@ public class SaveLoadScript : MonoBehaviour
     GridClass _grid;
 
     string saveFilePath = null;
+
+    public bool dontLoad = false;
+
+    private void Awake()
+    {
+        GameObject go = GameObject.Find("AuxManager");
+        if (go != gameObject)
+        {
+            dontLoad = true;
+
+            Destroy(go);
+
+        }
+    }
 
     void Start()
     {
@@ -79,7 +94,7 @@ public class SaveLoadScript : MonoBehaviour
     {
         if (LoadGrid())
         {
-            GetComponent<SceneChangeScript>().ChangeScene(sceneIndex);
+            SceneChangeScript.ChangeScene(sceneIndex);
         }
     }
     public bool LoadGrid()

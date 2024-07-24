@@ -10,6 +10,11 @@ public class ImageManager : MonoBehaviour
 
     private void Start()
     {
+        if (GetComponent<SaveLoadScript>().dontLoad)
+        {
+            return;
+        }
+
         // Initialize database
         db.Initialize();
 

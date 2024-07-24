@@ -209,6 +209,9 @@ public class GridManager : MonoBehaviour
         return new Vector2Int(width, height);
     }
     #endregion
+
+    #region MISC
+    #endregion
 }
 
 public class LogFileManager

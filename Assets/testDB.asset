@@ -17,7 +17,7 @@ MonoBehaviour:
     images:
     - sprite: {fileID: -1006080624, guid: 6fa83bf926dc0a244af5b64039e68786, type: 3}
       rows: 1
-      columns: 3
+      columns: 2
     - sprite: {fileID: 986082921, guid: 35541c5543d962f42b01dce9a7954c3f, type: 3}
       rows: 1
       columns: 1
@@ -472,8 +472,8 @@ MonoBehaviour:
       rows: 3
       columns: 4
     - sprite: {fileID: -996005751, guid: efa0fce3b78f7c04394bc9ce4ea5b764, type: 3}
-      rows: 1
-      columns: 2
+      rows: 2
+      columns: 1
     - sprite: {fileID: 1831066763, guid: a98031fc04601a6498336e76e231fa3c, type: 3}
       rows: 1
       columns: 1

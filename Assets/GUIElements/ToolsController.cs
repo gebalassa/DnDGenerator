@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
+using TMPro;
 
 public class ToolsController : MonoBehaviour
 {
@@ -31,6 +32,9 @@ public class ToolsController : MonoBehaviour
     [Header("Wall Placement Tool")]
     Vector3? wallStartPosition;
     [SerializeField] LineRenderer lineRenderer = null;
+
+    [Header("Wave Function Collapse")]
+    [SerializeField] TMP_Dropdown dropdown;
 
     private void Awake()
     {
@@ -373,6 +377,11 @@ public class ToolsController : MonoBehaviour
         gridManager.PaintAssetMap();
     }
 
+    //Change scene back to main menu
+    public void BackToMenu()
+    {
+        SceneChangeScript.ChangeScene(0);
+    }
     #endregion
 
     #region UTILITIES
