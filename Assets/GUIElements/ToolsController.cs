@@ -380,7 +380,7 @@ public class ToolsController : MonoBehaviour
     //Fill selected tiles with WFC generated content
     public void GenerateWFC()
     {
-        gridManager.GridClass(references.wfcManager.GetWFC(gridManager.GridClass()));
+        gridManager.GridClass(references.wfcManager.GetWFC(gridManager.GridClass(), dropdown.captionText.text));
         gridManager.PaintAssetMap();
     }
 
